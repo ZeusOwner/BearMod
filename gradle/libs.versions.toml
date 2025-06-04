@@ -1,0 +1,74 @@
+[versions]
+# Android
+compileSdk = "36"
+minSdk = "29"
+targetSdk = "35"
+versionCode = "100"
+versionName = "3.8.0"
+
+# Gradle & Build Tools
+agp = "8.10.1"
+ndk = "27.1.12297006"
+
+# Java/Kotlin
+java = "17"
+
+# AndroidX Core
+androidx-core = "1.16.0"
+androidx-appcompat = "1.7.0"
+androidx-viewpager = "1.1.0"
+androidx-fragment = "1.8.7"
+androidx-viewpager2 = "1.1.0"
+androidx-exifinterface = "1.4.1"
+
+# Google Material
+material = "1.12.0"
+
+# Networking
+retrofit = "3.0.0"
+
+# Testing
+junit = "4.13.2"
+mockito-core = "5.18.0"
+mockito-inline = "5.2.0"
+mockito-android = "5.18.0"
+androidx-test-core = "1.6.1"
+androidx-test-ext-junit = "1.2.1"
+robolectric = "4.14.1"
+espresso-core = "3.6.1"
+
+[libraries]
+# AndroidX
+androidx-core = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-viewpager = { group = "androidx.viewpager", name = "viewpager", version.ref = "androidx-viewpager" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "androidx-fragment" }
+androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "androidx-viewpager2" }
+androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "androidx-exifinterface" }
+
+# Google Material
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Networking
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito-core" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito-inline" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito-android" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test-core" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+
+[bundles]
+androidx-ui = ["androidx-core", "androidx-appcompat", "androidx-viewpager", "androidx-fragment", "androidx-viewpager2", "androidx-exifinterface"]
+networking = ["retrofit", "retrofit-converter-gson"]
+testing-unit = ["junit", "mockito-core", "mockito-inline", "androidx-test-core", "androidx-test-ext-junit", "robolectric"]
+testing-android = ["androidx-test-ext-junit", "espresso-core", "mockito-android"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+foojay-resolver-convention = { id = "org.gradle.toolchains.foojay-resolver-convention", version = "0.8.0" } 
