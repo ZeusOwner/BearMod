@@ -6424,7 +6424,7 @@ void native_Init(JNIEnv *env, jclass clazz, jobject mContext) {
     //    pthread_t t;
     //pthread_create(&t, 0, Init_Thread, 0);
 }
-/*
+
 jstring native_Check(JNIEnv *env, jclass clazz, jobject mContext, jstring mUserKey) {
     auto userKey = env->GetStringUTFChars(mUserKey, 0);
     std::string hwid = userKey;
@@ -6499,7 +6499,7 @@ jstring native_Check(JNIEnv *env, jclass clazz, jobject mContext, jstring mUserK
     return bValid ? env->NewStringUTF("OK") : env->NewStringUTF(errMsg.c_str());
 
 }
-*/
+
 
 extern "C"
 JNIEXPORT void JNICALL

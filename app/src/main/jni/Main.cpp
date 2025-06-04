@@ -1,8 +1,9 @@
-
-
-#include "Helper/Includes.h"
+#include <jni.h>
+#include <cstring>
+#include <cstdlib>
+#include <unistd.h>
+#include <pthread.h>
 #include "NRG.h"
-
 
 bool TestGGG = false;
 bool IsHideEsp(JNIEnv * env, jclass clazz)
@@ -26,7 +27,6 @@ void native_onSendConfig(JNIEnv *env, jobject thiz, jstring s, jstring v) {
         Config[config] = (u_long) strtoul(value, 0, 0);
     }
 }
-
 
 #include "MOD/LOGO.h"
 

@@ -564,21 +564,21 @@ public class FileUtil
 		}
 		
 		synchronized (fileLock) {
-			try (FileInputStream fis = new FileInputStream(new File(context.getFilesDir(), fileName));
+			File file = new File(context.getFilesDir(), fileName);
+			if (!file.exists() || !file.canRead()) {
+				Log.w(TAG, "File does not exist or cannot be read: " + fileName);
+				return null;
+			}
+			
+			long fileSize = file.length();
+			if (fileSize > 50 * 1024 * 1024) { // 50MB limit
+				Log.e(TAG, "File too large to read into memory: " + fileName + " (" + fileSize + " bytes)");
+				return null;
+			}
+			
+			try (FileInputStream fis = new FileInputStream(file);
 				 BufferedInputStream bis = new BufferedInputStream(fis, MEDIUM_BUFFER_SIZE);
 				 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				
-				File file = new File(context.getFilesDir(), fileName);
-				if (!file.exists() || !file.canRead()) {
-					Log.w(TAG, "File does not exist or cannot be read: " + fileName);
-					return null;
-				}
-				
-				long fileSize = file.length();
-				if (fileSize > 50 * 1024 * 1024) { // 50MB limit
-					Log.e(TAG, "File too large to read into memory: " + fileName + " (" + fileSize + " bytes)");
-					return null;
-				}
 				
 				byte[] buffer = new byte[MEDIUM_BUFFER_SIZE];
 				int bytesRead;
@@ -605,26 +605,26 @@ public class FileUtil
 		}
 		
 		synchronized (fileLock) {
-			try (FileInputStream fis = new FileInputStream(new File(context.getFilesDir(), sourceFileName));
-				 BufferedInputStream bis = new BufferedInputStream(fis, MEDIUM_BUFFER_SIZE);
-				 FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir(), destFileName));
-				 BufferedOutputStream bos = new BufferedOutputStream(fos, MEDIUM_BUFFER_SIZE)) {
-				
-				File sourceFile = new File(context.getFilesDir(), sourceFileName);
-				File destFile = new File(context.getFilesDir(), destFileName);
-				
-				if (!sourceFile.exists() || !sourceFile.canRead()) {
-					Log.e(TAG, "Source file does not exist or cannot be read: " + sourceFileName);
+			File sourceFile = new File(context.getFilesDir(), sourceFileName);
+			File destFile = new File(context.getFilesDir(), destFileName);
+			
+			if (!sourceFile.exists() || !sourceFile.canRead()) {
+				Log.e(TAG, "Source file does not exist or cannot be read: " + sourceFileName);
+				return false;
+			}
+			
+			File destParent = destFile.getParentFile();
+			if (destParent != null && !destParent.exists()) {
+				if (!destParent.mkdirs()) {
+					Log.e(TAG, "Failed to create destination directory: " + destParent.getAbsolutePath());
 					return false;
 				}
-				
-				File destParent = destFile.getParentFile();
-				if (destParent != null && !destParent.exists()) {
-					if (!destParent.mkdirs()) {
-						Log.e(TAG, "Failed to create destination directory: " + destParent.getAbsolutePath());
-						return false;
-					}
-				}
+			}
+			
+			try (FileInputStream fis = new FileInputStream(sourceFile);
+				 BufferedInputStream bis = new BufferedInputStream(fis, MEDIUM_BUFFER_SIZE);
+				 FileOutputStream fos = new FileOutputStream(destFile);
+				 BufferedOutputStream bos = new BufferedOutputStream(fos, MEDIUM_BUFFER_SIZE)) {
 				
 				byte[] buffer = new byte[MEDIUM_BUFFER_SIZE];
 				int bytesRead;
