@@ -153,4 +153,4 @@ For issues or questions:
 4. Test on LD Player emulator first
 
 ---
-**Disclaimer**: This tool is for educational purposes. Users are responsible for compliance with game terms of service and local laws. 
+**Disclaimer**: This tool is for educational purposes. Users are responsible for compliance with game terms of service and local laws.
