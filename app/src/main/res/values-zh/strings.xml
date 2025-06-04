@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">熊模组</string>
+    <string name="esp_line">线</string>
+    <string name="esp_bone">骨骼</string>
+    <string name="esp_info">信息</string>
+    <string name="esp_weapon">武器</string>
+    <string name="esp_grenade">手雷预警</string>
+    <string name="aim_aimbot">自瞄</string>
+    <string name="aim_ignore">忽略机器人</string>
+    <string name="aim_knocked">瞄准击倒</string>
+    <string name="skin_enable">皮肤启用</string>
+    <string name="deadbox">死亡箱子（游戏中打开）</string>
+</resources>

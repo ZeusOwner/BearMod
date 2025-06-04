@@ -1,0 +1,41 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# BearMod Package Overview
+
+This document provides an overview of the Java files located in the `app/src/main/java/com/bearmod/` directory, which appear to constitute the main application or loader components of BearMod.
+
+## Key Files
+
+- **`[MainActivity.java](mdc:app/src/main/java/com/bearmod/MainActivity.java)`**:
+  - Likely the main entry point for the Android application.
+  - Handles the primary user interface and overall application lifecycle.
+
+- **`[Floating.java](mdc:app/src/main/java/com/bearmod/Floating.java)`**:
+  - Potentially implements a floating UI element, such as a mod menu or an overlay.
+  - This could be used to interact with mod features while the target application is running.
+
+- **`[ESPView.java](mdc:app/src/main/java/com/bearmod/ESPView.java)`**:
+  - Suggests functionality related to ESP (Extra Sensory Perception).
+  - This component would be responsible for drawing or displaying information gathered through ESP features.
+
+- **`[Launcher.java](mdc:app/src/main/java/com/bearmod/Launcher.java)`**:
+  - May handle the initialization and launching of various parts of the BearMod application or the mod itself.
+  - Could be involved in setting up the environment before the mod's core functionalities are activated.
+
+- **`[FileUtil.java](mdc:app/src/main/java/com/bearmod/FileUtil.java)`**:
+  - A utility class providing helper methods for file operations.
+  - This might be used for managing configuration files, assets, or downloaded module components.
+
+- **`[RecorderFakeUtils.java](mdc:app/src/main/java/com/bearmod/RecorderFakeUtils.java)`**:
+  - Likely contains utilities to bypass or spoof screen recording status.
+  - This can be used to prevent the mod or application from being detected by anti-cheat systems that monitor screen recording.
+
+## Relationship to Modular Architecture
+
+These files seem to align with the "Loader App" portion of the "Modular Android Loader Architecture" described in `[Modular Android Loader Architecture (BearMod-Loader)](mdc:.cursor/rules/BearMod-Loader-Architecture.mdc)`. They handle UI, potentially some pre-mod logic, and utilities, before any dynamic mod module is loaded.
+
+Refer to the individual files for detailed implementation.
+

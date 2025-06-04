@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">BearMod</string>
+        <string name="esp_line">Line</string>
+        <string name="esp_bone">Bone</string>
+        <string name="esp_info">Info</string>
+        <string name="esp_weapon">Weapon</string>
+        <string name="esp_grenade">Grenade Warning</string>
+        <string name="aim_aimbot">AimBot</string>
+        <string name="aim_ignore">IgnoreBot</string>
+        <string name="aim_knocked">Aim-Knocked</string>
+        <string name="skin_enable">Skin-Enable</string>
+        <string name="deadbox">DeadBox (Ingame for open)</string>
+</resources>
