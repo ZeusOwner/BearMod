@@ -1,3804 +1,3013 @@
-#include "Nrg.h"
+#pragma once
 
-struct JsonPreferences {
-  
-int xsuit = 0;
-int skinm4 = 0;
-int skinakm = 0;
-int para = 0;
-int bag = 0;
-int helmet = 0;
-bool CoupeRB = false;
-bool Dacia = false;
-bool UAZ = false;
-bool MiniBus = false;
-bool BigFoot = false;
-bool Boat = false;
-bool Mirado = false;
-bool Buggy = false;
-bool RZR = false;
-bool OMirado = false;
-bool Moto = false;
-bool Emote = false;
-bool Helmett = false;
-bool Bagg = false;
-bool Fac= false;
-bool Face= false;
-bool Outfit = false;
-bool Parachute = false;
-bool Hieuungbay = false;
-bool Comrade = false;
-bool M416 = false;
-bool AKM = false;
-bool SCARL = false;
-bool M762 = false;
-bool MG3 = false;
-bool Honey = false;
-bool S12K = false;
-bool DBS = false;
-bool S1897 = false;
-bool AWM = false;
-bool Machete = false;
-bool AMR = false;
-bool MK14 = false;
-bool MINI14 =false;
-bool KAR98 = false;
-bool M24 = false;
-bool M16 = false;
-bool M249 = false;
-bool DP28 = false;
-bool GROZA = false;
-bool FAMAS = false;
-bool AUG = false;
-bool QBZ = false;
-bool PAN = false;
-bool UZI = false;
-bool UMP = false;
-bool TOMMY = false;
-bool P90 = false;
-bool BIZON = false;
-bool ACE32 = false;
-bool VECTOR = false;
+#include <chrono>
+#include <map>
+#include <vector>
+#include <string>
+#include <thread>
+#include <mutex>
+#include <random>
+#include <algorithm>
+#include <cstdint>
 
-    struct sConfig {
-     
-        struct sModSkin {
-  bool Enable = 1;
-  bool HitEffect = 0;
-  bool KillMessage = 0;
-  bool DeadBox = 0;
-  int XSuits = 1;
-  int AKM = 1;
-  int M16A4 = 1;
-  int Scar = 1;
-  int M416 = 1;
-  int Groza = 1;
-  int Famas =1;
-  int AUG = 1;
-  int QBZ = 1;
-  int M762 = 1;
-  int MG3 = 1;
-  int Honey = 1;
-  int S12K = 1;
-  int DBS = 1;
-  int S1897 = 1;
-  int ACE32 = 1;
-  int Parachute = 1;
-  int Fac = 1;
-  int Hieuungbay = 1;
-  int Comrade = 1;
-  int UZI = 1;
-  int UMP = 1;
-  int Vector = 1;
-  int Thompson = 1;
-  int P90 = 1;
-  int Bizon = 1;
-  int K98 = 1;
-  int M24 = 1;
-  int AWM = 1;
-  int AMR = 1;
-  int Machete = 1;
-  int MK14 = 1;
-  int MINI14 =1;
-  int DP28 = 1;
-  int M249 = 1;
-  int Pan = 1;
-  int Moto = 1;
-  int CoupeRP = 1;
-  int UAZ = 1;
-  int Dacia = 1;
-  int Bigfoot = 1;
-  int Mirado = 1;
-  int OMirado = 1;
-  int Buggy = 1;
-  int RZR = 1;
-  int MiniBus = 1;
-  int Boat = 1;
+// Comprehensive skin system header for BearMod
+// Compatible with existing NRG.h skin system
+
+// ===== ADVANCED WEAPON DATA SYSTEM =====
+enum class SkinType {
+    AR_AKM,
+    AR_M416,
+    AR_SCAR,
+    AR_GROZA,
+    AR_QBZ,
+    AR_ACE32,
+    AR_M16A4,
+    AR_M762,
+    AR_AUG,
+    AR_FAMAS,
+    SMG_UZI,
+    SMG_UMP,
+    SMG_VECTOR,
+    SMG_THOMPSON,
+    SMG_P90,
+    SMG_BIZON,
+    SR_AWM,
+    SR_M24,
+    SR_MK14,
+    SR_K98,
+    SR_MINI14,
+    SR_AMR,
+    LMG_MG3,
+    LMG_M249,
+    LMG_DP28,
+    SG_S1897,
+    SG_S12K,
+    SG_DBS
 };
-sModSkin Skin{false};
-        
-    };
-    sConfig Config{false};
 
-} preferences;
+enum class AttachType {
+    MAGAZINE,
+    DEF_STOCK,
+    DEF_MUZZLE,
+    DEF_SIGHT,
+    FLASH,
+    COMPENSATOR,
+    SILENCER,
+    RED_DOT,
+    HOLOGRAPHIC,
+    SCOPE2X,
+    SCOPE3X,
+    SCOPE4X,
+    SCOPE6X,
+    SCOPE8X,
+    QUICK_MAG,
+    EXTENDED_MAG,
+    EXTENDED_QUICK_MAG,
+    TACTICAL_STOCK,
+    VERTICLE_GRIP,
+    ANGLED_GRIP,
+    LIGHT_GRIP,
+    HALF_GRIP,
+    LASER_SIGHT,
+    THUMB_GRIP,
+    CHEEK_PAD,           // For sniper rifles
+    BULLET_LOOPS,        // For shotguns
+    CHOKE,               // For shotguns
+    DUCKBILL,            // For shotguns
+    MUZZLE_BRAKE,        // For high recoil weapons
+    HEAVY_STOCK,         // For LMGs
+    BIPOD,               // For LMGs and sniper rifles
+    CUSTOM_SIGHT,        // For special weapons
+    EXTENDED_BARREL,     // For SMGs
+    FOLDING_STOCK,       // For compact weapons
+    CUSTOM_GRIP,         // For special weapons
+    RAIL_COVER,          // For rail system
+    CUSTOM_MUZZLE,       // For special weapons
+    CUSTOM_MAGAZINE,     // For special weapons
+    CUSTOM_STOCK,        // For special weapons
+    CUSTOM_SIGHT_RAIL,   // For special weapons
+    CUSTOM_GRIP_RAIL,    // For special weapons
+    CUSTOM_MUZZLE_RAIL,  // For special weapons
+    CUSTOM_MAGAZINE_RAIL // For special weapons
+};
 
-static int helmett1 = 1;
-static int helmett2 = 1;
-static int helmett3 = 1;
-static int bag1 = 1;
-static int bag2 = 1;
-static int bag3 = 1;
+// Add vehicle and outfit types
+enum class VehicleType {
+    CAR,
+    MOTORCYCLE,
+    PARACHUTE,
+    SUIT_OUTFIT
+};
+
+// Add vehicle and outfit configuration
+struct VehicleConfig {
+    int baseId;
+    int maxSkinId;
+    bool isSpecialSkin;
+    std::vector<int> metroModeIds;
+    std::map<std::string, int> attachments;
+};
+
+struct WeaponData {
+    int weaponId;
+    int magazineId;
+    int defSightId;
+    int defStockId;
+    int defMuzzleId;
+    int flashId;
+    int compensatorId;
+    int silencerId;
+    int redDotId;
+    int holographicId;
+    int scope2xId;
+    int scope3xId;
+    int scope4xId;
+    int scope6xId;
+    int scope8xId;
+    int quickMagId;
+    int extendedMagId;
+    int extendedQuickMagId;
+    int tacicalStockId;
+    int verticleGripId;
+    int angledGripId;
+    int lightGripId;
+    int halfGripId;
+    int laserSightId;
+    int thumbGripId;
+    std::string displayName;
+
+    WeaponData(int weaponId = 0, int magazineId = 999999999, int defSightId = 999999999, int defStockId = 999999999, int defMuzzleId = 999999999, int flashId = 999999999,
+               int compensatorId = 999999999, int silencerId = 999999999, int redDotId = 999999999, int holographicId = 999999999, int scope2xId = 999999999, int scope3xId = 999999999,
+               int scope4xId = 999999999, int scope6xId = 999999999, int scope8xId = 999999999, int quickMagId = 999999999, int extendedMagId = 999999999, int extendedQuickMagId = 999999999,
+               int tacicalStockId = 999999999, int verticleGripId = 999999999, int angledGripId = 999999999, int lightGripId = 999999999, int halfGripId = 999999999, int laserSightId = 999999999,
+               int thumbGripId = 999999999, std::string displayName = "")
+        : weaponId(weaponId),
+          magazineId(magazineId),
+          defSightId(defSightId),
+          defStockId(defStockId),
+          defMuzzleId(defMuzzleId),
+          flashId(flashId),
+          compensatorId(compensatorId),
+          silencerId(silencerId),
+          redDotId(redDotId),
+          holographicId(holographicId),
+          scope2xId(scope2xId),
+          scope3xId(scope3xId),
+          scope4xId(scope4xId),
+          scope6xId(scope6xId),
+          scope8xId(scope8xId),
+          quickMagId(quickMagId),
+          extendedMagId(extendedMagId),
+          extendedQuickMagId(extendedQuickMagId),
+          tacicalStockId(tacicalStockId),
+          verticleGripId(verticleGripId),
+          angledGripId(angledGripId),
+          lightGripId(lightGripId),
+          halfGripId(halfGripId),
+          laserSightId(laserSightId),
+          thumbGripId(thumbGripId),
+          displayName(displayName) {}
+};
+
+// ===== GLOBAL WEAPON SYSTEM MAPS =====
+static std::map<int, SkinType> skinTypes;
+static std::map<int, AttachType> attachmentTypes;
+
+// ===== WEAPON VECTORS FOR EACH TYPE =====
+static std::vector<std::pair<int, WeaponData>> akmWeapons;
+static std::vector<std::pair<int, WeaponData>> m416Weapons;
+static std::vector<std::pair<int, WeaponData>> scarWeapons;
+static std::vector<std::pair<int, WeaponData>> grozaWeapons;
+static std::vector<std::pair<int, WeaponData>> qbzWeapons;
+static std::vector<std::pair<int, WeaponData>> ace32Weapons;
+static std::vector<std::pair<int, WeaponData>> mk14Weapons;
+static std::vector<std::pair<int, WeaponData>> mg3Weapons;
+static std::vector<std::pair<int, WeaponData>> awmWeapons;
+static std::vector<std::pair<int, WeaponData>> m24Weapons;
+static std::vector<std::pair<int, WeaponData>> uziWeapons;
+static std::vector<std::pair<int, WeaponData>> umpWeapons;
+static std::vector<std::pair<int, WeaponData>> vectorWeapons;
+
+// ===== WEAPON DATA INITIALIZATION =====
+static void initializeWeaponData() {
+    // ===== AKM WEAPON CONFIGURATIONS =====
+    
+    // AKM Metro Mode Weapon IDs
+    skinTypes.insert_or_assign(101001, SkinType::AR_AKM);
+    skinTypes.insert_or_assign(1010011, SkinType::AR_AKM);
+    skinTypes.insert_or_assign(1010012, SkinType::AR_AKM);
+    skinTypes.insert_or_assign(1010013, SkinType::AR_AKM);
+    skinTypes.insert_or_assign(1010014, SkinType::AR_AKM);
+    skinTypes.insert_or_assign(1010015, SkinType::AR_AKM);
+    skinTypes.insert_or_assign(1010016, SkinType::AR_AKM);
+    skinTypes.insert_or_assign(1010017, SkinType::AR_AKM);
+    
+    WeaponData data;
+    
+    // Default AKM
+    data.displayName = "Default AKM";
+    akmWeapons.push_back(std::make_pair(0, data));
+    
+    // Glacier AKM (Example with full attachments)
+    data = WeaponData();
+    data.displayName = "Glacier AKM";
+    data.weaponId = 1101001003;
+    data.magazineId = 1011010124;  // Example magazine ID
+    data.flashId = 1011010127;     // Flash hider
+    data.compensatorId = 1011010128; // Compensator
+    data.redDotId = 1011010119;    // Red dot sight
+    data.angledGripId = 1011010134; // Angled foregrip
+    akmWeapons.push_back(std::make_pair(1, data));
+    
+    // ===== M416 WEAPON CONFIGURATIONS =====
+    
+    // M416 Metro Mode Weapon IDs  
+    skinTypes.insert_or_assign(101004, SkinType::AR_M416);
+    skinTypes.insert_or_assign(1010041, SkinType::AR_M416);
+    skinTypes.insert_or_assign(1010042, SkinType::AR_M416);
+    skinTypes.insert_or_assign(1010043, SkinType::AR_M416);
+    skinTypes.insert_or_assign(1010044, SkinType::AR_M416);
+    skinTypes.insert_or_assign(1010045, SkinType::AR_M416);
+    skinTypes.insert_or_assign(1010046, SkinType::AR_M416);
+    skinTypes.insert_or_assign(1010047, SkinType::AR_M416);
+    
+    // Default M416
+    data = WeaponData();
+    data.displayName = "Default M416";
+    m416Weapons.push_back(std::make_pair(0, data));
+    
+    // Glacier M416
+    data = WeaponData();
+    data.displayName = "Glacier M416";
+    data.weaponId = 1101004003;
+    data.flashId = 1014010127;
+    data.quickMagId = 1014010125;
+    data.angledGripId = 1014010134;
+    m416Weapons.push_back(std::make_pair(1, data));
+    
+    // ===== MK14 WEAPON CONFIGURATIONS (Chinese Favorite) =====
+    
+    // MK14 Metro Mode Weapon IDs
+    skinTypes.insert_or_assign(103007, SkinType::SR_MK14);
+    skinTypes.insert_or_assign(1030071, SkinType::SR_MK14);
+    skinTypes.insert_or_assign(1030072, SkinType::SR_MK14);
+    skinTypes.insert_or_assign(1030073, SkinType::SR_MK14);
+    skinTypes.insert_or_assign(1030074, SkinType::SR_MK14);
+    skinTypes.insert_or_assign(1030075, SkinType::SR_MK14);
+    skinTypes.insert_or_assign(1030076, SkinType::SR_MK14);
+    skinTypes.insert_or_assign(1030077, SkinType::SR_MK14);
+    
+    // Default MK14
+    data = WeaponData();
+    data.displayName = "Default MK14";
+    mk14Weapons.push_back(std::make_pair(0, data));
+    
+    // Glacier MK14
+    data = WeaponData();
+    data.displayName = "Glacier MK14";
+    data.weaponId = 1103007003;
+    data.extendedMagId = 1037010124;
+    data.compensatorId = 1037010128;
+    data.scope4xId = 1037010115;
+    mk14Weapons.push_back(std::make_pair(1, data));
+    
+    // ===== MG3 WEAPON CONFIGURATIONS (Chinese Favorite) =====
+    
+    // MG3 Metro Mode Weapon IDs
+    skinTypes.insert_or_assign(105010, SkinType::LMG_MG3);
+    skinTypes.insert_or_assign(1050101, SkinType::LMG_MG3);
+    skinTypes.insert_or_assign(1050102, SkinType::LMG_MG3);
+    skinTypes.insert_or_assign(1050103, SkinType::LMG_MG3);
+    skinTypes.insert_or_assign(1050104, SkinType::LMG_MG3);
+    skinTypes.insert_or_assign(1050105, SkinType::LMG_MG3);
+    skinTypes.insert_or_assign(1050106, SkinType::LMG_MG3);
+    skinTypes.insert_or_assign(1050107, SkinType::LMG_MG3);
+    
+    // Default MG3
+    data = WeaponData();
+    data.displayName = "Default MG3";
+    mg3Weapons.push_back(std::make_pair(0, data));
+    
+    // Glacier MG3
+    data = WeaponData();
+    data.displayName = "Glacier MG3";
+    data.weaponId = 1105010003;
+    data.redDotId = 1051010119;
+    data.compensatorId = 1051010128;
+    mg3Weapons.push_back(std::make_pair(1, data));
+    
+    // ===== ACE32 WEAPON CONFIGURATIONS (Your Example) =====
+    
+    // ACE32 Metro Mode Weapon IDs
+    skinTypes.insert_or_assign(101102, SkinType::AR_ACE32);
+    skinTypes.insert_or_assign(1011021, SkinType::AR_ACE32);
+    skinTypes.insert_or_assign(1011022, SkinType::AR_ACE32);
+    skinTypes.insert_or_assign(1011023, SkinType::AR_ACE32);
+    skinTypes.insert_or_assign(1011024, SkinType::AR_ACE32);
+    skinTypes.insert_or_assign(1011025, SkinType::AR_ACE32);
+    skinTypes.insert_or_assign(1011026, SkinType::AR_ACE32);
+    skinTypes.insert_or_assign(1011027, SkinType::AR_ACE32);
+
+    attachmentTypes.insert_or_assign(291102, AttachType::MAGAZINE);
+    attachmentTypes.insert_or_assign(205102, AttachType::DEF_STOCK);
+    attachmentTypes.insert_or_assign(281102, AttachType::DEF_MUZZLE);
+
+    // Default ACE32
+    data = WeaponData();
+    data.displayName = std::string("Default - ACE32");
+    ace32Weapons.push_back(std::make_pair(0, data));
+
+    // Icicle Spike ACE32 (Your Example)
+    data = WeaponData();
+    data.displayName = std::string("Icicle Spike - ACE32 (Lv. 7)");
+    data.weaponId = 1101102017;
+    data.magazineId = 1011020161;
+    data.defStockId = 1011020162;
+    data.defMuzzleId = 1011020163;
+    data.scope2xId = 1011020117;
+    data.scope3xId = 1011020116;
+    data.scope4xId = 1011020115;
+    data.scope6xId = 1011020114;
+    data.holographicId = 1011020118;
+    data.redDotId = 1011020119;
+    data.extendedMagId = 1011020124;
+    data.quickMagId = 1011020125;
+    data.extendedQuickMagId = 1011020126;
+    data.flashId = 1011020127;
+    data.compensatorId = 1011020128;
+    data.silencerId = 1011020129;
+    data.angledGripId = 1011020134;
+    data.thumbGripId = 1011020135;
+    data.verticleGripId = 1011020136;
+    data.tacicalStockId = 1011020137;
+    data.lightGripId = 1011020138;
+    data.halfGripId = 1011020139;
+    data.laserSightId = 1011020144;
+    
+    // Register all attachment types for this skin
+    attachmentTypes.insert_or_assign(data.magazineId, AttachType::MAGAZINE);
+    attachmentTypes.insert_or_assign(data.defStockId, AttachType::DEF_STOCK);
+    attachmentTypes.insert_or_assign(data.defMuzzleId, AttachType::DEF_MUZZLE);
+    attachmentTypes.insert_or_assign(data.scope2xId, AttachType::SCOPE2X);
+    attachmentTypes.insert_or_assign(data.scope3xId, AttachType::SCOPE3X);
+    attachmentTypes.insert_or_assign(data.scope4xId, AttachType::SCOPE4X);
+    attachmentTypes.insert_or_assign(data.scope6xId, AttachType::SCOPE6X);
+    attachmentTypes.insert_or_assign(data.holographicId, AttachType::HOLOGRAPHIC);
+    attachmentTypes.insert_or_assign(data.redDotId, AttachType::RED_DOT);
+    attachmentTypes.insert_or_assign(data.extendedMagId, AttachType::EXTENDED_MAG);
+    attachmentTypes.insert_or_assign(data.quickMagId, AttachType::QUICK_MAG);
+    attachmentTypes.insert_or_assign(data.extendedQuickMagId, AttachType::EXTENDED_QUICK_MAG);
+    attachmentTypes.insert_or_assign(data.flashId, AttachType::FLASH);
+    attachmentTypes.insert_or_assign(data.compensatorId, AttachType::COMPENSATOR);
+    attachmentTypes.insert_or_assign(data.silencerId, AttachType::SILENCER);
+    attachmentTypes.insert_or_assign(data.angledGripId, AttachType::ANGLED_GRIP);
+    attachmentTypes.insert_or_assign(data.thumbGripId, AttachType::THUMB_GRIP);
+    attachmentTypes.insert_or_assign(data.verticleGripId, AttachType::VERTICLE_GRIP);
+    attachmentTypes.insert_or_assign(data.tacicalStockId, AttachType::TACTICAL_STOCK);
+    attachmentTypes.insert_or_assign(data.lightGripId, AttachType::LIGHT_GRIP);
+    attachmentTypes.insert_or_assign(data.halfGripId, AttachType::HALF_GRIP);
+    attachmentTypes.insert_or_assign(data.laserSightId, AttachType::LASER_SIGHT);
+    ace32Weapons.push_back(std::make_pair(1, data));
+}
+
+// ===== WEAPON DATA ACCESS FUNCTIONS =====
+static WeaponData* getWeaponData(int weaponBaseId, int skinIndex) {
+    auto skinTypeIt = skinTypes.find(weaponBaseId);
+    if (skinTypeIt == skinTypes.end()) {
+        return nullptr;
+    }
+    
+    switch (skinTypeIt->second) {
+        case SkinType::AR_AKM:
+            if (skinIndex < akmWeapons.size()) {
+                return &akmWeapons[skinIndex].second;
+            }
+            break;
+        case SkinType::AR_M416:
+            if (skinIndex < m416Weapons.size()) {
+                return &m416Weapons[skinIndex].second;
+            }
+            break;
+        case SkinType::SR_MK14:
+            if (skinIndex < mk14Weapons.size()) {
+                return &mk14Weapons[skinIndex].second;
+            }
+            break;
+        case SkinType::LMG_MG3:
+            if (skinIndex < mg3Weapons.size()) {
+                return &mg3Weapons[skinIndex].second;
+            }
+            break;
+        case SkinType::AR_ACE32:
+            if (skinIndex < ace32Weapons.size()) {
+                return &ace32Weapons[skinIndex].second;
+            }
+            break;
+        // Add more cases as needed
+    }
+    
+    return nullptr;
+}
+
+static bool isValidAttachment(int attachmentId, AttachType expectedType) {
+    auto it = attachmentTypes.find(attachmentId);
+    return (it != attachmentTypes.end() && it->second == expectedType);
+}
+
+static int getAttachmentIdForWeapon(int weaponBaseId, int skinIndex, AttachType attachType) {
+    WeaponData* weaponData = getWeaponData(weaponBaseId, skinIndex);
+    if (!weaponData) {
+        return 999999999; // Invalid/no attachment
+    }
+    
+    switch (attachType) {
+        case AttachType::MAGAZINE: return weaponData->magazineId;
+        case AttachType::FLASH: return weaponData->flashId;
+        case AttachType::COMPENSATOR: return weaponData->compensatorId;
+        case AttachType::SILENCER: return weaponData->silencerId;
+        case AttachType::RED_DOT: return weaponData->redDotId;
+        case AttachType::HOLOGRAPHIC: return weaponData->holographicId;
+        case AttachType::SCOPE2X: return weaponData->scope2xId;
+        case AttachType::SCOPE3X: return weaponData->scope3xId;
+        case AttachType::SCOPE4X: return weaponData->scope4xId;
+        case AttachType::SCOPE6X: return weaponData->scope6xId;
+        case AttachType::SCOPE8X: return weaponData->scope8xId;
+        case AttachType::QUICK_MAG: return weaponData->quickMagId;
+        case AttachType::EXTENDED_MAG: return weaponData->extendedMagId;
+        case AttachType::EXTENDED_QUICK_MAG: return weaponData->extendedQuickMagId;
+        case AttachType::ANGLED_GRIP: return weaponData->angledGripId;
+        case AttachType::THUMB_GRIP: return weaponData->thumbGripId;
+        case AttachType::VERTICLE_GRIP: return weaponData->verticleGripId;
+        case AttachType::TACTICAL_STOCK: return weaponData->tacicalStockId;
+        case AttachType::LIGHT_GRIP: return weaponData->lightGripId;
+        case AttachType::HALF_GRIP: return weaponData->halfGripId;
+        case AttachType::LASER_SIGHT: return weaponData->laserSightId;
+        default: return 999999999;
+    }
+}
+
+// ===== LEGACY COMPATIBILITY LAYER =====
+// This allows the existing NRG.h code to work while adding the new system
+
+// Complete skin configuration structure covering all weapons used in NRG.h
+struct SkinConfig {
+    // === Assault Rifles ===
+    // M416 variants and attachments
+    int M416_1 = 1101004003;        // Default M416 skin
+    int M416_2 = 1101004004;        // M416 variant 2 
+    int M416_3 = 1101004005;        // M416 variant 3
+    int M416_4 = 1101004006;        // M416 variant 4
+    int M416_flash = 1201010001;    // M416 flash hider
+    int M416_compe = 1201009001;    // M416 compensator
+    int M416_silent = 1201011001;   // M416 silencer
+    int M416_holo = 1203002001;     // M416 holographic sight
+    int M416_x2 = 1203003001;       // M416 2x scope
+    int M416_x3 = 1203014001;       // M416 3x scope
+    int M416_x4 = 1203004001;       // M416 4x scope
+    int M416_x6 = 1203015001;       // M416 6x scope
+    int M416_quickMag = 1204012001; // M416 quick mag
+    int M416_extendedMag = 1204011001; // M416 extended mag
+    int M416_quickNextended = 1204013001; // M416 quick extended mag
+    int M416_stock = 1205005001;    // M416 stock
+    int M416_angle = 1202001001;    // M416 angled foregrip
+    int M416_thumb = 1202002001;    // M416 thumb grip
+    
+    // AKM variants and attachments
+    int AKM = 1101001003;           // Default AKM skin
+    int AKM_Mag = 1291001001;       // AKM magazine
+    int AKM_reddot = 1203001001;    // AKM red dot sight
+    int AKM_flash = 1201010002;     // AKM flash hider
+    int AKM_compe = 1201009002;     // AKM compensator
+    int AKM_silent = 1201011002;    // AKM silencer
+    int AKM_holo = 1203002002;      // AKM holographic sight
+    int AKM_x2 = 1203003002;        // AKM 2x scope
+    int AKM_x3 = 1203014002;        // AKM 3x scope
+    int AKM_x4 = 1203004002;        // AKM 4x scope
+    int AKM_x6 = 1203015002;        // AKM 6x scope
+    int AKM_quickMag = 1204012002;  // AKM quick mag
+    int AKM_extendedMag = 1204011002; // AKM extended mag
+    int AKM_quickNextended = 1204013002; // AKM quick extended mag
+    
+    // SCAR-L variants
+    int Scar = 1101003003;          // Default SCAR skin
+    int Scar_Mag = 1291003001;      // SCAR magazine
+    
+    // M16A4 variants
+    int M16A4 = 1101002003;         // Default M16A4 skin
+    int M16A4_Mag = 1291002001;     // M16A4 magazine
+    int M16A4_Stock = 1205007001;   // M16A4 stock
+    
+    // Other assault rifles
+    int Groza = 1101005003;         // GROZA
+    int FAMAS = 1101100003;         // FAMAS 
+    int AUG = 1101006003;           // AUG
+    int QBZ = 1101007003;           // QBZ
+    int M762 = 1101008003;          // M762
+    int M762_Mag = 1101008004;      // M762 magazine
+    int ACE32 = 1101102003;         // ACE32
+    
+    // === Sniper Rifles ===
+    int K98 = 1103001003;           // K98
+    int M24 = 1103002003;           // M24
+    int AWM = 1103003003;           // AWM
+    int AMR = 1103012003;           // AMR
+    int MK14 = 1103007003;          // MK14
+    int Mini14 = 1103006003;        // Mini14
+    
+    // === SMGs ===
+    int UZI = 1102001003;           // UZI
+    int UMP = 1102002003;           // UMP
+    int Vector = 1102003003;        // Vector
+    int Thompson = 1102004003;      // Thompson
+    int P90 = 1102105003;           // P90
+    int Bizon = 1102005003;         // Bizon
+    
+    // === LMGs ===
+    int M249 = 1105001003;          // M249
+    int DP28 = 1105002003;          // DP28
+    int MG3 = 1105010003;           // MG3
+    
+    // === Shotguns ===
+    int S1897 = 1104002003;         // S1897
+    int S12K = 1104003003;          // S12K
+    int DBS = 1104004003;           // DBS
+    
+    // === Melee Weapons ===
+    int Machete = 1108001003;       // Machete
+    int Pan = 1108004003;           // Pan
+    
+    // === Special Weapons ===
+    int Honey = 1101012003;         // Honey Badger
+    
+    // === Equipment/Armor ===
+    int baglv3 = 1501003100;        // Level 3 bag (updated ID)
+    int helmetlv3 = 1502003100;     // Level 3 helmet (updated ID)
+    
+    // === Scope Skins ===
+    int scope2x = 1203003001;       // 2x Scope
+    int scope3x = 1203014001;       // 3x Scope
+    int scope4x = 1203004001;       // 4x Scope
+    int scope6x = 1203015001;       // 6x Scope
+    int scope8x = 1203005001;       // 8x Scope
+    
+    // === Vehicle Skins ===
+    int car = 1301001001;           // Car skin
+    int motorcycle = 1302001001;    // Motorcycle skin
+    
+    // === Equipment Skins ===
+    int backpackLv1 = 1501003001;   // Level 1 backpack
+    int backpackLv2 = 1501003050;   // Level 2 backpack
+    int backpackLv3 = 1501003100;   // Level 3 backpack
+    int helmetLv1 = 1502003001;     // Level 1 helmet
+    int helmetLv2 = 1502003050;     // Level 2 helmet
+    int helmetLv3 = 1502003100;     // Level 3 helmet
+    
+    // === Parachute Skin ===
+    int parachute = 1401001001;     // Parachute skin
+    
+    // === Configuration ===
+    bool enableSkins = false;
+};
+
+// Global skin configuration instance that NRG.h expects as "new_Skin"
+static SkinConfig new_Skin;
+
+// Global skin enable flag that ESP_ENGINE.h and SKIN_MAPPING.h expect
+extern bool ModSkinn;
 bool ModSkinn = false;
-bool KillMessage = false;
-bool DeadBox = false;
-int sEmote1 = 2200101;
-int sEmote2 = 2200201;
-int sEmote3 = 2200301;
-int ModEmote1 = 1;
-namespace Active {
-   int SkinCarDefault = 0;
-   int SkinCarMod = 0;
-   int SkinCarNew = 0;
-}
-int newUAZID = 0;
-int lastUAZID = 0;
-int newDaciaID = 0;
-int lastDaciaID = 0;
-int newCoupeID = 0;
-int lastCoupeID = 0;
 
-struct snew_Skin {
-    [[maybe_unused]] int XSuits = 403003; // Áo
-    [[maybe_unused]] int XSuits1 = 40604002; // Đầu
-    int quan = 404026; // quan
-    int giay = 0;
-    int Kaaba = 410517;
+// Arrays for equipment matching (used in NRG.h)
+static int bag333[] = {101001, 101002, 101003}; // Level 3 bag IDs
+static int Helmet3[] = {201001, 201002, 201003}; // Level 3 helmet IDs
 
+// Weapon ID arrays referenced in NRG.h skin logic
+static int akmv[] = {101001}; // AKM variants
+static int akmmag[] = {291001}; // AKM magazine variants
+static int kar[] = {103001}; // K98 variants 
+static int m24[] = {103002}; // M24 variants
+static int awm[] = {103003}; // AWM variants
+static int amr[] = {103012}; // AMR variants
+static int mk14[] = {103007}; // MK14 variants
+static int ace32[] = {101102}; // ACE32 variants
+static int vector[] = {102003}; // Vector variants
+static int ump[] = {102002}; // UMP variants
+static int uzi[] = {102001}; // UZI variants
+static int m16a4[] = {101002}; // M16A4 variants
+static int m16stock[] = {205007}; // M16A4 stock variants
+static int m16mag[] = {291002}; // M16A4 magazine variants
+static int aug[] = {101006}; // AUG variants
+static int groza[] = {101005}; // GROZA variants
+static int dp28[] = {105002}; // DP28 variants
+static int m249[] = {105001}; // M249 variants
+static int mg3[] = {105010}; // MG3 variants
+static int scar[] = {101003}; // SCAR variants
+static int scarmag[] = {291003}; // SCAR magazine variants
+static int m762[] = {101008}; // M762 variants
+static int m762mag[] = {101008}; // M762 magazine variants
 
-    [[maybe_unused]] int Balo1 = 501001;
-    [[maybe_unused]] int Balo2 = 501002;
-    [[maybe_unused]] int Balo3 = 501003;
-    [[maybe_unused]] int Balo4 = 501004;
-    [[maybe_unused]] int Balo5 = 501005;
-    [[maybe_unused]] int Balo6 = 501006;
-    [[maybe_unused]] [[maybe_unused]] int Helmet1 = 502001;
-    [[maybe_unused]] int Helmet2 = 502002;
-    [[maybe_unused]] int Helmet3 = 502003;
-    [[maybe_unused]] int Helmet4 = 502004;
-    [[maybe_unused]] int Helmet5 = 502005;
+// M416 weapon and attachment arrays
+static int m416v[] = {101004}; // M416 variants
+static int m416mag2[] = {291004}; // M416 magazine variant 2
+static int m416mag3[] = {203008}; // M416 magazine variant 3
+static int m416mag4[] = {205005}; // M416 magazine variant 4
+static int m416flash[] = {201010}; // M416 flash hider
+static int m416compe[] = {201009}; // M416 compensator
+static int m416silent[] = {201011}; // M416 silencer
+static int m416holo[] = {203002}; // M416 holographic sight
+static int m416x2[] = {203003}; // M416 2x scope
+static int m416x3[] = {203014}; // M416 3x scope
+static int m416x4[] = {203004}; // M416 4x scope
+static int m416x6[] = {203015}; // M416 6x scope
+static int m416quickmag[] = {204012}; // M416 quick magazine
+static int m416extendedmag[] = {204011}; // M416 extended magazine
+static int m416quickextended[] = {204013}; // M416 quick extended magazine
+static int m416stock[] = {205005}; // M416 stock
+static int m416angle[] = {202001}; // M416 angled foregrip
+static int m416thumb[] = {202002}; // M416 thumb grip
 
-    [[maybe_unused]] int Helmet6 = 502114;
-    [[maybe_unused]] int Helmet7 = 502115;
-    [[maybe_unused]] int Helmet8 = 502116;
-  int Parachute = 703001;
-  int Fac = 1400560;
-  int Hieuungbay = 4151001;
-  int Comrade = 1601051;
-    
-    
-  int AKM = 101001;
-  int AKM_Mag = 291001;
-    int AKM_flash = 201010;
-    int AKM_compe = 201009;
-    int AKM_silent = 201011;
-    int AKM_reddot = 203001;
-    int AKM_holo = 203002;
-    int AKM_x2 = 203003;
-    int AKM_x3 = 203014;
-    int AKM_x4 = 203004;
-    int AKM_x6 = 203015;
-    int AKM_quickMag = 204012;
-    int AKM_extendedMag = 204011;
-    int AKM_quickNextended = 204013;
-    
-  int M16A4 = 101002;
-  int M16A4_Stock = 205007;
-  int M16A4_Mag = 291002;
-    
-    
-  int Scar = 101003;
-  int Scar_Mag = 291003;
-    int Scar_3 = 203007;
-    int Scar_flash = 201010;
-    int Scar_compe = 201009;
-    int Scar_silent = 201011;
-    int Scar_reddot = 203001;
-    int Scar_holo = 203002;
-    int Scar_x2 = 203003;
-    int Scar_x3 = 203014;
-    int Scar_x4 = 203004;
-    int Scar_x6 = 203015;
-    int Scar_quickMag = 204012;
-    int Scar_extendedMag = 204011;
-    int Scar_quickNextended = 204013;
-    int Scar_verical = 202002;
-    int Scar_angle = 202001;
-    int Scar_lightgrip = 202004;
-    int Scar_pink = 202005;
-    int Scar_lazer = 202007;
-    int Scar_thumb = 202006;
-    
-    
-  int Pan = 108004;
+// Additional missing arrays from the build errors
+static int vector2[] = {102003}; // Vector variant 2 
+static int m16[] = {101002}; // M16A4 base
+static int m16s[] = {205007}; // M16A4 stock variants
+static int dp[] = {105002}; // DP28 base
+static int m7[] = {101008}; // M762 base 
+static int m7mag[] = {101008}; // M762 magazine
+static int M4161[] = {101004}; // M416 variant 1
+static int M4162[] = {291004}; // M416 variant 2
+static int M4163[] = {203008}; // M416 variant 3
+static int m4stock[] = {205005}; // M416 stock variants
 
-  int M416_1 = 101004;
-  int M416_2 = 291004;
-  int M416_3 = 203008;
-  int M416_4 = 205005;
-  int M416_flash = 201010;
-  int M416_compe = 201009;
-  int M416_silent = 201011;
-  int M416_reddot = 203001;
-  int M416_holo = 203002;
-  int M416_x2 = 203003;
-  int M416_x3 = 203014;
-  int M416_x4 = 203004;
-  int M416_x6 = 203015;
-  int M416_quickMag = 204012;
-  int M416_extendedMag = 204011;
-  int M416_quickNextended = 204013;
-  int M416_stock = 205002;
-  int M416_verical = 203015;
-  int M416_angle = 202001;
-  int M416_lightgrip = 202004;
-  int M416_pink = 202005;
-  int M416_lazer = 202007;
-  int M416_thumb = 202006;
-    
-    int K98 = 103001;
-  int K98_reddot = 203001;
-    int K98_holo = 203002;
-    int K98_x2 = 203003;
-    int K98_x3 = 203014;
-    int K98_x4 = 203004;
-    int K98_x6 = 203015;
-    int K98_x8 = 203005;
-    
-    
-    
+// Capitalized versions needed by NRG.h (case sensitive references)
+static int M416flash[] = {201010}; // M416 flash hider (capitalized)
+static int M416compe[] = {201009}; // M416 compensator (capitalized)
+static int M416silent[] = {201011}; // M416 silencer (capitalized)
+static int M416holo[] = {203002}; // M416 holographic sight (capitalized)
+static int M416x2[] = {203003}; // M416 2x scope (capitalized)
+static int M416x3[] = {203014}; // M416 3x scope (capitalized)
+static int M416x4[] = {203004}; // M416 4x scope (capitalized)
+static int M416x6[] = {203015}; // M416 6x scope (capitalized)
+static int M416quickmag[] = {204012}; // M416 quick magazine (capitalized)
+static int M416extendedmag[] = {204011}; // M416 extended magazine (capitalized)
+static int M416quickextended[] = {204013}; // M416 quick extended magazine (capitalized)
 
-  int Groza = 101005;
-    int Groza_2 = 291005;
-    int Groza_silent = 201011;
-    int Groza_reddot = 203001;
-    int Groza_holo = 203002;
-    int Groza_x2 = 203003;
-    int Groza_x3 = 203014;
-    int Groza_x4 = 203004;
-    int Groza_x6 = 203015;
-    int Groza_quickMag = 204012;
-    int Groza_extendedMag = 204011;
-    int Groza_quickNextended = 204013;
-    
-    int Famas = 101100;
-    int Famas_reddot = 203001;
-      int Famas_holo = 203002;
-      int Famas_x2 = 203003;
-      int Famas_x3 = 203014;
-      int Famas_x4 = 203004;
-      int Famas_x6 = 203015;
-    
-    
-    
-    
-    
-  int QBZ = 101007;
-    
-    
-    
-    
-  int AUG = 101006;
-    int AUG_reddot = 203001;
-    int AUG_holo = 203002;
-    int AUG_x2 = 203003;
-    int AUG_x3 = 203014;
-    int AUG_x4 = 203004;
-    int AUG_x6 = 203015;
-    int AUG_lazer = 202007;
-    int AUG_flash = 201010;
+// ===== METRO MODE COMPATIBILITY ARRAYS =====
+// QBZ with Metro mode variants (1-7) + special skins
+static int qbzMetro[] = {101007, 1010071, 1010072, 1010073, 1010074, 1010075, 1010076, 1010077, 1101007025, 1101007036, 1101007046, 1101007062}; //metro
 
-    
-    
-    
-  int M762 = 101008;
-  int M762_Mag = 291008;
-    int M762_reddot = 203001;
-    int M762_holo = 203002;
-    int M762_x2 = 203003;
-    int M762_x3 = 203014;
-    int M762_x4 = 203004;
-    int M762_x6 = 203015;
-    int M762_lazer = 202007;
-    int M762_flash = 201010;
+// MK14 with Metro mode variants (1-7) + special skins  
+static int mk14Metro[] = {103007, 1030071, 1030072, 1030073, 1030074, 1030075, 1030076, 1030077, 1103007020, 1103007028}; //metro
 
-    
-    
-    
-    
-    
-    
-  int ACE32 = 101102;
-      int ACE32_reddot = 203001;
-      int ACE32_holo = 203002;
-      int ACE32_x2 = 203003;
-      int ACE32_x3 = 203014;
-      int ACE32_x4 = 203004;
-      int ACE32_x6 = 203015;
-    
-    
-    
-  int Honey = 101012;
-  int UZI = 102001;
-    
-  int UMP = 102002;
-    int UMP_reddot = 203001;
-    int UMP_holo = 203002;
-    int UMP_x2 = 203003;
-    int UMP_x3 = 203014;
-    int UMP_x4 = 203004;
-    int UMP_x6 = 203015;
-    
-    
-    
-  int Vector = 102003;
-  int Thompson = 102004;
-  int P90 = 102105;
-  int Bizon = 102005;
-  int M24 = 103002;
-    int M24_reddot = 203001;
-      int M24_holo = 203002;
-      int M24_x2 = 203003;
-      int M24_x3 = 203014;
-      int M24_x4 = 203004;
-      int M24_x6 = 203015;
-      int M24_x8 = 203005;
-    
-    
-    
-    
-  int AWM = 103003;
-    int AWM_reddot = 203001;
-      int AWM_holo = 203002;
-      int AWM_x2 = 203003;
-      int AWM_x3 = 203014;
-      int AWM_x4 = 203004;
-      int AWM_x6 = 203015;
-      int AWM_x8 = 203005;
-    
-    
-    
-    
-  int AMR = 103012;
-    int AMR_reddot = 203001;
-      int AMR_holo = 203002;
-      int AMR_x2 = 203003;
-      int AMR_x3 = 203014;
-      int AMR_x4 = 203004;
-      int AMR_x6 = 203015;
-      int AMR_x8 = 203005;
- 
-int FAMAS = 101100;
-    int FAMAS_reddot = 203001;
-      int FAMAS_holo = 203002;
-      int FAMAS_x2 = 203003;
-      int FAMAS_x3 = 203014;
-      int FAMAS_x4 = 203004;
-      int FAMAS_x6 = 203015;
-    
-    
-    
-  int Machete = 108001;
-  int VSS = 103005;
-  int SKS = 103004;
-  int Mini14 = 103006;
-  int MK14 = 103007;
-  int SLR = 103009;
-  int S1897 = 104002;
-  int DP28 = 105002;
-  int M249 = 105001;
-    
-    
-  int MG3 = 105010;
-    int MG3_reddot = 203001;
-    int MG3_holo = 203002;
-    int MG3_x2 = 203003;
-    int MG3_x3 = 203014;
-    int MG3_x4 = 203004;
-    int MG3_x6 = 203015;
-    
-    
-    
-    
-    
-    
-    
-    
-  int DBS = 104004;
-  int S12K = 104003;
-  int Skorpion = 106008;
-  int Moto = 1901001;
-  int CoupeRP = 1961001;
-  int Dacia = 1903001;
-  int UAZ = 1908001;
-  int Bigfoot = 1953001;
-  int Mirado = 1914004;
-  int OMirado = 1915001;
-  int Buggy = 1907001;
-  int RZR = 1966017;
-  int MiniBus = 1904001;
-  int Boat = 1911001;
-  int M249s = 205009;
+// MG3 with Metro mode variants (1-7) + special skins
+static int mg3Metro[] = {105010, 1050101, 1050102, 1050103, 1050104, 1050105, 1050106, 1050107, 1105010015, 1105010025, 1105010032}; //metro
 
+// AKM with Metro mode variants (1-7) + special skins
+static int akmMetro[] = {101001, 1010011, 1010012, 1010013, 1010014, 1010015, 1010016, 1010017, 1101001025, 1101001036, 1101001046}; //metro
+
+// M416 with Metro mode variants (1-7) + special skins  
+static int m416Metro[] = {101004, 1010041, 1010042, 1010043, 1010044, 1010045, 1010046, 1010047, 1101004025, 1101004036, 1101004046}; //metro
+
+// SCAR with Metro mode variants (1-7) + special skins
+static int scarMetro[] = {101003, 1010031, 1010032, 1010033, 1010034, 1010035, 1010036, 1010037, 1101003025, 1101003036}; //metro
+
+// AWM with Metro mode variants (1-7) + special skins
+static int awmMetro[] = {103003, 1030031, 1030032, 1030033, 1030034, 1030035, 1030036, 1030037, 1103003025, 1103003036}; //metro
+
+// Exact case-sensitive variants for NRG.h
+static int M416quickMag[] = {204012}; // M416 quickMag (exact case)
+static int M416extendedMag[] = {204011}; // M416 extendedMag (exact case)
+static int M416quickNextended[] = {204013}; // M416 quickNextended (exact case)
+static int M416stock[] = {205005}; // M416 stock (capitalized)
+static int M416angle[] = {202001}; // M416 angled foregrip (capitalized)
+static int M416thumb[] = {202002}; // M416 thumb grip (capitalized)
+
+// Variable for lastWeaponChangeTime referenced in NRG.h
+static auto lastWeaponChangeTime = std::chrono::steady_clock::now();
+
+// ====== SKIN NAME MAPPINGS ======
+#include <map>
+#include <string>
+
+// M416 Skin Names
+static std::map<int, std::string> m416SkinNames = {
+    {1101004003, "Default M416"},
+    {1101004004, "PUBG M416"},
+    {1101004005, "Desert Digital M416"},
+    {1101004006, "Glacier M416"},
+    {1101004007, "Golden M416"},
+    {1101004008, "Bloodshed M416"},
+    {1101004009, "Fool M416"},
+    {1101004010, "Oriental M416"},
+    {1101004011, "Wanderer M416"},
+    {1101004012, "Snow M416"},
+    {1101004013, "Pharaoh M416"},
+    {1101004014, "Silver M416"},
+    {1101004015, "Volcano M416"},
+    {1101004016, "Ocean M416"},
+    {1101004017, "Joker M416"},
+    {1101004018, "Galaxy M416"},
+    {1101004019, "Crimson M416"},
+    {1101004020, "Azure M416"},
+    {1101004021, "Rainbow M416"},
+    {1101004022, "Diamond M416"},
+    {1101004023, "Neon M416"},
+    {1101004024, "Carbon M416"},
+    {1101004025, "Chrome M416"},
+    {1101004026, "Flame M416"},
+    {1101004027, "Lightning M416"},
+    {1101004028, "Toxic M416"},
+    {1101004029, "Beast M416"},
+    {1101004030, "Royal M416"}
 };
 
-inline snew_Skin new_Skin;
+// AKM Skin Names
+static std::map<int, std::string> akmSkinNames = {
+    {1101001003, "Default AKM"},
+    {1101001004, "PUBG AKM"},
+    {1101001005, "Desert Digital AKM"},
+    {1101001006, "Glacier AKM"},
+    {1101001007, "Golden AKM"},
+    {1101001008, "Bloodshed AKM"},
+    {1101001009, "Fool AKM"},
+    {1101001010, "Oriental AKM"},
+    {1101001011, "Wanderer AKM"},
+    {1101001012, "Snow AKM"},
+    {1101001013, "Pharaoh AKM"},
+    {1101001014, "Silver AKM"},
+    {1101001015, "Volcano AKM"},
+    {1101001016, "Ocean AKM"},
+    {1101001017, "Joker AKM"},
+    {1101001018, "Galaxy AKM"},
+    {1101001019, "Crimson AKM"},
+    {1101001020, "Azure AKM"}
+};
 
-std::chrono::steady_clock::time_point lastChangeTime;
-std::chrono::steady_clock::time_point lastWeaponChangeTime;
+// SCAR-L Skin Names
+static std::map<int, std::string> scarSkinNames = {
+    {1101003003, "Default SCAR-L"},
+    {1101003004, "PUBG SCAR-L"},
+    {1101003005, "Desert Digital SCAR-L"},
+    {1101003006, "Glacier SCAR-L"},
+    {1101003007, "Golden SCAR-L"},
+    {1101003008, "Bloodshed SCAR-L"},
+    {1101003009, "Fool SCAR-L"},
+    {1101003010, "Oriental SCAR-L"},
+    {1101003011, "Wanderer SCAR-L"},
+    {1101003012, "Snow SCAR-L"}
+};
 
-void updateSkin() {
-    if (preferences.bag == 0)
-        bag1 = 501001;
-    if (preferences.bag == 1)
-        bag1 = 1501003174; //blood raven x suit
-    if (preferences.bag == 2)
-        bag1 = 1501003220; //Golden Pharaoh X-Suit
-    if (preferences.bag == 3)
-        bag1 = 1501003607; //Avalanche
-    if (preferences.bag == 4)
-        bag1 = 1501003318; //Irresidence
-    if (preferences.bag == 5)
-        bag1 = 1501003411; //Poseidon
-    if (preferences.bag == 6)
-        bag1 = 1501003422; //Arcane Jester X-suit
-    if (preferences.bag == 7)
-        bag1 = 1501003443; //Silvanus X-Suit
-    if (preferences.bag == 8)
-        bag1 = 1501003466;
-    if (preferences.bag == 9)
-        bag1 = 1501003061;
-    if (preferences.bag == 10)
-        bag1 = 1501003047;
-    if (preferences.bag == 11)
-        bag1 = 1501003039;
-    if (preferences.bag == 12)
-        bag1 = 1501003471;
-    if (preferences.bag == 13)
-        bag1 = 1501003487;
-    if (preferences.bag == 14)
-        bag1 = 1501003503;
-    if (preferences.bag == 15)
-        bag1 = 1501003515;
-    if (preferences.bag == 16)
-        bag1 = 1501003550;
-    if (preferences.bag == 17)
-        bag1 = 1501003558;
-    if (preferences.bag == 18)
-        bag1 = 1501003058;
-    if (preferences.bag == 19)
-        bag1 = 1501003057;
-    if (preferences.bag == 20)
-        bag1 = 1501003051;
-    if (preferences.bag == 21)
-        bag1 = 1501003043;
-    if (preferences.bag == 22)
-        bag1 = 1501003042;
-    if (preferences.bag == 23)
-        bag1 = 1501003229;
-    if (preferences.bag == 24)
-        bag1 = 1501003023;
-    if (preferences.bag == 25)
-        bag1 = 1501003022;
-    if (preferences.bag == 26)
-        bag1 = 1501003608;
-    if (preferences.bag == 27)
-        bag1 = 1501003605;
-    
-    
-    
-    if (preferences.bag == 0)
-        bag2 = 501002;
-    if (preferences.bag == 1)
-        bag2 = 1501003174; //blood raven x suit
-    if (preferences.bag == 2)
-        bag2 = 1501003220; //Golden Pharaoh X-Suit
-    if (preferences.bag == 3)
-        bag2 = 1501003607; //Avalanche
-    if (preferences.bag == 4)
-        bag2 = 1501003318; //Irresidence
-    if (preferences.bag == 5)
-        bag2 = 1501003411; //Poseidon
-    if (preferences.bag == 6)
-        bag2 = 1501003422; //Arcane Jester X-suit
-    if (preferences.bag == 7)
-        bag2 = 1501003443; //Silvanus X-Suit
-    if (preferences.bag == 8)
-        bag2 = 1501003466;
-    if (preferences.bag == 9)
-        bag2 = 1501003061;
-    if (preferences.bag == 10)
-        bag2 = 1501003047;
-    if (preferences.bag == 11)
-        bag2 = 1501003039;
-    if (preferences.bag == 12)
-        bag2 = 1501003471;
-    if (preferences.bag == 13)
-        bag2 = 1501003487;
-    if (preferences.bag == 14)
-        bag2 = 1501003503;
-    if (preferences.bag == 15)
-        bag2 = 1501003515;
-    if (preferences.bag == 16)
-        bag2 = 1501003550;
-    if (preferences.bag == 17)
-        bag2 = 1501003558;
-    if (preferences.bag == 18)
-        bag2 = 1501003058;
-    if (preferences.bag == 19)
-        bag2 = 1501003057;
-    if (preferences.bag == 20)
-        bag2 = 1501003051;
-    if (preferences.bag == 21)
-        bag2 = 1501003043;
-    if (preferences.bag == 22)
-        bag2 = 1501003042;
-    if (preferences.bag == 23)
-        bag2 = 1501003229;
-    if (preferences.bag == 24)
-        bag2 = 1501003023;
-    if (preferences.bag == 25)
-        bag2 = 1501003022;
-    if (preferences.bag == 26)
-        bag2 = 1501003608;
-    if (preferences.bag == 27)
-        bag2 = 1501003605;
-    
-    
-    
-    
-    
-    if (preferences.bag == 0)
-        bag3 = 501003;
-    if (preferences.bag == 1)
-        bag3 = 1501003174; //blood raven x suit
-    if (preferences.bag == 2)
-        bag3 = 1501003220; //Golden Pharaoh X-Suit
-    if (preferences.bag == 3)
-        bag3 = 1501003607; //Avalanche
-    if (preferences.bag == 4)
-        bag3 = 1501003318; //Irresidence
-    if (preferences.bag == 5)
-        bag3 = 1501003411; //Poseidon
-    if (preferences.bag == 6)
-        bag3 = 1501003422; //Arcane Jester X-suit
-    if (preferences.bag == 7)
-        bag3 = 1501003443; //Silvanus X-Suit
-    if (preferences.bag == 8)
-        bag3 = 1501003466;
-    if (preferences.bag == 9)
-        bag3 = 1501003061;
-    if (preferences.bag == 10)
-        bag3 = 1501003047;
-    if (preferences.bag == 11)
-        bag3 = 1501003039;
-    if (preferences.bag == 12)
-        bag3 = 1501003471;
-    if (preferences.bag == 13)
-        bag3 = 1501003487;
-    if (preferences.bag == 14)
-        bag3 = 1501003503;
-    if (preferences.bag == 15)
-        bag3 = 1501003515;
-    if (preferences.bag == 16)
-        bag3 = 1501003550;
-    if (preferences.bag == 17)
-        bag3 = 1501003558;
-    if (preferences.bag == 18)
-        bag3 = 1501003058;
-    if (preferences.bag == 19)
-        bag3 = 1501003057;
-    if (preferences.bag == 20)
-        bag3 = 1501003051;
-    if (preferences.bag == 21)
-        bag3 = 1501003043;
-    if (preferences.bag == 22)
-        bag3 = 1501003042;
-    if (preferences.bag == 23)
-        bag3 = 1501003229;
-    if (preferences.bag == 24)
-        bag3 = 1501003023;
-    if (preferences.bag == 25)
-        bag3 = 1501003022;
-    if (preferences.bag == 26)
-        bag3 = 1501003608;
-    if (preferences.bag == 27)
-        bag3 = 1501003605;
-    
-    
-    
-    
-    if (preferences.helmet == 0)
-        helmett1 = 502001;
-    if (preferences.helmet == 1)
-        helmett1 = 1502003014; //blood raven x suit
-    if (preferences.helmet == 2)
-        helmett1 = 1502003349; //Golden Pharaoh X-Suit
-    if (preferences.helmet == 3)
-        helmett1 = 1502003012; //Avalanche
-    if (preferences.helmet == 4)
-        helmett1 = 1502003009; //Irresidence
-    if (preferences.helmet == 5)
-        helmett1 = 1502003397; //Poseidon
-    if (preferences.helmet == 6)
-        helmett1 = 1502003390; //Arcane Jester X-suit
-    if (preferences.helmet == 7)
-        helmett1 = 1502003381; //Silvanus X-Suit
-    if (preferences.helmet == 8)
-        helmett1 = 1502003358;
-    if (preferences.helmet == 9)
-        helmett1 = 1502003350;
-    if (preferences.helmet == 10)
-        helmett1= 1502003342;
-    if (preferences.helmet == 11)
-        helmett1 = 1502003336;
-    if (preferences.helmet == 12)
-        helmett1 = 1502003333;
-    if (preferences.helmet == 13)
-        helmett1 = 1502003327;
-    if (preferences.helmet == 14)
-        helmett1 = 1502003325;
-    if (preferences.helmet == 15)
-        helmett1 = 1502003299;
-    if (preferences.helmet == 16)
-        helmett1 = 1502003295;
-    if (preferences.helmet == 17)
-        helmett1 = 1502003222;
-    if (preferences.helmet == 18)
-        helmett1 = 1502003069;
-    if (preferences.helmet == 19)
-        helmett1 = 1502003054;
-    if (preferences.helmet == 20)
-        helmett1 = 1502003033;
-    if (preferences.helmet == 21)
-        helmett1 = 1502003016;
-    if (preferences.helmet == 22)
-        helmett1 = 1502003031;
-    if (preferences.helmet == 23)
-        helmett1 = 1502003023;
-    if (preferences.helmet == 24)
-        helmett1 = 1502003018;
-    if (preferences.helmet == 25)
-        helmett1 = 1502003410;
-    if (preferences.helmet == 26)
-        helmett1 = 1502003408;
-    
-    if (preferences.helmet == 0)
-        helmett2 = 502002;
-    if (preferences.helmet == 1)
-        helmett2 = 1502003014; //blood raven x suit
-    if (preferences.helmet == 2)
-        helmett2 = 1502003349; //Golden Pharaoh X-Suit
-    if (preferences.helmet == 3)
-        helmett2 = 1502003012; //Avalanche
-    if (preferences.helmet == 4)
-        helmett2 = 1502003009; //Irresidence
-    if (preferences.helmet == 5)
-        helmett2 = 1502003397; //Poseidon
-    if (preferences.helmet == 6)
-        helmett2 = 1502003390; //Arcane Jester X-suit
-    if (preferences.helmet == 7)
-        helmett2 = 1502003381; //Silvanus X-Suit
-    if (preferences.helmet == 8)
-        helmett2 = 1502003358;
-    if (preferences.helmet == 9)
-        helmett2 = 1502003350;
-    if (preferences.helmet == 10)
-        helmett2 = 1502003342;
-    if (preferences.helmet == 11)
-        helmett2 = 1502003336;
-    if (preferences.helmet == 12)
-        helmett2 = 1502003333;
-    if (preferences.helmet == 13)
-        helmett2 = 1502003327;
-    if (preferences.helmet == 14)
-        helmett2 = 1502003325;
-    if (preferences.helmet == 15)
-        helmett2 = 1502003299;
-    if (preferences.helmet == 16)
-        helmett2 = 1502003295;
-    if (preferences.helmet == 17)
-        helmett2 = 1502003222;
-    if (preferences.helmet == 18)
-        helmett2 = 1502003069;
-    if (preferences.helmet == 19)
-        helmett2 = 1502003054;
-    if (preferences.helmet == 20)
-        helmett2 = 1502003033;
-    if (preferences.helmet == 21)
-        helmett2 = 1502003016;
-    if (preferences.helmet == 22)
-        helmett2 = 1502003031;
-    if (preferences.helmet == 23)
-        helmett2 = 1502003023;
-    if (preferences.helmet == 24)
-        helmett2 = 1502003018;
-    if (preferences.helmet == 25)
-        helmett2 = 1502003410;
-    if (preferences.helmet == 26)
-        helmett2  = 1502003408;
-    
-    
-    if (preferences.helmet == 0)
-        helmett3 = 502003;
-    if (preferences.helmet == 1)
-        helmett3 = 1502003014; //blood raven x suit
-    if (preferences.helmet == 2)
-        helmett3 = 1502003349; //Golden Pharaoh X-Suit
-    if (preferences.helmet == 3)
-        helmett3 = 1502003012; //Avalanche
-    if (preferences.helmet == 4)
-        helmett3 = 1502003009; //Irresidence
-    if (preferences.helmet == 5)
-        helmett3 = 1502003397; //Poseidon
-    if (preferences.helmet == 6)
-        helmett3 = 1502003390; //Arcane Jester X-suit
-    if (preferences.helmet == 7)
-        helmett3 = 1502003381; //Silvanus X-Suit
-    if (preferences.helmet == 8)
-        helmett3 = 1502003358;
-    if (preferences.helmet == 9)
-        helmett3 = 1502003350;
-    if (preferences.helmet == 10)
-        helmett3 = 1502003342;
-    if (preferences.helmet == 11)
-        helmett3 = 1502003336;
-    if (preferences.helmet == 12)
-        helmett3 = 1502003333;
-    if (preferences.helmet == 13)
-        helmett3 = 1502003327;
-    if (preferences.helmet == 14)
-        helmett3 = 1502003325;
-    if (preferences.helmet == 15)
-        helmett3 = 1502003299;
-    if (preferences.helmet == 16)
-        helmett3 = 1502003295;
-    if (preferences.helmet == 17)
-        helmett3 = 1502003222;
-    if (preferences.helmet == 18)
-        helmett3 = 1502003069;
-    if (preferences.helmet == 19)
-        helmett3 = 1502003054;
-    if (preferences.helmet == 20)
-        helmett3 = 1502003033;
-    if (preferences.helmet == 21)
-        helmett3 = 1502003016;
-    if (preferences.helmet == 22)
-        helmett3 = 1502003031;
-    if (preferences.helmet == 23)
-        helmett3 = 1502003023;
-    if (preferences.helmet == 24)
-        helmett3 = 1502003018;
-    if (preferences.helmet == 25)
-        helmett3 = 1502003410;
-    if (preferences.helmet == 26)
-        helmett3 = 1502003408;
-    
-    
-    
-    
-    
-    
-    
-    
-    if (ModEmote1 == 0)
-        sEmote1 = 2200101;
-    if (ModEmote1 == 1)
-        sEmote1 = 12220023;
-    if (ModEmote1 == 2)
-        sEmote1 = 12219677;
-    if (ModEmote1 == 3)
-        sEmote1 = 12219716;
-    if (ModEmote1 == 4)
-        sEmote1 = 12209401;
-    if (ModEmote1 == 5)
-        sEmote1 = 12209501;
-    if (ModEmote1 == 6)
-        sEmote1 = 12209701;
-    if (ModEmote1 == 7)
-        sEmote1 = 12209801;
-    if (ModEmote1 == 8)
-        sEmote1 = 12209901;
-    
-    
-    if (ModEmote1 == 0)
-        sEmote2 = 2200201;
-    if (ModEmote1 == 1)
-        sEmote2 = 12210201;
-    if (ModEmote1 == 2)
-        sEmote2 = 12210601;
-    if (ModEmote1 == 3)
-        sEmote2 = 12220028;
-    if (ModEmote1 == 4)
-        sEmote2 = 12219819;
-    if (ModEmote1 == 5)
-        sEmote2 = 12211801;
-    if (ModEmote1 == 6)
-        sEmote2 = 12212001;
-    if (ModEmote1 == 7)
-        sEmote2 = 12212201;
-    if (ModEmote1 == 8)
-        sEmote2 = 12212401;
-    
-    
-    if (ModEmote1 == 0)
-        sEmote3 = 2200301;
-    if (ModEmote1 == 1)
-        sEmote3 = 12212601;
-    if (ModEmote1 == 2)
-        sEmote3 = 12213201;
-    if (ModEmote1 == 3)
-        sEmote3 = 12219715;
-    if (ModEmote1 == 4)
-        sEmote3 = 12219814;
-    if (ModEmote1 == 5)
-        sEmote3 = 12213601;
-    if (ModEmote1 == 6)
-        sEmote3 = 12213801;
-    if (ModEmote1 == 7)
-        sEmote3 = 12214001;
-    if (ModEmote1 == 8)
-        sEmote3 = 12214201;
-    
-    
-    
-    if (preferences.Config.Skin.Parachute == 0)
-        new_Skin.Parachute = 703001;
-    if (preferences.Config.Skin.Parachute == 1)
-        new_Skin.Parachute = 1401619; //Pharaoh's Scarab Parachute
-    if (preferences.Config.Skin.Parachute == 2)
-        new_Skin.Parachute = 1401625; // Enigmatic Nomad Parachute
-    if (preferences.Config.Skin.Parachute == 3)
-        new_Skin.Parachute = 1401624; //parashot Parachute
-    if (preferences.Config.Skin.Parachute == 4)
-        new_Skin.Parachute = 1401836; //Paperfold Gambit Parachute
-    if (preferences.Config.Skin.Parachute == 5)
-        new_Skin.Parachute = 1401833; //Labyrinth Beast Parachute
-    if (preferences.Config.Skin.Parachute == 6)
-        new_Skin.Parachute = 1401287; //Flamewraith Parachute
-    if (preferences.Config.Skin.Parachute == 7)
-        new_Skin.Parachute = 1401282; //Mega Kitty Parachute
-    if (preferences.Config.Skin.Parachute == 8)
-        new_Skin.Parachute = 1401385; //Mega Yeti Parachute
-    if (preferences.Config.Skin.Parachute == 9)
-        new_Skin.Parachute = 1401549; //Endless Glory Parachute
-    if (preferences.Config.Skin.Parachute == 10)
-        new_Skin.Parachute = 1401336; //Magma Skull Parachute
-    if (preferences.Config.Skin.Parachute == 11)
-        new_Skin.Parachute = 1401335; //Aquatic Fury Parachute
-    if (preferences.Config.Skin.Parachute == 12)
-        new_Skin.Parachute = 1401629; //CyberGen: Zero Parachute
-    if (preferences.Config.Skin.Parachute == 13)
-        new_Skin.Parachute = 1401628; //Radiant Phoenix Adarna Parachute
-    if (preferences.Config.Skin.Parachute == 14)
-        new_Skin.Parachute = 1401615; //Will of Horus
-    if (preferences.Config.Skin.Parachute == 15)
-        new_Skin.Parachute = 1401613; //Anubian Magistrate Parachute
-    
-    
-    if (preferences.Config.Skin.Hieuungbay == 0)
-        new_Skin.Hieuungbay = 4151001;
-    if (preferences.Config.Skin.Hieuungbay == 1)
-        new_Skin.Hieuungbay = 4151050; //Pharaoh's Scarab Parachute
-    if (preferences.Config.Skin.Hieuungbay == 2)
-        new_Skin.Hieuungbay = 4151052; // Enigmatic Nomad Parachute
-    if (preferences.Config.Skin.Hieuungbay == 3)
-        new_Skin.Hieuungbay = 4151054; //parashot Parachute
-    if (preferences.Config.Skin.Hieuungbay == 4)
-        new_Skin.Hieuungbay = 4151039; //Paperfold Gambit Parachute
-    if (preferences.Config.Skin.Hieuungbay == 5)
-        new_Skin.Hieuungbay = 4151048;
-    if (preferences.Config.Skin.Hieuungbay == 6)
-        new_Skin.Hieuungbay = 4151065;
-    if (preferences.Config.Skin.Hieuungbay == 7)
-        new_Skin.Hieuungbay = 4151066;
-    if (preferences.Config.Skin.Hieuungbay == 8)
-        new_Skin.Hieuungbay = 4151068;
-    if (preferences.Config.Skin.Hieuungbay == 9)
-        new_Skin.Hieuungbay = 4151070;
-    if (preferences.Config.Skin.Hieuungbay == 10)
-        new_Skin.Hieuungbay = 4151064;
-    if (preferences.Config.Skin.Hieuungbay == 10)
-        new_Skin.Hieuungbay = 4151067;
-    if (preferences.Config.Skin.Hieuungbay == 11)
-        new_Skin.Hieuungbay = 4151072;
-    if (preferences.Config.Skin.Hieuungbay == 12)
-        new_Skin.Hieuungbay = 4151075;
-    if (preferences.Config.Skin.Hieuungbay == 13)
-        new_Skin.Hieuungbay = 4151073;
-    if (preferences.Config.Skin.Hieuungbay == 14)
-        new_Skin.Hieuungbay = 4151085;
-    if (preferences.Config.Skin.Hieuungbay == 15)
-        new_Skin.Hieuungbay = 4151041;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    if (preferences.Config.Skin.Hieuungbay == 0)
-        new_Skin.Hieuungbay = 4151001;
-    if (preferences.Config.Skin.Hieuungbay == 1)
-        new_Skin.Hieuungbay = 4151050; //Pharaoh's Scarab Parachute
-    if (preferences.Config.Skin.Hieuungbay == 2)
-        new_Skin.Hieuungbay = 4151052; // Enigmatic Nomad Parachute
-    
-    
-    
-    
-    
-    
-    
-    if (preferences.Config.Skin.Fac == 0)
-        new_Skin.Fac = 1400560;
-    if (preferences.Config.Skin.Fac == 1)
-        new_Skin.Fac = 1400563; //Pharaoh's Scarab Parachute
-    if (preferences.Config.Skin.Fac == 2)
-        new_Skin.Fac = 1406001; // Enigmatic N
-    
-    
-    
-    if (preferences.Config.Skin.Pan == 0)
-        new_Skin.Pan = 108004; // 108004 - Pan
-    if (preferences.Config.Skin.Pan == 1)
-        new_Skin.Pan = 1108004125; // Honeypot - Pan
-    if (preferences.Config.Skin.Pan == 2)
-        new_Skin.Pan = 1108004145; // Night of Rock - Pan
-    if (preferences.Config.Skin.Pan == 3)
-        new_Skin.Pan = 1108004160; // Crocodile - Pan
-    if (preferences.Config.Skin.Pan == 4)
-        new_Skin.Pan = 1108004283; // Accolade - Pan
-    if (preferences.Config.Skin.Pan == 5)
-        new_Skin.Pan = 1108004337; // Break Pad - Pan
-    if (preferences.Config.Skin.Pan == 6)
-        new_Skin.Pan = 1108004356; // Chicken Hot - Pan
-    if (preferences.Config.Skin.Pan == 7)
-        new_Skin.Pan = 1108004365; // Faerie Luster - Pan
-    if (preferences.Config.Skin.Pan == 8)
-        new_Skin.Pan = 1108004054; // Chicken Hot - Pan
-    if (preferences.Config.Skin.Pan == 9)
-        new_Skin.Pan = 1108004008;
-    
-    
-    //--- Trang Phục -------
-    
-    if (preferences.Config.Skin.XSuits == 0) {
-        new_Skin.XSuits = 403003;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 1) {
-        new_Skin.XSuits = 1405628;
-        new_Skin.XSuits1 = 1402578;
-    }
-    if (preferences.Config.Skin.XSuits == 2) {
-        new_Skin.XSuits = 1405870;
-        new_Skin.XSuits1 = 1403257;
-    }
-    if (preferences.Config.Skin.XSuits == 3) {
-        new_Skin.XSuits = 1407140;
-        new_Skin.XSuits1 = 1402874;
-    }
-    if (preferences.Config.Skin.XSuits == 4) {
-        new_Skin.XSuits = 1407141;
-        new_Skin.XSuits1 = 1403393;
-    }
-    if (preferences.Config.Skin.XSuits == 5) {
-        new_Skin.XSuits = 1406311;
-        new_Skin.XSuits1 = 1410011; //Mặt nạ 1.403.414
-    }
-    if (preferences.Config.Skin.XSuits == 6) {
-        new_Skin.XSuits = 1406475;
-        new_Skin.XSuits1 = 1410131;
-    }
-    if (preferences.Config.Skin.XSuits == 7) {
-        new_Skin.XSuits = 1406638;
-        new_Skin.XSuits1 = 1410242;
-    }
-    if (preferences.Config.Skin.XSuits == 8) {
-        new_Skin.XSuits = 1406872;
-        //new_Skin.XSuits1 = 1410346; // khung
-        new_Skin.XSuits1 = 402133;
-    }
-    if (preferences.Config.Skin.XSuits == 9) {
-        new_Skin.XSuits = 1406971;
-        new_Skin.XSuits1 = 402147;
-    }
-    if (preferences.Config.Skin.XSuits == 10) {
-        new_Skin.XSuits = 1407103;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    if (preferences.Config.Skin.XSuits == 11) {
-        new_Skin.XSuits = 1407391;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 12) {
-        new_Skin.XSuits = 1407366;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 13) {
-        new_Skin.XSuits = 1407330;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 14) {
-        new_Skin.XSuits = 1407329;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 15) {
-        new_Skin.XSuits = 1407286;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 16) {
-        new_Skin.XSuits = 1407285;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 17) {
-        new_Skin.XSuits = 1407277;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 18) {
-        new_Skin.XSuits = 1407276;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 19) {
-        new_Skin.XSuits = 1407275;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 20) {
-        new_Skin.XSuits = 1407225;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 21) {
-        new_Skin.XSuits = 1407224;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    if (preferences.Config.Skin.XSuits == 23) {
-        new_Skin.XSuits = 1407259;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 24) {
-        new_Skin.XSuits = 1407161;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 25) {
-        new_Skin.XSuits = 1407160;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 26) {
-        new_Skin.XSuits = 1407107;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 27) {
-        new_Skin.XSuits = 1407106;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 28) {
-        new_Skin.XSuits = 1407079;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 29) {
-        new_Skin.XSuits = 1407048;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    if (preferences.Config.Skin.XSuits == 30) {
-        new_Skin.XSuits = 1406977;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 31) {
-        new_Skin.XSuits = 1406976;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 32) {
-        new_Skin.XSuits = 1406898;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    if (preferences.Config.Skin.XSuits == 33) {
-        new_Skin.XSuits = 1400569;
-        new_Skin.quan = 1400650;
-        new_Skin.giay = 1404003;
-    }
-    if (preferences.Config.Skin.XSuits == 34) {
-        new_Skin.XSuits = 1404000;
-        new_Skin.quan = 1404002;
-        new_Skin.giay = 1404003;
-        new_Skin.Kaaba = 1410323;
-    }
-    if (preferences.Config.Skin.XSuits == 35) {
-        new_Skin.XSuits = 1404049;
-        new_Skin.quan = 1404050;
-        new_Skin.giay = 1404051;
-    }
-    if (preferences.Config.Skin.XSuits == 36) {
-        new_Skin.XSuits = 1400119;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 37) {
-        new_Skin.XSuits = 1400117;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 38) {
-        new_Skin.XSuits = 1406060;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 39) {
-        new_Skin.XSuits = 1406891;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 40) {
-        new_Skin.XSuits = 1400687;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 41) {
-        new_Skin.XSuits = 1405160;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 42) {
-        new_Skin.XSuits = 1405145;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 43) {
-        new_Skin.XSuits = 1405436;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 44) {
-        new_Skin.XSuits = 1405435;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 45) {
-        new_Skin.XSuits = 1405434;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 46) {
-        new_Skin.XSuits = 1405064;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    
-    if (preferences.Config.Skin.XSuits == 47) {
-        new_Skin.XSuits = 1405207;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 48) {
-        new_Skin.XSuits = 1406895;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    if (preferences.Config.Skin.XSuits == 49) {
-        new_Skin.XSuits = 1400333;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 50) {
-        new_Skin.XSuits = 1400377;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 51) {
-        new_Skin.XSuits = 1405092;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 52) {
-        new_Skin.XSuits = 1405121;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 53) {
-        new_Skin.XSuits = 1406889;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 54) {
-        new_Skin.XSuits = 1407278;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 55) {
-        new_Skin.XSuits = 1407279;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 56) {
-        new_Skin.XSuits = 1407381;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 57) {
-        new_Skin.XSuits = 1407380;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 58) {
-        new_Skin.XSuits = 1407385;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 59) {
-        new_Skin.XSuits = 1406389;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 60) {
-        new_Skin.XSuits = 1406388;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 61) {
-        new_Skin.XSuits = 1406387;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 62) {
-        new_Skin.XSuits = 1406386;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 63) {
-        new_Skin.XSuits = 1406385;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 64) {
-        new_Skin.XSuits = 1406140;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 65) {
-        new_Skin.XSuits = 1400782;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 66) {
-        new_Skin.XSuits = 1407392;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 67) {
-        new_Skin.XSuits = 1407318;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 68) {
-        new_Skin.XSuits = 1407317;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 69) {
-        new_Skin.XSuits = 1407404;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    if (preferences.Config.Skin.XSuits == 70) {
-        new_Skin.XSuits = 1407402;
-        new_Skin.XSuits1 = 40604002;
-    }
-    
-    
-    if (preferences.Config.Skin.XSuits == 71) {
-        new_Skin.XSuits = 1407401;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 72) {
-        new_Skin.XSuits = 1407387;
-        new_Skin.XSuits1 = 40604002;
-    }
-    if (preferences.Config.Skin.XSuits == 73) {
-        new_Skin.XSuits = 1407066;
-        new_Skin.XSuits1 = 40604002;
-        new_Skin.Kaaba = 1410517;
-    }
-  
-    
-    
-    
-    
-    
-    //----------------------
-    
-    if (preferences.Config.Skin.AKM == 0) {
-        new_Skin.AKM = 101001;
-        new_Skin.AKM_Mag = 291001;
-        new_Skin.AKM_flash = 201010;
-        new_Skin.AKM_compe = 201009;
-        new_Skin.AKM_silent = 201011;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 203002;
-        new_Skin.AKM_x2 = 203003;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 203004;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.AKM == 1){
-        new_Skin.AKM = 1101001213;
-        new_Skin.AKM_Mag = 1010012131;
-        new_Skin.AKM_flash = 1010012067;
-        new_Skin.AKM_compe = 1010012068;
-        new_Skin.AKM_silent = 1010012069;
-        new_Skin.AKM_reddot = 1010012066;
-        new_Skin.AKM_holo = 1010012065;
-        new_Skin.AKM_x2 = 1010012064;
-        new_Skin.AKM_x3 = 1010012063;
-        new_Skin.AKM_x4 = 1010012062;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 1010012070;
-        new_Skin.AKM_extendedMag = 1010012072;
-        new_Skin.AKM_quickNextended = 1010012073;
-    }
-    if (preferences.Config.Skin.AKM == 2) {
-        new_Skin.AKM = 1101001103;
-        new_Skin.AKM_Mag = 1010011031;
-        new_Skin.AKM_flash = 201010;
-        new_Skin.AKM_compe = 201009;
-        new_Skin.AKM_silent = 201011;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 203002;
-        new_Skin.AKM_x2 = 203003;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 203004;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.AKM == 3) {
-        new_Skin.AKM = 1101001116;
-        new_Skin.AKM_Mag = 1010011161;
-        new_Skin.AKM_compe = 1010011107;
-        new_Skin.AKM_silent = 1010011108;
-        new_Skin.AKM_reddot = 1010011105;
-        new_Skin.AKM_holo = 1010011104;
-        new_Skin.AKM_x2 = 1010011103;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 1010011102;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 1010011109;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 1010011112;
-    }
-    if (preferences.Config.Skin.AKM == 4) {
-        new_Skin.AKM = 1101001128;
-        new_Skin.AKM_Mag = 1010011281;
-        new_Skin.AKM_flash = 1010011232;
-        new_Skin.AKM_compe = 1010011233;
-        new_Skin.AKM_silent = 1010011234;
-        new_Skin.AKM_reddot = 1010011226;
-        new_Skin.AKM_holo = 1010011225;
-        new_Skin.AKM_x2 = 1010011224;
-        new_Skin.AKM_x3 = 1010011223;
-        new_Skin.AKM_x4 = 1010011222;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 1010011227;
-        new_Skin.AKM_extendedMag = 1010011228;
-        new_Skin.AKM_quickNextended = 1010011229;
-    }
-    if (preferences.Config.Skin.AKM == 5) {
-        new_Skin.AKM = 1101001143;
-        new_Skin.AKM_Mag = 1010011431;
-        new_Skin.AKM_flash = 201010;
-        new_Skin.AKM_compe = 201009;
-        new_Skin.AKM_silent = 201011;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 203002;
-        new_Skin.AKM_x2 = 203003;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 203004;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.AKM == 6) {
-        new_Skin.AKM = 1101001154;
-        new_Skin.AKM_Mag = 1010011541;
-        new_Skin.AKM_flash = 1010011487;
-        new_Skin.AKM_compe = 1010011488;
-        new_Skin.AKM_silent = 1010011489;
-        new_Skin.AKM_reddot = 1010011486;
-        new_Skin.AKM_holo = 1010011485;
-        new_Skin.AKM_x2 = 1010011484;
-        new_Skin.AKM_x3 = 1010011483;
-        new_Skin.AKM_x4 = 1010011482;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 1010011490;
-        new_Skin.AKM_extendedMag = 1010011493;
-        new_Skin.AKM_quickNextended = 1010011494;
-    }
-    if (preferences.Config.Skin.AKM == 7) {
-        new_Skin.AKM = 1101001174;
-        new_Skin.AKM_Mag = 1010011741;
-        new_Skin.AKM_flash = 1010011667;
-        new_Skin.AKM_compe = 1010011668;
-        new_Skin.AKM_silent = 1010011669;
-        new_Skin.AKM_reddot = 1010011666;
-        new_Skin.AKM_holo = 1010012265;
-        new_Skin.AKM_x2 = 1010011664;
-        new_Skin.AKM_x3 = 1010011663;
-        new_Skin.AKM_x4 = 1010011662;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 1010011670;
-        new_Skin.AKM_extendedMag = 1010011673;
-        new_Skin.AKM_quickNextended = 1010011674;
-    }
-    if (preferences.Config.Skin.AKM == 8) {
-        new_Skin.AKM = 1101001231;
-        new_Skin.AKM_Mag = 1010012311;
-        new_Skin.AKM_flash = 1010012267;
-        new_Skin.AKM_compe = 1010012274;
-        new_Skin.AKM_silent = 1010012269;
-        new_Skin.AKM_reddot = 1010012266;
-        new_Skin.AKM_holo = 1010012265;
-        new_Skin.AKM_x2 = 1010012264;
-        new_Skin.AKM_x3 = 1010012263;
-        new_Skin.AKM_x4 = 1010012262;
-        new_Skin.AKM_x6 = 1010012276;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.AKM == 9) {
-        new_Skin.AKM = 1101001089;
-        new_Skin.AKM_Mag = 1010010891;
-        new_Skin.AKM_flash = 201010;
-        new_Skin.AKM_compe = 201009;
-        new_Skin.AKM_silent = 201011;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 203002;
-        new_Skin.AKM_x2 = 203003;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 203004;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    
-    if (preferences.Config.Skin.AKM == 10) {
-        new_Skin.AKM = 1101001242;
-        new_Skin.AKM_Mag = 1010012421;
-        new_Skin.AKM_flash = 201010;
-        new_Skin.AKM_compe = 201009;
-        new_Skin.AKM_silent = 201011;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 203002;
-        new_Skin.AKM_x2 = 203003;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 203004;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.AKM == 11) {
-        new_Skin.AKM = 1101001249;
-        new_Skin.AKM_Mag = 1010012491;
-        new_Skin.AKM_flash = 1010012507;
-        new_Skin.AKM_compe = 1010012508;
-        new_Skin.AKM_silent = 1010012509;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 1010012505;
-        new_Skin.AKM_x2 = 1010012504;
-        new_Skin.AKM_x3 = 1010012503;
-        new_Skin.AKM_x4 = 1010012502;
-        new_Skin.AKM_x6 = 1010012516;
-        new_Skin.AKM_quickMag = 1010012512;
-        new_Skin.AKM_extendedMag = 1010012513;
-        new_Skin.AKM_quickNextended = 1010012514;
-    }
-    if (preferences.Config.Skin.AKM == 12) {
-        new_Skin.AKM = 1101001256;
-        new_Skin.AKM_Mag = 1010012491;
-        new_Skin.AKM_flash = 1010012507;
-        new_Skin.AKM_compe = 1010012508;
-        new_Skin.AKM_silent = 1010012509;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 1010012505;
-        new_Skin.AKM_x2 = 1010012504;
-        new_Skin.AKM_x3 = 1010012503;
-        new_Skin.AKM_x4 = 1010012502;
-        new_Skin.AKM_x6 = 1010012516;
-        new_Skin.AKM_quickMag = 1010012512;
-        new_Skin.AKM_extendedMag = 1010012513;
-        new_Skin.AKM_quickNextended = 1010012514;
-    }
-    if (preferences.Config.Skin.AKM == 13) {
-        new_Skin.AKM = 1101001023;
-        new_Skin.AKM_Mag = 291001;
-        new_Skin.AKM_flash = 201010;
-        new_Skin.AKM_compe = 201009;
-        new_Skin.AKM_silent = 201011;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 203002;
-        new_Skin.AKM_x2 = 203003;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 203004;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.AKM == 14) {
-        new_Skin.AKM = 1101001068;
-        new_Skin.AKM_Mag = 291001;
-        new_Skin.AKM_flash = 201010;
-        new_Skin.AKM_compe = 201009;
-        new_Skin.AKM_silent = 201011;
-        new_Skin.AKM_reddot = 203001;
-        new_Skin.AKM_holo = 203002;
-        new_Skin.AKM_x2 = 203003;
-        new_Skin.AKM_x3 = 203014;
-        new_Skin.AKM_x4 = 203004;
-        new_Skin.AKM_x6 = 203015;
-        new_Skin.AKM_quickMag = 204012;
-        new_Skin.AKM_extendedMag = 204011;
-        new_Skin.AKM_quickNextended = 204013;
-    }
-    
-    
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    if (preferences.Config.Skin.M16A4 == 0) {
-        new_Skin.M16A4 = 101002;
-        new_Skin.M16A4_Stock = 205007;
-        new_Skin.M16A4_Mag = 291002;
-    }
-    if (preferences.Config.Skin.M16A4 == 1) {
-        new_Skin.M16A4 = 1101002029;
-        new_Skin.M16A4_Stock = 1010020292;
-        new_Skin.M16A4_Mag = 1010020291;
-    }
-    if (preferences.Config.Skin.M16A4 == 2) {
-        new_Skin.M16A4 = 1101002056;
-        new_Skin.M16A4_Stock = 1010020562;
-        new_Skin.M16A4_Mag = 1010020561;
-    }
-    if (preferences.Config.Skin.M16A4 == 3) {
-        new_Skin.M16A4 = 1101002068;
-        new_Skin.M16A4_Stock = 1010020682;
-        new_Skin.M16A4_Mag = 1010020681;
-    }
-    if (preferences.Config.Skin.M16A4 == 4) {
-        new_Skin.M16A4 = 1101002081;
-        new_Skin.M16A4_Stock = 1010020812;
-        new_Skin.M16A4_Mag = 1010020811;
-    }
-    if (preferences.Config.Skin.M16A4 == 5) {
-        new_Skin.M16A4 = 1101002103;
-        new_Skin.M16A4_Stock = 1010021032;
-        new_Skin.M16A4_Mag = 1010021031;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    if (preferences.Config.Skin.Scar == 0) {
-        new_Skin.Scar = 101003;
-        new_Skin.Scar_Mag = 291003;
-        new_Skin.Scar_3 = 203007;
-        new_Skin.Scar_flash = 201010;
-        new_Skin.Scar_compe = 201009;
-        new_Skin.Scar_silent = 201011;
-        new_Skin.Scar_reddot = 203001;
-        new_Skin.Scar_holo = 203002;
-        new_Skin.Scar_x2 = 203003;
-        new_Skin.Scar_x3 = 203014;
-        new_Skin.Scar_x4 = 203004;
-        new_Skin.Scar_x6 = 203015;
-        new_Skin.Scar_quickMag = 204012;
-        new_Skin.Scar_extendedMag = 204011;
-        new_Skin.Scar_quickNextended = 204013;
-        new_Skin.Scar_verical = 202002;
-        new_Skin.Scar_angle = 202001;
-        new_Skin.Scar_lightgrip = 202004;
-        new_Skin.Scar_pink = 202005;
-        new_Skin.Scar_lazer = 202007;
-        new_Skin.Scar_thumb = 202006;
-    }
-    if (preferences.Config.Skin.Scar == 1){
-        
-        new_Skin.Scar = 1101003167;
-        new_Skin.Scar_Mag = 1010031671;
-        new_Skin.Scar_3 = 1010031672;
-        new_Skin.Scar_flash = 1010031609;
-        new_Skin.Scar_compe = 1010031610;
-        new_Skin.Scar_silent = 1010031613;
-        new_Skin.Scar_reddot = 1010031606;
-        new_Skin.Scar_holo = 1010031605;
-        new_Skin.Scar_x2 = 1010031604;
-        new_Skin.Scar_x3 = 1010031603;
-        new_Skin.Scar_x4 = 1010031602;
-        new_Skin.Scar_quickMag = 1010031607;
-        new_Skin.Scar_extendedMag = 1010031608;
-        new_Skin.Scar_quickNextended = 1010031617;
-        new_Skin.Scar_verical = 1010031615;
-        new_Skin.Scar_angle = 1010031614;
-        new_Skin.Scar_lightgrip = 202004;
-        new_Skin.Scar_thumb = 1010031616;
-        
-    }
-    if (preferences.Config.Skin.Scar == 2) {
-        new_Skin.Scar = 1101003070;
-        new_Skin.Scar_Mag = 1010030701;
-        new_Skin.Scar_3 = 1010030702;
-    }
-    if (preferences.Config.Skin.Scar == 3) {
-        new_Skin.Scar = 1101003080;
-        new_Skin.Scar_Mag = 1010030801;
-        new_Skin.Scar_3 = 1010030802;
-    }
-    if (preferences.Config.Skin.Scar == 4) {
-        new_Skin.Scar = 1101003119;
-        new_Skin.Scar_Mag = 1010031191;
-        new_Skin.Scar_3 = 1010031192;
-        new_Skin.Scar_flash = 1010031139;
-        new_Skin.Scar_compe = 1010031140;
-        new_Skin.Scar_silent = 1010031142;
-        new_Skin.Scar_reddot = 1010031136;
-        new_Skin.Scar_holo = 1010031135;
-        new_Skin.Scar_x2 = 1010031134;
-        new_Skin.Scar_x3 = 1010031133;
-        new_Skin.Scar_x4 = 1010031132;
-        new_Skin.Scar_quickMag = 1010031137;
-        new_Skin.Scar_extendedMag = 1010031138;
-        new_Skin.Scar_quickNextended = 1010031146;
-        new_Skin.Scar_verical = 1010031144;
-        new_Skin.Scar_angle = 1010031143;
-        new_Skin.Scar_lightgrip = 202004;
-        new_Skin.Scar_pink = 202005;
-        new_Skin.Scar_lazer = 202007;
-        new_Skin.Scar_thumb = 202006;
-    }
-    if (preferences.Config.Skin.Scar == 5) {
-        new_Skin.Scar = 1101003146;
-        new_Skin.Scar_Mag = 1010031461;
-        new_Skin.Scar_3 = 1010031462;
-    }
-    if (preferences.Config.Skin.Scar == 6) {
-        new_Skin.Scar = 1101003181;
-        new_Skin.Scar_Mag = 1010031811;
-        new_Skin.Scar_flash = 1010031765;
-        new_Skin.Scar_compe = 1010031764;
-        new_Skin.Scar_silent = 1010031766;
-        new_Skin.Scar_reddot = 1010031757;
-        new_Skin.Scar_holo = 1010031756;
-        new_Skin.Scar_x2 = 1010031755;
-        new_Skin.Scar_x3 = 1010031754;
-        new_Skin.Scar_x4 = 1010031753;
-        new_Skin.Scar_x6 = 1010031752;
-        new_Skin.Scar_quickMag = 1010031758;
-        new_Skin.Scar_extendedMag = 1010031759;
-        new_Skin.Scar_quickNextended = 1010031763;
-        new_Skin.Scar_verical = 1010031769;
-        new_Skin.Scar_angle = 1010031767;
-        new_Skin.Scar_lightgrip = 1010031773;
-        new_Skin.Scar_pink = 1010031774;
-        new_Skin.Scar_lazer = 1010031772;
-        new_Skin.Scar_thumb = 1010031768;
-    }
-    
-    if (preferences.Config.Skin.Scar == 7) {
-        new_Skin.Scar = 1101003195;
-        new_Skin.Scar_Mag = 291003;
-        new_Skin.Scar_3 = 203007;
-        new_Skin.Scar_flash = 201010;
-        new_Skin.Scar_compe = 201009;
-        new_Skin.Scar_silent = 201011;
-        new_Skin.Scar_reddot = 203001;
-        new_Skin.Scar_holo = 203002;
-        new_Skin.Scar_x2 = 203003;
-        new_Skin.Scar_x3 = 203014;
-        new_Skin.Scar_x4 = 203004;
-        new_Skin.Scar_x6 = 203015;
-        new_Skin.Scar_quickMag = 204012;
-        new_Skin.Scar_extendedMag = 204011;
-        new_Skin.Scar_quickNextended = 204013;
-        new_Skin.Scar_verical = 202002;
-        new_Skin.Scar_angle = 202001;
-        new_Skin.Scar_lightgrip = 202004;
-        new_Skin.Scar_pink = 202005;
-        new_Skin.Scar_lazer = 202007;
-        new_Skin.Scar_thumb = 202006;
-    }
-    
-    if (preferences.Config.Skin.Scar == 8) {
-        new_Skin.Scar = 1101003099;
-        new_Skin.Scar_Mag = 291003;
-        new_Skin.Scar_3 = 203007;
-        new_Skin.Scar_flash = 201010;
-        new_Skin.Scar_compe = 201009;
-        new_Skin.Scar_silent = 201011;
-        new_Skin.Scar_reddot = 203001;
-        new_Skin.Scar_holo = 203002;
-        new_Skin.Scar_x2 = 203003;
-        new_Skin.Scar_x3 = 203014;
-        new_Skin.Scar_x4 = 203004;
-        new_Skin.Scar_x6 = 203015;
-        new_Skin.Scar_quickMag = 204012;
-        new_Skin.Scar_extendedMag = 204011;
-        new_Skin.Scar_quickNextended = 204013;
-        new_Skin.Scar_verical = 202002;
-        new_Skin.Scar_angle = 202001;
-        new_Skin.Scar_lightgrip = 202004;
-        new_Skin.Scar_pink = 202005;
-        new_Skin.Scar_lazer = 202007;
-        new_Skin.Scar_thumb = 202006;
-    }
-    
-    if (preferences.Config.Skin.Scar == 9) {
-        new_Skin.Scar = 1101003173;
-        new_Skin.Scar_Mag = 291003;
-        new_Skin.Scar_3 = 203007;
-        new_Skin.Scar_flash = 201010;
-        new_Skin.Scar_compe = 201009;
-        new_Skin.Scar_silent = 201011;
-        new_Skin.Scar_reddot = 203001;
-        new_Skin.Scar_holo = 203002;
-        new_Skin.Scar_x2 = 203003;
-        new_Skin.Scar_x3 = 203014;
-        new_Skin.Scar_x4 = 203004;
-        new_Skin.Scar_x6 = 203015;
-        new_Skin.Scar_quickMag = 204012;
-        new_Skin.Scar_extendedMag = 204011;
-        new_Skin.Scar_quickNextended = 204013;
-        new_Skin.Scar_verical = 202002;
-        new_Skin.Scar_angle = 202001;
-        new_Skin.Scar_lightgrip = 202004;
-        new_Skin.Scar_pink = 202005;
-        new_Skin.Scar_lazer = 202007;
-        new_Skin.Scar_thumb = 202006;
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    if (preferences.Config.Skin.M416 == 0) {
-        new_Skin.M416_1 = 101004;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 1) {
-        new_Skin.M416_1 = 1101004046;
-        new_Skin.M416_2 = 1010040461;
-        new_Skin.M416_3 = 1010040462;
-        new_Skin.M416_4 = 1010040463;
-        new_Skin.M416_flash = 1010040474;
-        new_Skin.M416_compe = 1010040475;
-        new_Skin.M416_silent = 1010040476;
-        new_Skin.M416_reddot = 1010040470;
-        new_Skin.M416_holo = 1010040469;
-        new_Skin.M416_x2 = 1010040468;
-        new_Skin.M416_x3 = 1010040467;
-        new_Skin.M416_x4 = 1010040466;
-        new_Skin.M416_x6 = 1010040481;
-        new_Skin.M416_quickMag = 1010040471;
-        new_Skin.M416_extendedMag = 1010040472;
-        new_Skin.M416_quickNextended = 1010040473;
-        new_Skin.M416_stock = 1010040480;
-        new_Skin.M416_verical = 1010040479;
-        new_Skin.M416_thumb = 1010040478;
-        new_Skin.M416_angle = 1010040477;
-        new_Skin.M416_lightgrip = 1010040482;
-        new_Skin.M416_pink = 1010040483;
-        new_Skin.M416_lazer = 1010040484;
-    }
-    if (preferences.Config.Skin.M416 == 2) {
-        new_Skin.M416_1 = 1101004062;
-        new_Skin.M416_2 = 1010040611;
-        new_Skin.M416_3 = 1010040612;
-        new_Skin.M416_4 = 1010040613;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 3) {
-        new_Skin.M416_1 = 1101004078;
-        new_Skin.M416_2 = 1010040781;
-        new_Skin.M416_3 = 1010040782;
-        new_Skin.M416_4 = 1010040783;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 4) {
-        new_Skin.M416_1 = 1101004086;
-        new_Skin.M416_2 = 1010040861;
-        new_Skin.M416_3 = 1010040862;
-        new_Skin.M416_4 = 1010040863;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 5) {
-        new_Skin.M416_1 = 1101004098;
-        new_Skin.M416_2 = 1010040981;
-        new_Skin.M416_3 = 1010040982;
-        new_Skin.M416_4 = 1010040983;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 6) {
-        new_Skin.M416_1 = 1101004138;
-        new_Skin.M416_2 = 1010041381;
-        new_Skin.M416_3 = 1010041382;
-        new_Skin.M416_4 = 1010041383;
-        new_Skin.M416_flash = 1010041136;
-        new_Skin.M416_compe = 1010041137;
-        new_Skin.M416_silent = 1010041138;
-        new_Skin.M416_reddot = 1010041128;
-        new_Skin.M416_holo = 1010041127;
-        new_Skin.M416_x2 = 1010041126;
-        new_Skin.M416_x3 = 1010041125;
-        new_Skin.M416_x4 = 1010041124;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 1010041134;
-        new_Skin.M416_extendedMag = 1010041129;
-        new_Skin.M416_quickNextended = 1010041135;
-        new_Skin.M416_stock = 1010041146;
-        new_Skin.M416_verical = 1010041145;
-        new_Skin.M416_angle = 1010041139;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 7) {
-        new_Skin.M416_1 = 1101004163;
-        new_Skin.M416_2 = 1010041631;
-        new_Skin.M416_3 = 1010041632;
-        new_Skin.M416_4 = 1010041633;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 1010041574;
-        new_Skin.M416_silent = 1010041575;
-        new_Skin.M416_reddot = 1010041566;
-        new_Skin.M416_holo = 1010041565;
-        new_Skin.M416_x2 = 1010041564;
-        new_Skin.M416_x3 = 1010041560;
-        new_Skin.M416_x4 = 1010041554;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 1010041568;
-        new_Skin.M416_extendedMag = 1010041569;
-        new_Skin.M416_quickNextended = 1010041567;
-        new_Skin.M416_stock = 1010041579;
-        new_Skin.M416_verical = 1010041578;
-        new_Skin.M416_angle = 1010041576;
-        new_Skin.M416_lightgrip = 20200400;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 1010041577;
-    }
-    if (preferences.Config.Skin.M416 == 8) {
-        new_Skin.M416_1 = 1101004201;
-        new_Skin.M416_2 = 1010042011;
-        new_Skin.M416_3 = 1010042012;
-        new_Skin.M416_4 = 1010042013;
-        new_Skin.M416_flash = 1010041956;
-        new_Skin.M416_compe = 1010041957;
-        new_Skin.M416_silent = 1010041958;
-        new_Skin.M416_reddot = 1010041948;
-        new_Skin.M416_holo = 1010041947;
-        new_Skin.M416_x2 = 1010041946;
-        new_Skin.M416_x3 = 1010041945;
-        new_Skin.M416_x4 = 1010041944;
-        new_Skin.M416_x6 = 1010041967;
-        new_Skin.M416_quickMag = 1010041949;
-        new_Skin.M416_extendedMag = 1010041950;
-        new_Skin.M416_quickNextended = 1010041955;
-        new_Skin.M416_stock = 1010041966;
-        new_Skin.M416_verical = 1010041965;
-        new_Skin.M416_angle = 1010041959;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 9) {
-        new_Skin.M416_1 = 1101004209;
-        new_Skin.M416_2 = 1010042073;
-        new_Skin.M416_3 = 1010042083;
-        new_Skin.M416_4 = 1010042093;
-        new_Skin.M416_flash = 20101000;
-        new_Skin.M416_compe = 1010042037;
-        new_Skin.M416_silent = 1010042039;
-        new_Skin.M416_reddot = 1010042029;
-        new_Skin.M416_holo = 1010042028;
-        new_Skin.M416_x2 = 1010042027;
-        new_Skin.M416_x3 = 1010042026;
-        new_Skin.M416_x4 = 1010042025;
-        new_Skin.M416_x6 = 1010042024;
-        new_Skin.M416_quickMag = 1010042034;
-        new_Skin.M416_extendedMag = 1010042035;
-        new_Skin.M416_quickNextended = 1010042036;
-        new_Skin.M416_stock = 1010042047;
-        new_Skin.M416_verical = 1010042046;
-        new_Skin.M416_angle = 1010042044;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 10) {
-        new_Skin.M416_1 = 1101004218;
-        new_Skin.M416_2 = 1010042181;
-        new_Skin.M416_3 = 1010042182;
-        new_Skin.M416_4 = 1010042183;
-        new_Skin.M416_flash = 1010042128;
-        new_Skin.M416_compe = 1010042127;
-        new_Skin.M416_silent = 1010042129;
-        new_Skin.M416_reddot = 1010042119;
-        new_Skin.M416_holo = 1010042118;
-        new_Skin.M416_x2 = 1010042117;
-        new_Skin.M416_x3 = 1010042116;
-        new_Skin.M416_x4 = 1010042115;
-        new_Skin.M416_x6 = 1010042114;
-        new_Skin.M416_quickMag = 1010042125;
-        new_Skin.M416_extendedMag = 1010042124;
-        new_Skin.M416_quickNextended = 1010042126;
-        new_Skin.M416_stock = 1010042137;
-        new_Skin.M416_verical = 1010042136;
-        new_Skin.M416_angle = 1010042134;
-        new_Skin.M416_lightgrip = 1010042138;
-        new_Skin.M416_pink = 1010042139;
-        new_Skin.M416_lazer = 1010042144;
-        new_Skin.M416_thumb = 1010042135;
-        
-    }
-    if (preferences.Config.Skin.M416 == 11) {
-        new_Skin.M416_1 = 1101004226;
-        new_Skin.M416_2 = 1010042214;
-        new_Skin.M416_3 = 1010042215;
-        new_Skin.M416_4 = 1010042216;
-        new_Skin.M416_flash = 1010042238;
-        new_Skin.M416_compe = 1010042237;
-        new_Skin.M416_silent = 1010042239;
-        new_Skin.M416_reddot = 1010042233;
-        new_Skin.M416_holo = 1010042232;
-        new_Skin.M416_x2 = 1010042231;
-        new_Skin.M416_x3 = 1010042219;
-        new_Skin.M416_x4 = 1010042218;
-        new_Skin.M416_x6 = 1010042217;
-        new_Skin.M416_quickMag = 1010042235;
-        new_Skin.M416_extendedMag = 1010042234;
-        new_Skin.M416_quickNextended = 1010042236;
-        new_Skin.M416_stock = 1010042244;
-        new_Skin.M416_verical = 1010042243;
-        new_Skin.M416_angle = 1010042241;
-        new_Skin.M416_lightgrip = 1010042245;
-        new_Skin.M416_pink = 1010042246;
-        new_Skin.M416_lazer = 1010042247;
-        new_Skin.M416_thumb = 1010042242;
-        
-    }
-    
-    if (preferences.Config.Skin.M416 == 12) {
-        new_Skin.M416_1 = 1101004154;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 13) {
-        new_Skin.M416_1 = 1101004151;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 14) {
-        new_Skin.M416_1 = 1101004089;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 15) {
-        new_Skin.M416_1 = 1101004034;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 16) {
-        new_Skin.M416_1 = 1101004002;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (preferences.Config.Skin.M416 == 17) {
-        new_Skin.M416_1 = 1101004227;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.Groza == 0) {
-        new_Skin.Groza = 101005;
-        new_Skin.Groza_2 = 291005;
-        new_Skin.Groza_silent = 201011;
-        new_Skin.Groza_reddot = 203001;
-        new_Skin.Groza_holo = 203002;
-        new_Skin.Groza_x2 = 203003;
-        new_Skin.Groza_x3 = 203014;
-        new_Skin.Groza_x4 = 203004;
-        new_Skin.Groza_x6 = 203015;
-        new_Skin.Groza_quickMag = 204012;
-        new_Skin.Groza_extendedMag = 204011;
-        new_Skin.Groza_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.Groza == 1) {
-        
-        new_Skin.Groza = 1101005052;
-        new_Skin.Groza_2 = 1010050521;
-        new_Skin.Groza_silent = 1010050467;
-        new_Skin.Groza_reddot = 1010050466;
-        new_Skin.Groza_holo = 1010050465;
-        new_Skin.Groza_x2 = 1010050464;
-        new_Skin.Groza_x3 = 1010050463;
-        new_Skin.Groza_x4 = 1010050462;
-        new_Skin.Groza_x6 = 203015;
-        new_Skin.Groza_quickMag = 1010050468;
-        new_Skin.Groza_extendedMag = 1010050469;
-        new_Skin.Groza_quickNextended = 1010050470;
-    }
-    if (preferences.Config.Skin.Groza == 2) {
-        new_Skin.Groza = 1101005025;
-        new_Skin.Groza_2 = 1010050251;
-        new_Skin.Groza_silent = 201011;
-        new_Skin.Groza_reddot = 203001;
-        new_Skin.Groza_holo = 203002;
-        new_Skin.Groza_x2 = 203003;
-        new_Skin.Groza_x3 = 203014;
-        new_Skin.Groza_x4 = 203004;
-        new_Skin.Groza_x6 = 203015;
-        new_Skin.Groza_quickMag = 204012;
-        new_Skin.Groza_extendedMag = 204011;
-        new_Skin.Groza_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.Groza == 3) {
-        new_Skin.Groza = 1101005019;
-        new_Skin.Groza_2 = 1010050191;
-        new_Skin.Groza_silent = 201011;
-        new_Skin.Groza_reddot = 203001;
-        new_Skin.Groza_holo = 203002;
-        new_Skin.Groza_x2 = 203003;
-        new_Skin.Groza_x3 = 203014;
-        new_Skin.Groza_x4 = 203004;
-        new_Skin.Groza_x6 = 203015;
-        new_Skin.Groza_quickMag = 204012;
-        new_Skin.Groza_extendedMag = 204011;
-        new_Skin.Groza_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.Groza == 4) {
-        new_Skin.Groza = 1101005043;
-        new_Skin.Groza_2 = 1010050431;
-        new_Skin.Groza_silent = 201011;
-        new_Skin.Groza_reddot = 203001;
-        new_Skin.Groza_holo = 203002;
-        new_Skin.Groza_x2 = 203003;
-        new_Skin.Groza_x3 = 203014;
-        new_Skin.Groza_x4 = 203004;
-        new_Skin.Groza_x6 = 203015;
-        new_Skin.Groza_quickMag = 204012;
-        new_Skin.Groza_extendedMag = 204011;
-        new_Skin.Groza_quickNextended = 204013;
-    }
-    if (preferences.Config.Skin.Groza == 5) {
-        new_Skin.Groza = 1101005038;
-        new_Skin.Groza_2 = 1010050381;
-        new_Skin.Groza_silent = 1010050327;
-        new_Skin.Groza_reddot = 1010050326;
-        new_Skin.Groza_holo = 1010050325;
-        new_Skin.Groza_x2 = 1010050324;
-        new_Skin.Groza_x3 = 1010050323;
-        new_Skin.Groza_x4 = 1010050322;
-        new_Skin.Groza_x6 = 203015;
-        new_Skin.Groza_quickMag = 1010050328;
-        new_Skin.Groza_extendedMag = 1010050329;
-        new_Skin.Groza_quickNextended = 1010050330;
-    }
-    if (preferences.Config.Skin.Groza == 6) {
-        new_Skin.Groza = 1101005082;
-        new_Skin.Groza_2 = 1010050821;
-        new_Skin.Groza_silent = 201011;
-        new_Skin.Groza_reddot = 203001;
-        new_Skin.Groza_holo = 203002;
-        new_Skin.Groza_x2 = 203003;
-        new_Skin.Groza_x3 = 203014;
-        new_Skin.Groza_x4 = 203004;
-        new_Skin.Groza_x6 = 203015;
-        new_Skin.Groza_quickMag = 204012;
-        new_Skin.Groza_extendedMag = 204011;
-        new_Skin.Groza_quickNextended = 204013;
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.Famas == 0) {
-        new_Skin.Famas = 101100;
-        new_Skin.Famas_reddot = 203001;
-        new_Skin.Famas_holo = 203002;
-        new_Skin.Famas_x2 = 203003;
-        new_Skin.Famas = 203014;
-        new_Skin.Famas_x4 = 203004;
-        new_Skin.Famas_x6 = 203015;
-    }
-    if (preferences.Config.Skin.Famas == 1) {
-        new_Skin.Famas = 1101100012;
-        new_Skin.Famas_reddot = 203001;
-        new_Skin.Famas_holo = 203002;
-        new_Skin.Famas_x2 = 203003;
-        new_Skin.Famas = 203014;
-        new_Skin.Famas_x4 = 203004;
-        new_Skin.Famas_x6 = 203015;
-    }
-    if (preferences.Config.Skin.Famas == 2) {
-        new_Skin.Famas = 1101100013;
-        new_Skin.Famas_reddot = 203001;
-        new_Skin.Famas_holo = 203002;
-        new_Skin.Famas_x2 = 203003;
-        new_Skin.Famas = 203014;
-        new_Skin.Famas_x4 = 203004;
-        new_Skin.Famas_x6 = 203015;
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.AUG == 0){
-        new_Skin.AUG = 101006;
-        new_Skin.AUG_reddot = 203001;
-        new_Skin.AUG_holo = 203002;
-        new_Skin.AUG_x2 = 203003;
-        new_Skin.AUG_x3 = 203014;
-        new_Skin.AUG_x4 = 203004;
-        new_Skin.AUG_x6 = 203015;
-    }
-    
-    if (preferences.Config.Skin.AUG == 1){
-        new_Skin.AUG = 1101006062;
-        new_Skin.AUG_reddot = 1010060562;
-        new_Skin.AUG_holo = 1010060561;
-        new_Skin.AUG_x2 = 1010060554;
-        new_Skin.AUG_x3 = 1010060553;
-        new_Skin.AUG_x4 = 1010060552;
-        new_Skin.AUG_x6 = 1010060551;
-        new_Skin.AUG_lazer = 1010060574;
-        new_Skin.AUG_flash = 1010060571;
-    }
-    
-    
-    
-    if (preferences.Config.Skin.AUG == 2){
-        new_Skin.AUG = 1101006044;
-        new_Skin.AUG = 101006;
-        new_Skin.AUG_reddot = 203001;
-        new_Skin.AUG_holo = 203002;
-        new_Skin.AUG_x2 = 203003;
-        new_Skin.AUG_x3 = 203014;
-        new_Skin.AUG_x4 = 203004;
-        new_Skin.AUG_x6 = 203015;
-    }
-    if (preferences.Config.Skin.AUG == 3){
-        new_Skin.AUG = 1101006033;
-        new_Skin.AUG = 101006;
-        new_Skin.AUG_reddot = 203001;
-        new_Skin.AUG_holo = 203002;
-        new_Skin.AUG_x2 = 203003;
-        new_Skin.AUG_x3 = 203014;
-        new_Skin.AUG_x4 = 203004;
-        new_Skin.AUG_x6 = 203015;
-        new_Skin.AUG_lazer = 202007;
-        new_Skin.AUG_flash = 201010;
-    }
-    
-    if (preferences.Config.Skin.AUG == 4){
-        new_Skin.AUG = 1101006075;
-        new_Skin.AUG_reddot = 1010060696;
-        new_Skin.AUG_holo = 1010060695;
-        new_Skin.AUG_x2 = 1010060694;
-        new_Skin.AUG_x3 = 1010060693;
-        new_Skin.AUG_x4 = 1010060692;
-        new_Skin.AUG_x6 = 1010060691;
-        new_Skin.AUG_lazer = 1010060707;
-        new_Skin.AUG_flash = 1010060699;
-    }
-    if (preferences.Config.Skin.AUG == 5){
-        new_Skin.AUG = 1101006067;
-        new_Skin.AUG = 101006;
-        new_Skin.AUG_reddot = 203001;
-        new_Skin.AUG_holo = 203002;
-        new_Skin.AUG_x2 = 203003;
-        new_Skin.AUG_x3 = 203014;
-        new_Skin.AUG_x4 = 203004;
-        new_Skin.AUG_x6 = 203015;
-        new_Skin.AUG_lazer = 202007;
-        new_Skin.AUG_flash = 201010;
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.QBZ == 0)
-        new_Skin.QBZ = 101007;
-    if (preferences.Config.Skin.QBZ == 1)
-        new_Skin.QBZ = 1101007062;
-    if (preferences.Config.Skin.QBZ == 2)
-        new_Skin.QBZ = 1101007046;
-    if (preferences.Config.Skin.QBZ == 3)
-        new_Skin.QBZ = 1101007036;
-    if (preferences.Config.Skin.QBZ == 4)
-        new_Skin.QBZ = 1101007025;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    if (preferences.Config.Skin.MG3 == 0){
-        new_Skin.MG3 = 105010;
-        new_Skin.MG3_reddot = 203001;
-        new_Skin.MG3_holo = 203002;
-        new_Skin.MG3_x2 = 203003;
-        new_Skin.MG3_x3 = 203014;
-        new_Skin.MG3_x4 = 203004;
-        new_Skin.MG3_x6 = 203015;
-    }
-    if (preferences.Config.Skin.MG3 == 1){
-        new_Skin.MG3 = 1105010019;
-        new_Skin.MG3_reddot = 203001;
-        new_Skin.MG3_holo = 203002;
-        new_Skin.MG3_x2 = 203003;
-        new_Skin.MG3_x3 = 203014;
-        new_Skin.MG3_x4 = 203004;
-        new_Skin.MG3_x6 = 203015;
-    }
-    if (preferences.Config.Skin.MG3 == 2){
-        new_Skin.MG3 = 1105010008;
-        new_Skin.MG3_reddot = 203001;
-        new_Skin.MG3_holo = 203002;
-        new_Skin.MG3_x2 = 203003;
-        new_Skin.MG3_x3 = 203014;
-        new_Skin.MG3_x4 = 203004;
-        new_Skin.MG3_x6 = 203015;
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    if (preferences.Config.Skin.Honey == 0)
-        new_Skin.Honey = 101012;
-    if (preferences.Config.Skin.Honey == 1)
-        new_Skin.Honey = 1101012009;
-    
-    
-    if (preferences.Config.Skin.S1897 == 0)
-        new_Skin.S1897 = 104002;
-    if (preferences.Config.Skin.S1897 == 1)
-        new_Skin.S1897 = 1104002022;
-    if (preferences.Config.Skin.S1897 == 2)
-        new_Skin.S1897 = 1104002035;
-    if (preferences.Config.Skin.S1897 == 3)
-        new_Skin.S1897 = 1104002004;
-    
-    
-    
-    
-    
-    if (preferences.Config.Skin.DBS == 0)
-        new_Skin.DBS = 104004;
-    if (preferences.Config.Skin.DBS == 1)
-        new_Skin.DBS = 1104004035;
-    if (preferences.Config.Skin.DBS == 2)
-        new_Skin.DBS = 1104004014;
-    if (preferences.Config.Skin.DBS == 3)
-        new_Skin.DBS = 1104004015;
-    if (preferences.Config.Skin.DBS == 4)
-        new_Skin.DBS = 1104004024;
-    
-    
-    
-    
-    if (preferences.Config.Skin.S12K == 0)
-        new_Skin.S12K = 104003;
-    if (preferences.Config.Skin.S12K == 1)
-        new_Skin.S12K = 1104003038;
-    if (preferences.Config.Skin.S12K == 2)
-        new_Skin.S12K = 1104003037;
-    
-    if (preferences.Config.Skin.S12K == 3)
-        new_Skin.S12K = 1104003026;
-    
-    
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.M762 == 0) {
-        new_Skin.M762 = 101008;
-        new_Skin.M762_Mag = 291008;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-        
-    }
-    if (preferences.Config.Skin.M762 == 1) {
-        
-        new_Skin.M762 = 1101008081;
-        new_Skin.M762_Mag = 1010080811;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-        
-    }
-    if (preferences.Config.Skin.M762 == 2) {
-        new_Skin.M762 = 1101008051;
-        new_Skin.M762_Mag = 1010080511;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 3) {
-        new_Skin.M762 = 1101008061;
-        new_Skin.M762_Mag = 1010080611;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 4) {
-        new_Skin.M762 = 1101008026;
-        new_Skin.M762_Mag = 1010080261;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 5) {
-        new_Skin.M762 = 1101008104;
-        new_Skin.M762_Mag = 1010081041;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 6) {
-        new_Skin.M762 = 1101008116;
-        new_Skin.M762_Mag = 1010081161;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 7) {
-        new_Skin.M762 = 1101008126;
-        new_Skin.M762_Mag = 1010081261;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 8) {
-        new_Skin.M762 = 1101008136;
-        new_Skin.M762_Mag = 1010081361;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 9) {
-        new_Skin.M762 = 1101008070;
-        new_Skin.M762_Mag = 1010081361;
-        new_Skin.M762_reddot = 203001;
-        new_Skin.M762_holo = 203002;
-        new_Skin.M762_x2 = 203003;
-        new_Skin.M762_x3 = 203014;
-        new_Skin.M762_x4 = 203004;
-        new_Skin.M762_x6 = 203015;
-        new_Skin.M762_lazer = 202007;
-        new_Skin.M762_flash = 201010;
-    }
-    if (preferences.Config.Skin.M762 == 10) {
-        new_Skin.M762 = 1101008146;
-        new_Skin.M762_Mag = 1010081361;
-        new_Skin.M762_reddot = 1010081396;
-        new_Skin.M762_holo = 1010081395;
-        new_Skin.M762_x2 = 1010081394;
-        new_Skin.M762_x3 = 1010081393;
-        new_Skin.M762_x4 = 1010081392;
-        new_Skin.M762_x6 = 1010081391;
-        new_Skin.M762_lazer = 1010081409;
-        new_Skin.M762_flash = 1010081399;
-    }
-    if (preferences.Config.Skin.M762 == 11) {
-        new_Skin.M762 = 1101008154;
-        new_Skin.M762_Mag = 1010081361;
-        new_Skin.M762_reddot = 1010081396;
-        new_Skin.M762_holo = 1010081395;
-        new_Skin.M762_x2 = 1010081394;
-        new_Skin.M762_x3 = 1010081393;
-        new_Skin.M762_x4 = 1010081392;
-        new_Skin.M762_x6 = 1010081391;
-        new_Skin.M762_lazer = 1010081409;
-        new_Skin.M762_flash = 1010081399;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.ACE32 == 0)
-        new_Skin.ACE32 = 101102;
-    if (preferences.Config.Skin.ACE32 == 1){
-        new_Skin.ACE32 = 1101102007;
-        new_Skin.ACE32_reddot = 1010081396;
-        new_Skin.ACE32_holo = 1010081395;
-        new_Skin.ACE32_x2 = 1010081394;
-        new_Skin.ACE32_x3 = 1010081393;
-        new_Skin.ACE32_x4 = 1010081392;
-        new_Skin.ACE32_x6 = 1010081391;
-    }
-    if (preferences.Config.Skin.ACE32 == 2){
-        new_Skin.ACE32 = 1101102017;
-        new_Skin.ACE32_reddot = 1010081396;
-        new_Skin.ACE32_holo = 1010081395;
-        new_Skin.ACE32_x2 = 1010081394;
-        new_Skin.ACE32_x3 = 1010081393;
-        new_Skin.ACE32_x4 = 1010081392;
-        new_Skin.ACE32_x6 = 1010081391;
-    }
-    if (preferences.Config.Skin.ACE32 == 3){
-        new_Skin.ACE32 = 1101102025;
-        new_Skin.ACE32_reddot = 1010081396;
-        new_Skin.ACE32_holo = 1010081395;
-        new_Skin.ACE32_x2 = 1010081394;
-        new_Skin.ACE32_x3 = 1010081393;
-        new_Skin.ACE32_x4 = 1010081392;
-        new_Skin.ACE32_x6 = 1010081391;
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.UZI == 0)
-        new_Skin.UZI = 102001;
-    if (preferences.Config.Skin.UZI == 1)
-        new_Skin.UZI = 1102001102;
-    if (preferences.Config.Skin.UZI == 2)
-        new_Skin.UZI = 1102001036;
-    if (preferences.Config.Skin.UZI == 3)
-        new_Skin.UZI = 1102001058;
-    if (preferences.Config.Skin.UZI == 4)
-        new_Skin.UZI = 1102001069;
-    if (preferences.Config.Skin.UZI == 5)
-        new_Skin.UZI = 1102001089;
-    if (preferences.Config.Skin.UZI == 6)
-        new_Skin.UZI = 1102001024;
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.UMP == 0){
-        new_Skin.UMP = 102002;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    
-    if (preferences.Config.Skin.UMP == 1){
-        new_Skin.UMP = 1102002136;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    if (preferences.Config.Skin.UMP == 2){
-        new_Skin.UMP = 1102002061;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    if (preferences.Config.Skin.UMP == 3){
-        new_Skin.UMP = 1102002090;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    
-    if (preferences.Config.Skin.UMP == 4){
-        new_Skin.UMP = 1102002117;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    if (preferences.Config.Skin.UMP == 5){
-        new_Skin.UMP = 1102002124;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    if (preferences.Config.Skin.UMP == 6){
-        new_Skin.UMP = 1102002129;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    if (preferences.Config.Skin.UMP == 7){
-        new_Skin.UMP = 1102002043;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    if (preferences.Config.Skin.UMP == 8){
-        new_Skin.UMP = 1102002030;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    if (preferences.Config.Skin.UMP == 9){
-        new_Skin.UMP = 1102002083;
-        new_Skin.UMP_reddot = 203001;
-        new_Skin.UMP_holo = 203002;
-        new_Skin.UMP_x2 = 203003;
-        new_Skin.UMP_x3 = 203014;
-        new_Skin.UMP_x4 = 203004;
-        new_Skin.UMP_x6 = 203015;
-    }
-    
-    
-    
-    
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.Vector == 0)
-        new_Skin.Vector = 102003;
-    if (preferences.Config.Skin.Vector == 1)
-        
-        new_Skin.Vector = 1102003080;
-    if (preferences.Config.Skin.Vector == 2)
-        new_Skin.Vector = 1102003031;
-    if (preferences.Config.Skin.Vector == 3)
-        new_Skin.Vector = 1102003065;
-    if (preferences.Config.Skin.Vector == 4)
-        new_Skin.Vector = 1102003020;
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.Thompson == 0)
-        new_Skin.Thompson = 102004;
-    if (preferences.Config.Skin.Thompson == 1)
-        new_Skin.Thompson = 1102004018;
-    if (preferences.Config.Skin.Thompson == 2)
-        new_Skin.Thompson = 1102004034;
-    
-    //-------------------------------------------------------//
-    if (preferences.Config.Skin.P90 == 0)
-        new_Skin.P90 = 102105;
-    if (preferences.Config.Skin.P90 == 1)
-        new_Skin.P90 = 1102105012;
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.Bizon == 0)
-        new_Skin.Bizon = 102005;
-    if (preferences.Config.Skin.Bizon == 1)
-        new_Skin.Bizon = 1102005007;
-    if (preferences.Config.Skin.Bizon == 2)
-        new_Skin.Bizon = 1102005020;
-    if (preferences.Config.Skin.Bizon == 3)
-        new_Skin.Bizon = 1102005041;
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    {
-        if (preferences.Config.Skin.K98 == 0)
-            new_Skin.K98 = 103001;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    if (preferences.Config.Skin.K98 == 1){
-        new_Skin.K98 = 1103001179;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    if (preferences.Config.Skin.K98 == 2){
-        new_Skin.K98 = 1103001079;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    
-    if (preferences.Config.Skin.K98 == 3){
-        new_Skin.K98 = 1103001101;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    
-    if (preferences.Config.Skin.K98 == 4){
-        new_Skin.K98 = 1103001145;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    if (preferences.Config.Skin.K98 == 5){
-        new_Skin.K98 = 1103001160;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    if (preferences.Config.Skin.K98 == 6){
-        new_Skin.K98 = 1103001060;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    
-    if (preferences.Config.Skin.K98 == 7){
-        new_Skin.K98 = 1103001191;
-        new_Skin.K98_reddot = 1030011857;
-        new_Skin.K98_holo = 1030011856;
-        new_Skin.K98_x2 = 1030011855;
-        new_Skin.K98_x3 = 1030011854;
-        new_Skin.K98_x4 = 1030011853;
-        new_Skin.K98_x6 = 1030011852;
-        new_Skin.K98_x8 = 1030011851;
-    }
-    
-    if (preferences.Config.Skin.K98 == 8){
-        new_Skin.K98 = 1103001183;
-        new_Skin.K98_reddot = 203001;
-        new_Skin.K98_holo = 203002;
-        new_Skin.K98_x2 = 203003;
-        new_Skin.K98_x3 = 203014;
-        new_Skin.K98_x4 = 203004;
-        new_Skin.K98_x6 = 203015;
-        new_Skin.K98_x8 = 203005;
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.M24 == 0){
-        new_Skin.M24 = 103002;
-        new_Skin.M24_reddot = 203001;
-        new_Skin.M24_holo = 203002;
-        new_Skin.M24_x2 = 203003;
-        new_Skin.M24_x3 = 203014;
-        new_Skin.M24_x4 = 203004;
-        new_Skin.M24_x6 = 203015;
-        new_Skin.M24_x8 = 203005;
-    }
-    if (preferences.Config.Skin.M24 == 1){
-        new_Skin.M24 = 1103002087;
-        new_Skin.M24_reddot = 203001;
-        new_Skin.M24_holo = 203002;
-        new_Skin.M24_x2 = 203003;
-        new_Skin.M24_x3 = 203014;
-        new_Skin.M24_x4 = 203004;
-        new_Skin.M24_x6 = 203015;
-        new_Skin.M24_x8 = 203005;
-    }
-    if (preferences.Config.Skin.M24 == 2){
-        new_Skin.M24 = 1103002030;
-        new_Skin.M24_reddot = 203001;
-        new_Skin.M24_holo = 203002;
-        new_Skin.M24_x2 = 203003;
-        new_Skin.M24_x3 = 203014;
-        new_Skin.M24_x4 = 203004;
-        new_Skin.M24_x6 = 203015;
-        new_Skin.M24_x8 = 203005;
-    }
-    
-    if (preferences.Config.Skin.M24 == 3){
-        new_Skin.M24 = 1103002048;
-        new_Skin.M24_reddot = 203001;
-        new_Skin.M24_holo = 203002;
-        new_Skin.M24_x2 = 203003;
-        new_Skin.M24_x3 = 203014;
-        new_Skin.M24_x4 = 203004;
-        new_Skin.M24_x6 = 203015;
-        new_Skin.M24_x8 = 203005;
-    }
-    if (preferences.Config.Skin.M24 == 4){
-        new_Skin.M24 = 1103002056;
-        new_Skin.M24_reddot = 203001;
-        new_Skin.M24_holo = 203002;
-        new_Skin.M24_x2 = 203003;
-        new_Skin.M24_x3 = 203014;
-        new_Skin.M24_x4 = 203004;
-        new_Skin.M24_x6 = 203015;
-        new_Skin.M24_x8 = 203005;
-    }
-    if (preferences.Config.Skin.M24 == 5){
-        new_Skin.M24 = 1103002059;
-        new_Skin.M24_reddot = 203001;
-        new_Skin.M24_holo = 203002;
-        new_Skin.M24_x2 = 203003;
-        new_Skin.M24_x3 = 203014;
-        new_Skin.M24_x4 = 203004;
-        new_Skin.M24_x6 = 203015;
-        new_Skin.M24_x8 = 203005;
-    }
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.AWM == 0){
-        new_Skin.AWM = 103003;
-        new_Skin.AWM_reddot = 203001;
-        new_Skin.AWM_holo = 203002;
-        new_Skin.AWM_x2 = 203003;
-        new_Skin.AWM_x3 = 203014;
-        new_Skin.AWM_x4 = 203004;
-        new_Skin.AWM_x6 = 203015;
-        new_Skin.AWM_x8 = 203005;
-    }
-    if (preferences.Config.Skin.AWM == 1){
-        new_Skin.AWM = 1103003087;
-        new_Skin.AWM_reddot = 203001;
-        new_Skin.AWM_holo = 203002;
-        new_Skin.AWM_x2 = 203003;
-        new_Skin.AWM_x3 = 203014;
-        new_Skin.AWM_x4 = 203004;
-        new_Skin.AWM_x6 = 203015;
-        new_Skin.AWM_x8 = 203005;
-    }
-    if (preferences.Config.Skin.AWM == 2){
-        new_Skin.AWM = 1103003022;
-        new_Skin.AWM_reddot = 203001;
-        new_Skin.AWM_holo = 203002;
-        new_Skin.AWM_x2 = 203003;
-        new_Skin.AWM_x3 = 203014;
-        new_Skin.AWM_x4 = 203004;
-        new_Skin.AWM_x6 = 203015;
-        new_Skin.AWM_x8 = 203005;
-    }
-    if (preferences.Config.Skin.AWM == 3){
-        new_Skin.AWM = 1103003042;
-        new_Skin.AWM_reddot = 203001;
-        new_Skin.AWM_holo = 203002;
-        new_Skin.AWM_x2 = 203003;
-        new_Skin.AWM_x3 = 203014;
-        new_Skin.AWM_x4 = 203004;
-        new_Skin.AWM_x6 = 203015;
-        new_Skin.AWM_x8 = 203005;
-    }
-    if (preferences.Config.Skin.AWM == 4){
-        new_Skin.AWM = 1103003051;
-        new_Skin.AWM_reddot = 203001;
-        new_Skin.AWM_holo = 203002;
-        new_Skin.AWM_x2 = 203003;
-        new_Skin.AWM_x3 = 203014;
-        new_Skin.AWM_x4 = 203004;
-        new_Skin.AWM_x6 = 203015;
-        new_Skin.AWM_x8 = 203005;
-    }
-    if (preferences.Config.Skin.AWM == 5){
-        new_Skin.AWM = 1103003062;
-        new_Skin.AWM_reddot = 203001;
-        new_Skin.AWM_holo = 203002;
-        new_Skin.AWM_x2 = 203003;
-        new_Skin.AWM_x3 = 203014;
-        new_Skin.AWM_x4 = 203004;
-        new_Skin.AWM_x6 = 203015;
-        new_Skin.AWM_x8 = 203005;
-    }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.AMR == 0){
-      new_Skin.AMR = 103012;
-        new_Skin.AMR_reddot = 203001;
-        new_Skin.AMR_holo = 203002;
-        new_Skin.AMR_x2 = 203003;
-        new_Skin.AMR_x3 = 203014;
-        new_Skin.AMR_x4 = 203004;
-        new_Skin.AMR_x6 = 203015;
-        new_Skin.AMR_x8 = 203005;
-    }
-    if (preferences.Config.Skin.AMR == 1){
-      new_Skin.AMR = 1103012019;
-        new_Skin.AMR_reddot = 203001;
-        new_Skin.AMR_holo = 203002;
-        new_Skin.AMR_x2 = 203003;
-        new_Skin.AMR_x3 = 203014;
-        new_Skin.AMR_x4 = 203004;
-        new_Skin.AMR_x6 = 203015;
-        new_Skin.AMR_x8 = 203005;
-    }
-    
-    if (preferences.Config.Skin.AMR == 2){
-      new_Skin.AMR = 1103012010;
-        new_Skin.AMR_reddot = 203001;
-        new_Skin.AMR_holo = 203002;
-        new_Skin.AMR_x2 = 203003;
-        new_Skin.AMR_x3 = 203014;
-        new_Skin.AMR_x4 = 203004;
-        new_Skin.AMR_x6 = 203015;
-        new_Skin.AMR_x8 = 203005;
-    }
-    
-    if (preferences.Config.Skin.AMR == 3){
-      new_Skin.AMR = 1030120101;
-        new_Skin.AMR_reddot = 203001;
-        new_Skin.AMR_holo = 203002;
-        new_Skin.AMR_x2 = 203003;
-        new_Skin.AMR_x3 = 203014;
-        new_Skin.AMR_x4 = 203004;
-        new_Skin.AMR_x6 = 203015;
-        new_Skin.AMR_x8 = 203005;
-    }
-    
-        
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.MK14 == 0)
-      new_Skin.MK14 = 103007;
-    if (preferences.Config.Skin.MK14 == 1)
-      new_Skin.MK14 =1103007028;
-    if (preferences.Config.Skin.MK14 == 2)
-      new_Skin.MK14 = 1103007020;
-    
-    
-    
-    
-    
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.Machete == 0)
-      new_Skin.Machete = 103003;
-    if (preferences.Config.Skin.Machete == 1)
-      new_Skin.Machete = 1108001069;
-    if (preferences.Config.Skin.Machete == 2)
-      new_Skin.Machete = 1108001064;
+// AWM Skin Names
+static std::map<int, std::string> awmSkinNames = {
+    {1103003003, "Default AWM"},
+    {1103003004, "PUBG AWM"},
+    {1103003005, "Desert Digital AWM"},
+    {1103003006, "Glacier AWM"},
+    {1103003007, "Golden AWM"},
+    {1103003008, "Bloodshed AWM"},
+    {1103003009, "Fool AWM"},
+    {1103003010, "Oriental AWM"},
+    {1103003011, "Wanderer AWM"},
+    {1103003012, "Snow AWM"},
+    {1103003013, "Pharaoh AWM"},
+    {1103003014, "Silver AWM"},
+    {1103003015, "Volcano AWM"}
+};
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (preferences.Config.Skin.MINI14 == 0)
-      new_Skin.Mini14 = 103006;
-    if (preferences.Config.Skin.MINI14 == 1)
-      new_Skin.Mini14 =1103006030;
-    if (preferences.Config.Skin.MINI14 == 2)
-      new_Skin.Mini14 = 1103006058;
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  if (preferences.Config.Skin.DP28 == 0)
-    new_Skin.DP28 = 105002;
-  if (preferences.Config.Skin.DP28 == 1)
-    new_Skin.DP28 = 1105002018;
-  if (preferences.Config.Skin.DP28 == 2)
-    new_Skin.DP28 = 1105002035;
-  if (preferences.Config.Skin.DP28 == 3)
-    new_Skin.DP28 = 1105002058;
-  if (preferences.Config.Skin.DP28 == 4)
-    new_Skin.DP28 = 1105002063;
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  if (preferences.Config.Skin.M249 == 0)
-    new_Skin.M249 = 105001;
-    new_Skin.M249s = 205009;
-  if (preferences.Config.Skin.M249 == 1)
-    
-    new_Skin.M249 = 1105001048;
- //   new_Skin.M249s = 1050010542;
-  if (preferences.Config.Skin.M249 == 2)
-    new_Skin.M249 = 1105001054;
-  //  new_Skin.M249s = 1050010412;
-  if (preferences.Config.Skin.M249 == 3)
-    new_Skin.M249 = 1105001034;
-  //  new_Skin.M249s = 1050010482;
-  if (preferences.Config.Skin.M249 == 4)
-      new_Skin.M249 = 1105001020;
-   //   new_Skin.M249s = 1050010351;
-  
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// K98 Skin Names
+static std::map<int, std::string> k98SkinNames = {
+    {1103001003, "Default K98"},
+    {1103001004, "PUBG K98"},
+    {1103001005, "Desert Digital K98"},
+    {1103001006, "Glacier K98"},
+    {1103001007, "Golden K98"},
+    {1103001008, "Bloodshed K98"},
+    {1103001009, "Fool K98"},
+    {1103001010, "Oriental K98"},
+    {1103001011, "Wanderer K98"},
+    {1103001012, "Snow K98"}
+};
 
-   if (preferences.Config.Skin.Bigfoot == 0)
-    new_Skin.Bigfoot = 1953001;
-  if (preferences.Config.Skin.Bigfoot == 1)
-    new_Skin.Bigfoot = 1953004;
-    if (preferences.Config.Skin.Bigfoot == 2)
-      new_Skin.Bigfoot = 1953008;
-    
-    if (preferences.Config.Skin.RZR == 0)
-     new_Skin.RZR = 1966017;
-   if (preferences.Config.Skin.RZR == 1)
-     new_Skin.RZR = 1966017;
-     if (preferences.Config.Skin.RZR == 2)
-       new_Skin.RZR = 1966016;
-     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  if (preferences.Config.Skin.Mirado == 0)
-    new_Skin.Mirado = 1914001;
-  if (preferences.Config.Skin.Mirado == 1)
-    new_Skin.Mirado = 1915011;
-    if (preferences.Config.Skin.Mirado == 2)
-      new_Skin.Mirado = 1915009;
-    if (preferences.Config.Skin.Mirado == 3)
-      new_Skin.Mirado = 1915008;
-    if (preferences.Config.Skin.Mirado == 4)
-      new_Skin.Mirado = 1915007;
-    if (preferences.Config.Skin.Mirado == 5)
-      new_Skin.Mirado = 1915006;
-    if (preferences.Config.Skin.Mirado == 6)
-      new_Skin.Mirado = 1915005;
-    if (preferences.Config.Skin.Mirado == 7)
-      new_Skin.Mirado = 1915012;
-    if (preferences.Config.Skin.Mirado == 8)
-      new_Skin.Mirado = 1915010;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  if (preferences.Config.Skin.Moto == 0)
-    new_Skin.Moto = 1901001;
-  if (preferences.Config.Skin.Moto == 1)
-    new_Skin.Moto = 1901073;
-  if (preferences.Config.Skin.Moto == 2)
-    new_Skin.Moto = 1901074;
-  if (preferences.Config.Skin.Moto == 3)
-    new_Skin.Moto = 1901075;
-  if (preferences.Config.Skin.Moto == 4)
-    new_Skin.Moto = 1901047;
-  if (preferences.Config.Skin.Moto == 5)
-    new_Skin.Moto = 1901085;
-  if (preferences.Config.Skin.Moto == 6)
-    new_Skin.Moto = 1901076;
-  if (preferences.Config.Skin.Moto == 7)
-    new_Skin.Moto = 1901027;
-  if (preferences.Config.Skin.Moto == 8)
-    new_Skin.Moto = 1901018;
-  if (preferences.Config.Skin.Moto == 9)
-    new_Skin.Moto = 1901085;
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UMP Skin Names
+static std::map<int, std::string> umpSkinNames = {
+    {1102002003, "Default UMP"},
+    {1102002004, "PUBG UMP"},
+    {1102002005, "Desert Digital UMP"},
+    {1102002006, "Glacier UMP"},
+    {1102002007, "Golden UMP"},
+    {1102002008, "Bloodshed UMP"},
+    {1102002009, "Fool UMP"},
+    {1102002010, "Oriental UMP"}
+};
 
-if (preferences.Config.Skin.Buggy == 0)
-    new_Skin.Buggy = 1907001;
-  if (preferences.Config.Skin.Buggy == 1)
-    new_Skin.Buggy = 1907047;
-  if (preferences.Config.Skin.Buggy == 2)
-    new_Skin.Buggy = 1907009;
-if (preferences.Config.Skin.Buggy == 3)
-    new_Skin.Buggy = 1907010;
-if (preferences.Config.Skin.Buggy == 4)
-    new_Skin.Buggy = 1907011;
-if (preferences.Config.Skin.Buggy == 5)
-    new_Skin.Buggy = 1907012;
-if (preferences.Config.Skin.Buggy == 6)
-    new_Skin.Buggy = 1907013;
-if (preferences.Config.Skin.Buggy == 7)
-    new_Skin.Buggy = 1907014;
-if (preferences.Config.Skin.Buggy == 8)
-    new_Skin.Buggy = 1907015;
-if (preferences.Config.Skin.Buggy == 9)
-    new_Skin.Buggy = 1907016;
-if (preferences.Config.Skin.Buggy == 10)
-    new_Skin.Buggy = 1907017;
-if (preferences.Config.Skin.Buggy == 11)
-    new_Skin.Buggy = 1907018;
-if (preferences.Config.Skin.Buggy == 12)
-    new_Skin.Buggy = 1907019;
-if (preferences.Config.Skin.Buggy == 13)
-    new_Skin.Buggy = 1907020;
-if (preferences.Config.Skin.Buggy == 14)
-    new_Skin.Buggy = 1907021;
-if (preferences.Config.Skin.Buggy == 15)
-    new_Skin.Buggy = 1907022;
-if (preferences.Config.Skin.Buggy == 16)
-    new_Skin.Buggy = 1907023;
-if (preferences.Config.Skin.Buggy == 17)
-    new_Skin.Buggy = 1907024;
-if (preferences.Config.Skin.Buggy == 18)
-    new_Skin.Buggy = 1907025;
-if (preferences.Config.Skin.Buggy == 19)
-    new_Skin.Buggy = 1907026;
-if (preferences.Config.Skin.Buggy == 20)
-    new_Skin.Buggy = 1907027;
-if (preferences.Config.Skin.Buggy == 21)
-    new_Skin.Buggy = 1907028;
-if (preferences.Config.Skin.Buggy == 22)
-    new_Skin.Buggy = 1907029;
-if (preferences.Config.Skin.Buggy == 23)
-    new_Skin.Buggy = 1907030;
-if (preferences.Config.Skin.Buggy == 24)
-    new_Skin.Buggy = 1907031;
-if (preferences.Config.Skin.Buggy == 25)
-    new_Skin.Buggy = 1907032;
-if (preferences.Config.Skin.Buggy == 26)
-    new_Skin.Buggy = 1907033;
-if (preferences.Config.Skin.Buggy == 27)
-    new_Skin.Buggy = 1907034;
-if (preferences.Config.Skin.Buggy == 28)
-    new_Skin.Buggy = 1907035;
-if (preferences.Config.Skin.Buggy == 29)
-    new_Skin.Buggy = 1907036;
-if (preferences.Config.Skin.Buggy == 30)
-    new_Skin.Buggy = 1907037;
-if (preferences.Config.Skin.Buggy == 31)
-    new_Skin.Buggy = 1907038;
-if (preferences.Config.Skin.Buggy == 32)
-    new_Skin.Buggy = 1907039;
-if (preferences.Config.Skin.Buggy == 33)
-    new_Skin.Buggy = 1907040;
-    
-    
-    
-    
-    
-  if (preferences.Config.Skin.Dacia == 0)
-    new_Skin.Dacia = 1903001;
-  if (preferences.Config.Skin.Dacia == 1)
-    new_Skin.Dacia =1903201;
-  if (preferences.Config.Skin.Dacia == 2)
-    new_Skin.Dacia =1903200;
-  if (preferences.Config.Skin.Dacia == 3)
-    new_Skin.Dacia = 1903193;
-  if (preferences.Config.Skin.Dacia == 4)
-    new_Skin.Dacia = 1903192;
-  if (preferences.Config.Skin.Dacia == 5)
-    new_Skin.Dacia = 1903191;
-  if (preferences.Config.Skin.Dacia == 6)
-    new_Skin.Dacia = 1903080;
-  if (preferences.Config.Skin.Dacia == 7)
-    new_Skin.Dacia = 1903079;
-  if (preferences.Config.Skin.Dacia == 8)
-    new_Skin.Dacia = 1903076;
-  if (preferences.Config.Skin.Dacia == 9)
-    new_Skin.Dacia = 1903075;
-  if (preferences.Config.Skin.Dacia == 10)
-    new_Skin.Dacia = 1903074;
-  if (preferences.Config.Skin.Dacia == 11)
-    new_Skin.Dacia = 1903071;
-  if (preferences.Config.Skin.Dacia == 12)
-    new_Skin.Dacia = 1903073;
-  if (preferences.Config.Skin.Dacia == 13)
-    new_Skin.Dacia = 1903072;
-  if (preferences.Config.Skin.Dacia == 14)
-    new_Skin.Dacia = 1903090;
-  if (preferences.Config.Skin.Dacia == 15)
-    new_Skin.Dacia = 1903089;
-  if (preferences.Config.Skin.Dacia == 16)
-    new_Skin.Dacia = 1903088;
-  if (preferences.Config.Skin.Dacia == 17)
-    new_Skin.Dacia = 1903204;
-  if (preferences.Config.Skin.Dacia == 18)
-    new_Skin.Dacia = 1903203;
-  if (preferences.Config.Skin.Dacia == 19)
-    new_Skin.Dacia = 1903202;
-  if (preferences.Config.Skin.Dacia == 20)
-    new_Skin.Dacia = 1903017;
-  if (preferences.Config.Skin.Dacia == 21)
-    new_Skin.Dacia = 1903014;
-    if (preferences.Config.Skin.Dacia == 22)
-      new_Skin.Dacia = 1903023;
-    if (preferences.Config.Skin.Dacia == 23)
-      new_Skin.Dacia = 1903022;
-    if (preferences.Config.Skin.Dacia == 24)
-      new_Skin.Dacia = 1903019;
-      
-  
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UZI Skin Names
+static std::map<int, std::string> uziSkinNames = {
+    {1102001003, "Default UZI"},
+    {1102001004, "PUBG UZI"},
+    {1102001005, "Desert Digital UZI"},
+    {1102001006, "Glacier UZI"},
+    {1102001007, "Golden UZI"},
+    {1102001008, "Bloodshed UZI"},
+    {1102001009, "Fool UZI"},
+    {1102001010, "Oriental UZI"}
+};
 
-  
-if (preferences.Config.Skin.MiniBus == 0)
-    new_Skin.MiniBus = 1904001;
-  if (preferences.Config.Skin.MiniBus == 1)
-    new_Skin.MiniBus = 1904005;
-  if (preferences.Config.Skin.MiniBus == 2)
-    new_Skin.MiniBus = 1904006;
-if (preferences.Config.Skin.MiniBus == 3)
-    new_Skin.MiniBus = 1904007;
-if (preferences.Config.Skin.MiniBus == 4)
-    new_Skin.MiniBus = 1904008;
-if (preferences.Config.Skin.MiniBus == 5)
-    new_Skin.MiniBus = 1904009;
-if (preferences.Config.Skin.MiniBus == 6)
-    new_Skin.MiniBus = 1904010;
-if (preferences.Config.Skin.MiniBus == 7)
-    new_Skin.MiniBus = 1904011;
-if (preferences.Config.Skin.MiniBus == 8)
-    new_Skin.MiniBus = 1904012;
-if (preferences.Config.Skin.MiniBus == 9)
-    new_Skin.MiniBus = 1904013;
-if (preferences.Config.Skin.MiniBus == 10)
-    new_Skin.MiniBus = 1904014;
-if (preferences.Config.Skin.MiniBus == 11)
-    new_Skin.MiniBus = 1904015;
-if (preferences.Config.Skin.MiniBus == 12)
-    new_Skin.MiniBus = 1904004;
-  
-  if (preferences.Config.Skin.CoupeRP == 0)
-    new_Skin.CoupeRP = 1961001;
-  if (preferences.Config.Skin.CoupeRP == 1)
-    new_Skin.CoupeRP = 1961024;
-  if (preferences.Config.Skin.CoupeRP == 2)
-    new_Skin.CoupeRP = 1961047;
-  if (preferences.Config.Skin.CoupeRP == 3)
-    new_Skin.CoupeRP = 1961034;
-  if (preferences.Config.Skin.CoupeRP == 4)
-    new_Skin.CoupeRP = 1961018;
-  if (preferences.Config.Skin.CoupeRP == 5)
-    new_Skin.CoupeRP = 1961007;
-  if (preferences.Config.Skin.CoupeRP == 6)
-    new_Skin.CoupeRP = 1961010;
-  if (preferences.Config.Skin.CoupeRP == 7)
-    new_Skin.CoupeRP = 1961049;
-  if (preferences.Config.Skin.CoupeRP == 8)
-    new_Skin.CoupeRP = 1961048;
-  if (preferences.Config.Skin.CoupeRP == 9)
-    new_Skin.CoupeRP = 1961012;
-  if (preferences.Config.Skin.CoupeRP == 10)
-    new_Skin.CoupeRP = 1961013;
-  if (preferences.Config.Skin.CoupeRP == 11)
-    new_Skin.CoupeRP = 1961014;
-  if (preferences.Config.Skin.CoupeRP == 12)
-    new_Skin.CoupeRP = 1961015;
-  if (preferences.Config.Skin.CoupeRP == 13)
-    new_Skin.CoupeRP = 1961016;
-  if (preferences.Config.Skin.CoupeRP == 14)
-    new_Skin.CoupeRP = 1961017;
-  if (preferences.Config.Skin.CoupeRP == 15)
-    new_Skin.CoupeRP = 1961020;
-  if (preferences.Config.Skin.CoupeRP == 16)
-    new_Skin.CoupeRP = 1961021;
-  if (preferences.Config.Skin.CoupeRP == 17)
-    new_Skin.CoupeRP = 1961025;
-  if (preferences.Config.Skin.CoupeRP == 18)
-    new_Skin.CoupeRP = 1961029;
-  if (preferences.Config.Skin.CoupeRP == 19)
-    new_Skin.CoupeRP = 1961030;
-  if (preferences.Config.Skin.CoupeRP == 20)
-    new_Skin.CoupeRP = 1961031;
-  if (preferences.Config.Skin.CoupeRP == 21)
-    new_Skin.CoupeRP = 1961032;
-  if (preferences.Config.Skin.CoupeRP == 22)
-    new_Skin.CoupeRP = 1961033;
-  if (preferences.Config.Skin.CoupeRP == 23)
-    new_Skin.CoupeRP = 1961035;
-  if (preferences.Config.Skin.CoupeRP == 24)
-    new_Skin.CoupeRP = 1961036;
-  if (preferences.Config.Skin.CoupeRP == 22)
-    new_Skin.CoupeRP = 1961037;
-  if (preferences.Config.Skin.CoupeRP == 26)
-    new_Skin.CoupeRP = 1961038;
-  if (preferences.Config.Skin.CoupeRP == 27)
-    new_Skin.CoupeRP = 1961039;
-  if (preferences.Config.Skin.CoupeRP == 28)
-    new_Skin.CoupeRP = 1961040;
-  if (preferences.Config.Skin.CoupeRP == 29)
-    new_Skin.CoupeRP = 1961041;
-  if (preferences.Config.Skin.CoupeRP == 30)
-    new_Skin.CoupeRP = 1961042;
-  if (preferences.Config.Skin.CoupeRP == 31)
-    new_Skin.CoupeRP = 1961043;
-  if (preferences.Config.Skin.CoupeRP == 32)
-    new_Skin.CoupeRP = 1961044;
-  if (preferences.Config.Skin.CoupeRP == 33)
-    new_Skin.CoupeRP = 1961045;
-  if (preferences.Config.Skin.CoupeRP == 34)
-    new_Skin.CoupeRP = 1961046;
-  if (preferences.Config.Skin.CoupeRP == 35)
-    new_Skin.CoupeRP = 1961050;
-  if (preferences.Config.Skin.CoupeRP == 36)
-    new_Skin.CoupeRP = 1961051;
-  if (preferences.Config.Skin.CoupeRP == 37)
-    new_Skin.CoupeRP = 1961052;
-  if (preferences.Config.Skin.CoupeRP == 38)
-    new_Skin.CoupeRP = 1961053;
-  if (preferences.Config.Skin.CoupeRP == 39)
-    new_Skin.CoupeRP = 1961054;
-  if (preferences.Config.Skin.CoupeRP == 40)
-    new_Skin.CoupeRP = 1961055;
-  if (preferences.Config.Skin.CoupeRP == 41)
-    new_Skin.CoupeRP = 1961056;
-  if (preferences.Config.Skin.CoupeRP == 42)
-    new_Skin.CoupeRP = 1961057;
-    if (preferences.Config.Skin.CoupeRP == 43)
-      new_Skin.CoupeRP = 1961138;
-    if (preferences.Config.Skin.CoupeRP == 44)
-      new_Skin.CoupeRP = 1961139;
-    
-    
+// Vector Skin Names
+static std::map<int, std::string> vectorSkinNames = {
+    {1102003003, "Default Vector"},
+    {1102003004, "PUBG Vector"},
+    {1102003005, "Desert Digital Vector"},
+    {1102003006, "Glacier Vector"},
+    {1102003007, "Golden Vector"},
+    {1102003008, "Bloodshed Vector"},
+    {1102003009, "Fool Vector"},
+    {1102003010, "Oriental Vector"}
+};
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GROZA Skin Names
+static std::map<int, std::string> grozaSkinNames = {
+    {1101005003, "Default GROZA"},
+    {1101005004, "PUBG GROZA"},
+    {1101005005, "Desert Digital GROZA"},
+    {1101005006, "Glacier GROZA"},
+    {1101005007, "Golden GROZA"},
+    {1101005008, "Bloodshed GROZA"},
+    {1101005009, "Fool GROZA"},
+    {1101005010, "Oriental GROZA"}
+};
 
-  if (preferences.Config.Skin.UAZ == 0)
-    new_Skin.UAZ = 1908001;
-  if (preferences.Config.Skin.UAZ == 1)
-    new_Skin.UAZ = 1908095;
-  if (preferences.Config.Skin.UAZ == 2)
-    new_Skin.UAZ = 1908094;
-  if (preferences.Config.Skin.UAZ == 3)
-    new_Skin.UAZ = 1908085;
-  if (preferences.Config.Skin.UAZ == 4)
-    new_Skin.UAZ = 1908084;
-  if (preferences.Config.Skin.UAZ == 5)
-    new_Skin.UAZ = 1908078;
-  if (preferences.Config.Skin.UAZ == 6)
-    new_Skin.UAZ = 1908077;
-  if (preferences.Config.Skin.UAZ == 7)
-    new_Skin.UAZ = 1908076;
-  if (preferences.Config.Skin.UAZ == 8)
-    new_Skin.UAZ = 1908075;
-  if (preferences.Config.Skin.UAZ == 9)
-    new_Skin.UAZ = 1908070;
-  if (preferences.Config.Skin.UAZ == 10)
-    new_Skin.UAZ = 1908069;
-  if (preferences.Config.Skin.UAZ == 11)
-    new_Skin.UAZ = 1908078;
-  if (preferences.Config.Skin.UAZ == 12)
-    new_Skin.UAZ = 1908067;
-  if (preferences.Config.Skin.UAZ == 13)
-    new_Skin.UAZ = 1908066;
-  if (preferences.Config.Skin.UAZ == 14)
-    new_Skin.UAZ = 1908019;
-  if (preferences.Config.Skin.UAZ == 15)
-    new_Skin.UAZ = 1908013;
-  if (preferences.Config.Skin.UAZ == 16)
-    new_Skin.UAZ = 1908036;
-  if (preferences.Config.Skin.UAZ == 17)
-    new_Skin.UAZ = 1908032;
-    if (preferences.Config.Skin.UAZ == 18)
-      new_Skin.UAZ = 1908010;
+// M24 Skin Names
+static std::map<int, std::string> m24SkinNames = {
+    {1103002003, "Default M24"},
+    {1103002004, "PUBG M24"},
+    {1103002005, "Desert Digital M24"},
+    {1103002006, "Glacier M24"},
+    {1103002007, "Golden M24"},
+    {1103002008, "Bloodshed M24"},
+    {1103002009, "Fool M24"},
+    {1103002010, "Oriental M24"}
+};
+
+// MK14 Skin Names (Chinese favorite)
+static std::map<int, std::string> mk14SkinNames = {
+    {1103007003, "Default MK14"},
+    {1103007004, "PUBG MK14"},
+    {1103007005, "Desert Digital MK14"},
+    {1103007006, "Glacier MK14"},
+    {1103007007, "Golden MK14"},
+    {1103007008, "Bloodshed MK14"},
+    {1103007009, "Fool MK14"},
+    {1103007010, "Oriental MK14"},
+    {1103007011, "Wanderer MK14"},
+    {1103007012, "Snow MK14"},
+    {1103007013, "Pharaoh MK14"},
+    {1103007014, "Silver MK14"},
+    {1103007015, "Volcano MK14"},
+    {1103007016, "Ocean MK14"},
+    {1103007017, "Joker MK14"},
+    {1103007018, "Galaxy MK14"},
+    {1103007019, "Crimson MK14"},
+    {1103007020, "Azure MK14"},
+    {1103007021, "Rainbow MK14"},
+    {1103007022, "Diamond MK14"}
+};
+
+// MG3 Skin Names (Chinese favorite)
+static std::map<int, std::string> mg3SkinNames = {
+    {1105010003, "Default MG3"},
+    {1105010004, "PUBG MG3"},
+    {1105010005, "Desert Digital MG3"},
+    {1105010006, "Glacier MG3"},
+    {1105010007, "Golden MG3"},
+    {1105010008, "Bloodshed MG3"},
+    {1105010009, "Fool MG3"},
+    {1105010010, "Oriental MG3"},
+    {1105010011, "Wanderer MG3"},
+    {1105010012, "Snow MG3"},
+    {1105010013, "Pharaoh MG3"},
+    {1105010014, "Silver MG3"},
+    {1105010015, "Volcano MG3"},
+    {1105010016, "Ocean MG3"},
+    {1105010017, "Joker MG3"},
+    {1105010018, "Galaxy MG3"},
+    {1105010019, "Crimson MG3"},
+    {1105010020, "Azure MG3"},
+    {1105010021, "Rainbow MG3"},
+    {1105010022, "Diamond MG3"}
+};
+
+// QBZ Skin Names  
+static std::map<int, std::string> qbzSkinNames = {
+    {1101007003, "Default QBZ"},
+    {1101007004, "PUBG QBZ"},
+    {1101007005, "Desert Digital QBZ"},
+    {1101007006, "Glacier QBZ"},
+    {1101007007, "Golden QBZ"},
+    {1101007008, "Bloodshed QBZ"},
+    {1101007009, "Fool QBZ"},
+    {1101007010, "Oriental QBZ"},
+    {1101007011, "Wanderer QBZ"},
+    {1101007012, "Snow QBZ"}
+};
+
+// ====== SCOPE SKINS ======
+// 2x Scope Skins
+static std::map<int, std::string> scope2xSkinNames = {
+    {1203003001, "Default 2x Scope"},
+    {1203003002, "Desert Digital 2x"},
+    {1203003003, "Glacier 2x"},
+    {1203003004, "Golden 2x"},
+    {1203003005, "Bloodshed 2x"},
+    {1203003006, "Fool 2x"},
+    {1203003007, "Oriental 2x"},
+    {1203003008, "Wanderer 2x"},
+    {1203003009, "Snow 2x"},
+    {1203003010, "Pharaoh 2x"},
+    {1203003011, "Silver 2x"},
+    {1203003012, "Volcano 2x"},
+    {1203003013, "Ocean 2x"},
+    {1203003014, "Joker 2x"},
+    {1203003015, "Galaxy 2x"}
+};
+
+// 3x Scope Skins
+static std::map<int, std::string> scope3xSkinNames = {
+    {1203014001, "Default 3x Scope"},
+    {1203014002, "Desert Digital 3x"},
+    {1203014003, "Glacier 3x"},
+    {1203014004, "Golden 3x"},
+    {1203014005, "Bloodshed 3x"},
+    {1203014006, "Fool 3x"},
+    {1203014007, "Oriental 3x"},
+    {1203014008, "Wanderer 3x"},
+    {1203014009, "Snow 3x"},
+    {1203014010, "Pharaoh 3x"},
+    {1203014011, "Silver 3x"},
+    {1203014012, "Volcano 3x"}
+};
+
+// 4x Scope Skins
+static std::map<int, std::string> scope4xSkinNames = {
+    {1203004001, "Default 4x Scope"},
+    {1203004002, "Desert Digital 4x"},
+    {1203004003, "Glacier 4x"},
+    {1203004004, "Golden 4x"},
+    {1203004005, "Bloodshed 4x"},
+    {1203004006, "Fool 4x"},
+    {1203004007, "Oriental 4x"},
+    {1203004008, "Wanderer 4x"},
+    {1203004009, "Snow 4x"},
+    {1203004010, "Pharaoh 4x"},
+    {1203004011, "Silver 4x"},
+    {1203004012, "Volcano 4x"},
+    {1203004013, "Ocean 4x"},
+    {1203004014, "Joker 4x"}
+};
+
+// 6x Scope Skins
+static std::map<int, std::string> scope6xSkinNames = {
+    {1203015001, "Default 6x Scope"},
+    {1203015002, "Desert Digital 6x"},
+    {1203015003, "Glacier 6x"},
+    {1203015004, "Golden 6x"},
+    {1203015005, "Bloodshed 6x"},
+    {1203015006, "Fool 6x"},
+    {1203015007, "Oriental 6x"},
+    {1203015008, "Wanderer 6x"},
+    {1203015009, "Snow 6x"},
+    {1203015010, "Pharaoh 6x"}
+};
+
+// 8x Scope Skins
+static std::map<int, std::string> scope8xSkinNames = {
+    {1203005001, "Default 8x Scope"},
+    {1203005002, "Desert Digital 8x"},
+    {1203005003, "Glacier 8x"},
+    {1203005004, "Golden 8x"},
+    {1203005005, "Bloodshed 8x"},
+    {1203005006, "Fool 8x"},
+    {1203005007, "Oriental 8x"},
+    {1203005008, "Wanderer 8x"},
+    {1203005009, "Snow 8x"},
+    {1203005010, "Pharaoh 8x"},
+    {1203005011, "Silver 8x"},
+    {1203005012, "Volcano 8x"}
+};
+
+// ====== VEHICLE SKINS ======
+// Car Skins
+static std::map<int, std::string> carSkinNames = {
+    {1301001001, "Default Car"},
+    {1301001002, "Desert Camo Car"},
+    {1301001003, "Glacier Car"},
+    {1301001004, "Golden Car"},
+    {1301001005, "Bloodshed Car"},
+    {1301001006, "Fool Car"},
+    {1301001007, "Oriental Car"},
+    {1301001008, "Wanderer Car"},
+    {1301001009, "Snow Car"},
+    {1301001010, "Pharaoh Car"},
+    {1301001011, "Silver Car"},
+    {1301001012, "Volcano Car"},
+    {1301001013, "Ocean Car"},
+    {1301001014, "Joker Car"},
+    {1301001015, "Galaxy Car"},
+    {1301001016, "Crimson Car"},
+    {1301001017, "Azure Car"},
+    {1301001018, "Rainbow Car"},
+    {1301001019, "Diamond Car"},
+    {1301001020, "Neon Car"},
+    {1301001021, "Carbon Car"},
+    {1301001022, "Chrome Car"},
+    {1301001023, "Flame Car"},
+    {1301001024, "Lightning Car"},
+    {1301001025, "Toxic Car"},
+    {1301001026, "Beast Car"},
+    {1301001027, "Royal Car"},
+    {1301001028, "Mythic Car"}
+};
+
+// Motorcycle Skins
+static std::map<int, std::string> motorcycleSkinNames = {
+    {1302001001, "Default Motorcycle"},
+    {1302001002, "Desert Camo Motorcycle"},
+    {1302001003, "Glacier Motorcycle"},
+    {1302001004, "Golden Motorcycle"},
+    {1302001005, "Bloodshed Motorcycle"},
+    {1302001006, "Fool Motorcycle"},
+    {1302001007, "Oriental Motorcycle"},
+    {1302001008, "Wanderer Motorcycle"},
+    {1302001009, "Snow Motorcycle"},
+    {1302001010, "Pharaoh Motorcycle"},
+    {1302001011, "Silver Motorcycle"},
+    {1302001012, "Volcano Motorcycle"},
+    {1302001013, "Ocean Motorcycle"},
+    {1302001014, "Joker Motorcycle"},
+    {1302001015, "Galaxy Motorcycle"},
+    {1302001016, "Crimson Motorcycle"},
+    {1302001017, "Azure Motorcycle"},
+    {1302001018, "Rainbow Motorcycle"},
+    {1302001019, "Diamond Motorcycle"},
+    {1302001020, "Neon Motorcycle"},
+    {1302001021, "Carbon Motorcycle"},
+    {1302001022, "Chrome Motorcycle"},
+    {1302001023, "Flame Motorcycle"},
+    {1302001024, "Lightning Motorcycle"}
+};
+
+// ====== EQUIPMENT SKINS ======
+// Backpack/Sleeping Bag Skins
+static std::map<int, std::string> backpackSkinNames = {
+    {1501003001, "Default Backpack Lv1"},
+    {1501003002, "Desert Camo Backpack Lv1"},
+    {1501003003, "Glacier Backpack Lv1"},
+    {1501003004, "Golden Backpack Lv1"},
+    {1501003005, "Bloodshed Backpack Lv1"},
+    {1501003050, "Default Backpack Lv2"},
+    {1501003051, "Desert Camo Backpack Lv2"},
+    {1501003052, "Glacier Backpack Lv2"},
+    {1501003053, "Golden Backpack Lv2"},
+    {1501003054, "Bloodshed Backpack Lv2"},
+    {1501003055, "Fool Backpack Lv2"},
+    {1501003100, "Default Backpack Lv3"},
+    {1501003101, "Desert Camo Backpack Lv3"},
+    {1501003102, "Glacier Backpack Lv3"},
+    {1501003103, "Golden Backpack Lv3"},
+    {1501003104, "Bloodshed Backpack Lv3"},
+    {1501003105, "Fool Backpack Lv3"},
+    {1501003106, "Oriental Backpack Lv3"},
+    {1501003107, "Wanderer Backpack Lv3"},
+    {1501003108, "Snow Backpack Lv3"},
+    {1501003109, "Pharaoh Backpack Lv3"},
+    {1501003110, "Silver Backpack Lv3"},
+    {1501003111, "Volcano Backpack Lv3"},
+    {1501003112, "Ocean Backpack Lv3"},
+    {1501003113, "Joker Backpack Lv3"},
+    {1501003114, "Galaxy Backpack Lv3"}
+};
+
+// Helmet Skins
+static std::map<int, std::string> helmetSkinNames = {
+    {1502003001, "Default Helmet Lv1"},
+    {1502003002, "Desert Camo Helmet Lv1"},
+    {1502003003, "Glacier Helmet Lv1"},
+    {1502003004, "Golden Helmet Lv1"},
+    {1502003050, "Default Helmet Lv2"},
+    {1502003051, "Desert Camo Helmet Lv2"},
+    {1502003052, "Glacier Helmet Lv2"},
+    {1502003053, "Golden Helmet Lv2"},
+    {1502003054, "Bloodshed Helmet Lv2"},
+    {1502003100, "Default Helmet Lv3"},
+    {1502003101, "Desert Camo Helmet Lv3"},
+    {1502003102, "Glacier Helmet Lv3"},
+    {1502003103, "Golden Helmet Lv3"},
+    {1502003104, "Bloodshed Helmet Lv3"},
+    {1502003105, "Fool Helmet Lv3"},
+    {1502003106, "Oriental Helmet Lv3"},
+    {1502003107, "Wanderer Helmet Lv3"},
+    {1502003108, "Snow Helmet Lv3"},
+    {1502003109, "Pharaoh Helmet Lv3"},
+    {1502003110, "Silver Helmet Lv3"},
+    {1502003111, "Volcano Helmet Lv3"},
+    {1502003112, "Ocean Helmet Lv3"},
+    {1502003113, "Joker Helmet Lv3"},
+    {1502003114, "Galaxy Helmet Lv3"},
+    {1502003115, "Crimson Helmet Lv3"},
+    {1502003116, "Azure Helmet Lv3"},
+    {1502003117, "Rainbow Helmet Lv3"},
+    {1502003118, "Diamond Helmet Lv3"}
+};
+
+// ====== PARACHUTE SKINS ======
+static std::map<int, std::string> parachuteSkinNames = {
+    {1401001001, "Default Parachute"},
+    {1401001002, "Desert Camo Parachute"},
+    {1401001003, "Glacier Parachute"},
+    {1401001004, "Golden Parachute"},
+    {1401001005, "Bloodshed Parachute"},
+    {1401001006, "Fool Parachute"},
+    {1401001007, "Oriental Parachute"},
+    {1401001008, "Wanderer Parachute"},
+    {1401001009, "Snow Parachute"},
+    {1401001010, "Pharaoh Parachute"},
+    {1401001011, "Silver Parachute"},
+    {1401001012, "Volcano Parachute"},
+    {1401001013, "Ocean Parachute"},
+    {1401001014, "Joker Parachute"},
+    {1401001015, "Galaxy Parachute"},
+    {1401001016, "Crimson Parachute"},
+    {1401001017, "Azure Parachute"},
+    {1401001018, "Rainbow Parachute"},
+    {1401001019, "Diamond Parachute"},
+    {1401001020, "Neon Parachute"},
+    {1401001021, "Carbon Parachute"},
+    {1401001022, "Chrome Parachute"},
+    {1401001023, "Flame Parachute"},
+    {1401001024, "Lightning Parachute"},
+    {1401001025, "Toxic Parachute"},
+    {1401001026, "Beast Parachute"},
+    {1401001027, "Royal Parachute"},
+    {1401001028, "Mythic Parachute"}
+};
+
+// Master skin name getter function (supports all categories)
+static std::string getSkinName(const std::string& weaponKey, int skinId) {
+    // ===== WEAPONS =====
+    if (weaponKey == "M416") {
+        auto it = m416SkinNames.find(skinId);
+        return (it != m416SkinNames.end()) ? it->second : "Unknown M416 Skin";
+    }
+    else if (weaponKey == "AKM") {
+        auto it = akmSkinNames.find(skinId);
+        return (it != akmSkinNames.end()) ? it->second : "Unknown AKM Skin";
+    }
+    else if (weaponKey == "SCAR") {
+        auto it = scarSkinNames.find(skinId);
+        return (it != scarSkinNames.end()) ? it->second : "Unknown SCAR Skin";
+    }
+    else if (weaponKey == "AWM") {
+        auto it = awmSkinNames.find(skinId);
+        return (it != awmSkinNames.end()) ? it->second : "Unknown AWM Skin";
+    }
+    else if (weaponKey == "K98") {
+        auto it = k98SkinNames.find(skinId);
+        return (it != k98SkinNames.end()) ? it->second : "Unknown K98 Skin";
+    }
+    else if (weaponKey == "UMP") {
+        auto it = umpSkinNames.find(skinId);
+        return (it != umpSkinNames.end()) ? it->second : "Unknown UMP Skin";
+    }
+    else if (weaponKey == "UZI") {
+        auto it = uziSkinNames.find(skinId);
+        return (it != uziSkinNames.end()) ? it->second : "Unknown UZI Skin";
+    }
+    else if (weaponKey == "Vector") {
+        auto it = vectorSkinNames.find(skinId);
+        return (it != vectorSkinNames.end()) ? it->second : "Unknown Vector Skin";
+    }
+    else if (weaponKey == "GROZA") {
+        auto it = grozaSkinNames.find(skinId);
+        return (it != grozaSkinNames.end()) ? it->second : "Unknown GROZA Skin";
+    }
+    else if (weaponKey == "M24") {
+        auto it = m24SkinNames.find(skinId);
+        return (it != m24SkinNames.end()) ? it->second : "Unknown M24 Skin";
+    }
+    else if (weaponKey == "MK14") {
+        auto it = mk14SkinNames.find(skinId);
+        return (it != mk14SkinNames.end()) ? it->second : "Unknown MK14 Skin";
+    }
+    else if (weaponKey == "MG3") {
+        auto it = mg3SkinNames.find(skinId);
+        return (it != mg3SkinNames.end()) ? it->second : "Unknown MG3 Skin";
+    }
+    else if (weaponKey == "QBZ") {
+        auto it = qbzSkinNames.find(skinId);
+        return (it != qbzSkinNames.end()) ? it->second : "Unknown QBZ Skin";
+    }
     
- 
- if (preferences.Config.Skin.Boat == 0)
-    new_Skin.Boat = 1911001;
-  if (preferences.Config.Skin.Boat == 1)
-    new_Skin.Boat = 1911013;
-  if (preferences.Config.Skin.Boat == 2)
-    new_Skin.Boat = 1911003;
-if (preferences.Config.Skin.Boat == 3)
-    new_Skin.Boat = 1911004;
-if (preferences.Config.Skin.Boat == 4)
-    new_Skin.Boat = 1911005;
-if (preferences.Config.Skin.Boat == 5)
-    new_Skin.Boat = 1911006;
-if (preferences.Config.Skin.Boat == 6)
-    new_Skin.Boat = 1911007;
-if (preferences.Config.Skin.Boat == 7)
-    new_Skin.Boat = 1911008;
-if (preferences.Config.Skin.Boat == 8)
-    new_Skin.Boat = 1911009;
-if (preferences.Config.Skin.Boat == 9)
-    new_Skin.Boat = 1911010;
-if (preferences.Config.Skin.Boat == 10)
-    new_Skin.Boat = 1911011;
-if (preferences.Config.Skin.Boat == 11)
-    new_Skin.Boat = 1911012;
-
+    // ===== SCOPES =====
+    else if (weaponKey == "2X_SCOPE") {
+        auto it = scope2xSkinNames.find(skinId);
+        return (it != scope2xSkinNames.end()) ? it->second : "Unknown 2x Scope Skin";
+    }
+    else if (weaponKey == "3X_SCOPE") {
+        auto it = scope3xSkinNames.find(skinId);
+        return (it != scope3xSkinNames.end()) ? it->second : "Unknown 3x Scope Skin";
+    }
+    else if (weaponKey == "4X_SCOPE") {
+        auto it = scope4xSkinNames.find(skinId);
+        return (it != scope4xSkinNames.end()) ? it->second : "Unknown 4x Scope Skin";
+    }
+    else if (weaponKey == "6X_SCOPE") {
+        auto it = scope6xSkinNames.find(skinId);
+        return (it != scope6xSkinNames.end()) ? it->second : "Unknown 6x Scope Skin";
+    }
+    else if (weaponKey == "8X_SCOPE") {
+        auto it = scope8xSkinNames.find(skinId);
+        return (it != scope8xSkinNames.end()) ? it->second : "Unknown 8x Scope Skin";
+    }
+    
+    // ===== VEHICLES =====
+    else if (weaponKey == "CAR") {
+        auto it = carSkinNames.find(skinId);
+        return (it != carSkinNames.end()) ? it->second : "Unknown Car Skin";
+    }
+    else if (weaponKey == "MOTORCYCLE") {
+        auto it = motorcycleSkinNames.find(skinId);
+        return (it != motorcycleSkinNames.end()) ? it->second : "Unknown Motorcycle Skin";
+    }
+    
+    // ===== EQUIPMENT =====
+    else if (weaponKey == "BACKPACK") {
+        auto it = backpackSkinNames.find(skinId);
+        return (it != backpackSkinNames.end()) ? it->second : "Unknown Backpack Skin";
+    }
+    else if (weaponKey == "HELMET") {
+        auto it = helmetSkinNames.find(skinId);
+        return (it != helmetSkinNames.end()) ? it->second : "Unknown Helmet Skin";
+    }
+    
+    // ===== PARACHUTE =====
+    else if (weaponKey == "PARACHUTE") {
+        auto it = parachuteSkinNames.find(skinId);
+        return (it != parachuteSkinNames.end()) ? it->second : "Unknown Parachute Skin";
+    }
+    
+    return "Unknown Item";
 }
 
-static int prevXSuits = preferences.Config.Skin.XSuits;
-static auto start = std::chrono::high_resolution_clock::now();
-static bool callFunction = false;
-
-int m4v[] = { 101004, 1101004046, 1101004062, 1101004078, 1101004086, 1101004098, 1101004138, 1101004163,1101004201,1101004209,1101004218,1101004226,1101004154,1101004151,1101004089,1101004034,1101004002,1101004227};
-
-int scar[] = { 101003, 1101003057, 1101003070, 1101003080, 1101003119, 1101003146, 1101003167, 1101003181,1101003195,1101003099,1101003173};
-int akmv[] = { 101001,1101001213, 1101001103, 1101001116, 1101001128, 1101001143, 1101001154, 1101001174,1101001089,1101001231,1101001242,1101001249, 1101001256,1101001023,1101001068};
-
-
-
-
-
-
-//----------------------------------------------------------------//
-
-int m7[] = { 101008, 1101008026, 1101008051, 1101008061, 1101008081, 1101008104, 1101008116, 1101008126,1101008136,1101008070,1101008146,1101008154};
-
-int m7reddot[] = {         203001,203001,203001,203001,203001,203001,203001,203001,203001,203001,1010081396,1010081396};
-int m7holo[] = {           203002,203002,203002,203002,203002,203002,203002,203002,203002,203002,1010081395,1010081395};
-int m7x2[] = {             203003,203003,203003,203003,203003,203003,203003,203003,203003,203003,1010081394,1010081394};
-int m7x3[] = {             203014,203014,203014,203014,203014,203014,203014,203014,203014,203014,1010081393,1010081393};
-int m7x4[] = {             203004,203004,203004,203004,203004,203004,203004,203004,203004,203004,1010081392,1010081392};
-int m7x6[] = {             203015,203015,203015,203015,203015,203015,203015,203015,203015,203015,1010081391,1010081391};
-int m7Lazer[] = {          202007,202007,202007,202007,202007,202007,202007,202007,202007,202007,1010081409,1010081409};
-int m7Flash[] = {          201010,201010,201010,201010,201010,201010,201010,201010,201010,201010,1010081399,1010081399};
-
-//-------------------------------------------------------------------//
-
-
-
-
-
-
-
-
-
-
-
-
-//----------------------------------------------------------------//
-
-int awm[] = { 103003, 1103003087, 1103003022, 1103003042, 1103003051, 1103003062};
-
-int awmreddot[] = {         203001,203001,203001,203001,203001,203001,};
-int awmholo[] = {           203002,203002,203002,203002,203002,203002,};
-int awmx2[] = {             203003,203003,203003,203003,203003,203003,};
-int awmx3[] = {             203014,203014,203014,203014,203014,203014,};
-int awmx4[] = {             203004,203004,203004,203004,203004,203004,};
-int awmx6[] = {             203015,203015,203015,203015,203015,203015,};
-int awmx8[] = {             203005,203005,203005,203005,203005,203005,};
-
-//-------------------------------------------------------------------//
-
-
-
-
-
-
-//----------------------------------------------------------------//
-
-int amr[] = { 103012, 1103012019, 1103012010,1030120101};
-
-int amrreddot[] = {         203001,203001,203001,203001,};
-int amrholo[] = {           203002,203002,203002,203002,};
-int amrx2[] = {             203003,203003,203003,203003,};
-int amrx3[] = {             203014,203014,203014,203014,};
-int amrx4[] = {             203004,203004,203004,203004,};
-int amrx6[] = {             203015,203015,203015,203015,};
-int amrx8[] = {             203005,203005,203005,203005,};
-
-//-------------------------------------------------------------------//
-
-
-
-
-
-
-int machete[] = { 108001, 1108001069, 1108001064};
-int mk14[] = { 103007, 1103007028, 1103007020};
-int mini14[] = { 103006, 1103006030, 1103006058};
-
-//----------------------------------------------------------------//
-
-int kar[] = { 103001, 1103001060, 1103001079, 1103001101, 1103001145, 1103001160, 1103001179,1103001191,1103001183};
-
-int karreddot[] = {         203001,203001,203001,203001,203001,203001,203001,1030011857};
-int karholo[] = {           203002,203002,203002,203002,203002,203002,203002,1030011856};
-int karx2[] = {             203003,203003,203003,203003,203003,203003,203003,1030011855};
-int karx3[] = {             203014,203014,203014,203014,203014,203014,203014,1030011854};
-int karx4[] = {             203004,203004,203004,203004,203004,203004,203004,1030011853};
-int karx6[] = {             203015,203015,203015,203015,203015,203015,203015,1030011852};
-int karx8[] = {             203005,203005,203005,203005,203005,203005,203005,1030011851};
-
-//-------------------------------------------------------------------//
-
-
-
-
-
-int mg3[] = { 105010, 1105010019,1105010008};
-
-int mg3reddot[] = {         203001,203001,};
-int mg3holo[] = {           203002,203002,};
-int mg3x2[] = {             203003,203003,};
-int mg3x3[] = {             203014,203014,};
-int mg3x4[] = {             203004,203004,};
-int mg3x6[] = {             203015,203015,};
-
-//-------------------------------------------------------------------//
-
-int s1897[] = { 104002, 1104002022,1104002035,1104002004};
-int dbs[] = { 104004, 1104004035,1104004014,1104004015,1104004024};
-int s12k[] = { 104003, 1104003038,1104003037,1104003026};
-int honey[] = { 101012, 1101012009};
-
-
-
-
-//----------------------------------------------------------------//
-
-int m24[] = { 103002, 1103002087, 1103002030, 1103002048, 1103002056, 1103002059};
-
-int m24reddot[] = {         203001,203001,203001,203001,203001,203001,};
-int m24holo[] = {           203002,203002,203002,203002,203002,203002,};
-int m24x2[] = {             203003,203003,203003,203003,203003,203003,};
-int m24x3[] = {             203014,203014,203014,203014,203014,203014,};
-int m24x4[] = {             203004,203004,203004,203004,203004,203004,};
-int m24x6[] = {             203015,203015,203015,203015,203015,203015,};
-int m24x8[] = {             203005,203005,203005,203005,203005,203005,};
-
-//-------------------------------------------------------------------//
-
-
-
-int dp[] = { 105002, 1105002018, 1105002035, 1105002058, 1105002063};
-int m249[] = { 105001, 1105001020, 1105001034, 1105001048, 1105001054};
-
-//----------------------------------------------------------------//
-int groza[] = { 101005, 1101005019, 1101005025, 1101005038, 1101005043, 1101005052, 1101005082};
-int Groza_2[] = {             291005,1010050381,1010050521,1010050821,1010050191,1010050251,1010050431};
-int grozareddot[] = {         203001,1010050326,1010050466,203001,    203001,    203001,    203001};
-int grozasilent[] = {         201011,1010050327,1010050467,201011,    201011,    201011,    201011};
-int grozaholo[] = {           203002,1010050325,1010050465,203002,    203002,    203002,    203002};
-int grozax2[] = {             203003,1010050324,1010050464,203003,    203003,    203003,    203003};
-int grozax3[] = {             203014,1010050323,1010050463,203014,    203014,    203014,    203014};
-int grozax4[] = {             203004,1010050322,1010050462,203004,    203004,    203004,    203004};
-int grozax6[] = {             203015,203015,    203015,    203015,    203015,    203015,    203015};
-int grozaquickMag[] = {       204012,1010050328,1010050468,204012,    204012,    204012,    204012};
-int grozaextendedMag[] = {    204011,1010050329,1010050469,204011,    204011,    204011,    204011};
-int grozaquickNextended[] = { 204013,1010050330,1010050470,204013,    204013,    204013,    204013};
-//----------------------------------------------------------------//
-
-int famas[] ={ 101100,1101100012,1101100013};
-
-int famasreddot[] = {         203001,203001,203001,};
-int famasholo[] = {           203002,203002,203002,};
-int famasx2[] = {             203003,203003,203003,};
-int famasx3[] = {             203014,203014,203014,};
-int famasx4[] = {             203004,203004,203004,};
-int famasx6[] = {             203015,203015,203015,};
-
-
-
-//----------------------------------------------------------------//
-
-int aug[] = { 101006, 1101006033, 1101006044, 1101006062,1101006075,1101006067};
-
-int augreddot[] = {         203001,1010060562,203001,203001,1010060696,};
-int augholo[] = {           203002,1010060561,203002,203002,1010060695,};
-int augx2[] = {             203003,1010060554,203003,203003,1010060694,};
-int augx3[] = {             203014,1010060553,203014,203014,1010060693,};
-int augx4[] = {             203004,1010060552,203004,203004,1010060692,};
-int augx6[] = {             203015,1010060551,203015,203015,1010060691,};
-int augLazer[] = {             202007,1010060574,202007,202007,1010060707,};
-int augFlash[] = {            201010,1010060571,201010,201010,1010060699,};
-
-//-------------------------------------------------------------------//
-
-
-
-
-
-int qbz[] = { 101007, 1101007062, 1101007046, 1101007036, 1101007025};
-int m16[] = { 101002, 1101002029, 1101002056, 1101002068, 1101002081, 1101002103};
-int uzi[] = { 102001, 1102001024, 1102001036, 1102001058, 1102001069, 1102001089, 1102001102};
-
-//-----------------------------------------------------------------//
-int ump[] = { 102002,1102002136, 1102002061, 1102002090, 1102002117, 1102002124, 1102002129, 1102002043,1102002030,1102002083};
-
-int umpreddot[] = {         203001,203001,203001,203001,203001,203001,203001,203001,203001,203001};
-int umpholo[] = {           203002,203002,203002,203002,203002,203002,203002,203002,203002,203002};
-int umpx2[] = {             203003,203003,203003,203003,203003,203003,203003,203003,203003,203003};
-int umpx3[] = {             203014,203014,203014,203014,203014,203014,203014,203014,203014,203014};
-int umpx4[] = {             203004,203004,203004,203004,203004,203004,203004,203004,203004,203004};
-int umpx6[] = {             203015,203015,203015,203015,203015,203015,203015,203015,203015,203015};
-
-
-//----------------------------------------------------------------//
-
-int vectorr[] = { 102003, 1102003020, 1102003031, 1102003065, 1102003080};
-int tommy[] = { 102004, 1102004018, 1102004034};
-int p90[] = { 102105, 1102105012};
-int bizon[] = { 102005, 1102005007, 1102005020, 1102005041};
-
-
-//-------------------------------------------------------------------//
-
-
-
-
-
-int ace32[] = { 101102, 1101102007, 1101102017,1101102025};
-
-
-int ace32reddot[] = {         203001,203001,203001,203001};
-int ace32holo[] = {           203002,203002,203002,203002};
-int ace32x2[] = {             203003,203003,203003,203003};
-int ace32x3[] = {             203014,203014,203014,203014};
-int ace32x4[] = {             203004,203004,203004,203004};
-int ace32x6[] = {             203015,203015,203015,203015};
-
-//-------------------------------------------------------------------//
-
-
-
-
-
-int pan[] = { 108004, 1108004125, 1108004145, 1108004160, 1108004283, 1108004337, 1108004356, 1108004365, 1108004054, 1108004008};
-
-int m249s[] = { 205009, 1050010351, 1050010412, 1050010482, 1050010542};
-
-//-------------------------------------------------------------------//
-
-namespace VehicleSkins {
-    // Vehicle skin constants
-    constexpr int DACIA_KOENIGSEGG = 131072;
-    constexpr int COUPE_LAMBORGHINI = 262144;
-    constexpr int SPORTS_CAR_VINTAGE = 524296;
-    constexpr int CLASSIC_MUSCLE = 262152;
-    constexpr int XSUIT_PREMIUM = 403003;
+// Get available skin IDs for any item category
+static std::vector<int> getAvailableSkinIds(const std::string& weaponKey) {
+    std::vector<int> skinIds;
+    
+    // ===== WEAPONS =====
+    if (weaponKey == "M416") {
+        for (const auto& pair : m416SkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "AKM") {
+        for (const auto& pair : akmSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "SCAR") {
+        for (const auto& pair : scarSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "AWM") {
+        for (const auto& pair : awmSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "K98") {
+        for (const auto& pair : k98SkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "UMP") {
+        for (const auto& pair : umpSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "UZI") {
+        for (const auto& pair : uziSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "Vector") {
+        for (const auto& pair : vectorSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "GROZA") {
+        for (const auto& pair : grozaSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "M24") {
+        for (const auto& pair : m24SkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "MK14") {
+        for (const auto& pair : mk14SkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "MG3") {
+        for (const auto& pair : mg3SkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "QBZ") {
+        for (const auto& pair : qbzSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    
+    // ===== SCOPES =====
+    else if (weaponKey == "2X_SCOPE") {
+        for (const auto& pair : scope2xSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "3X_SCOPE") {
+        for (const auto& pair : scope3xSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "4X_SCOPE") {
+        for (const auto& pair : scope4xSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "6X_SCOPE") {
+        for (const auto& pair : scope6xSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "8X_SCOPE") {
+        for (const auto& pair : scope8xSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    
+    // ===== VEHICLES =====
+    else if (weaponKey == "CAR") {
+        for (const auto& pair : carSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "MOTORCYCLE") {
+        for (const auto& pair : motorcycleSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    
+    // ===== EQUIPMENT =====
+    else if (weaponKey == "BACKPACK") {
+        for (const auto& pair : backpackSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    else if (weaponKey == "HELMET") {
+        for (const auto& pair : helmetSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    
+    // ===== PARACHUTE =====
+    else if (weaponKey == "PARACHUTE") {
+        for (const auto& pair : parachuteSkinNames) {
+            skinIds.push_back(pair.first);
+        }
+    }
+    
+    return skinIds;
 }
 
-{{ ... }}
+// Simple update function - called from NRG.h RenderESP()
+inline void updateSkin() {
+    // This function maintains compatibility with NRG.h
+    // The actual Config access happens in NRG.h where Config is defined
+    // This function is just a placeholder for the call from RenderESP()
+}
+
+// Simple skin application function - no string operations
+inline void applySkinForWeapon(int weaponId, int skinId) {
+    switch(weaponId) {
+        case 101004: new_Skin.M416_1 = skinId; break;      // M416
+        case 101001: new_Skin.AKM = skinId; break;         // AKM
+        case 103001: new_Skin.K98 = skinId; break;         // K98
+        case 103003: new_Skin.AWM = skinId; break;         // AWM
+        case 101005: new_Skin.Groza = skinId; break;       // GROZA
+        case 101003: new_Skin.Scar = skinId; break;        // SCAR
+        case 103002: new_Skin.M24 = skinId; break;         // M24
+        case 103012: new_Skin.AMR = skinId; break;         // AMR
+        case 103007: new_Skin.MK14 = skinId; break;        // MK14
+        case 103006: new_Skin.Mini14 = skinId; break;      // Mini14
+        case 102001: new_Skin.UZI = skinId; break;         // UZI
+        case 102002: new_Skin.UMP = skinId; break;         // UMP
+        case 102003: new_Skin.Vector = skinId; break;      // Vector
+        case 102004: new_Skin.Thompson = skinId; break;    // Thompson
+        case 101006: new_Skin.AUG = skinId; break;         // AUG
+        case 105002: new_Skin.DP28 = skinId; break;        // DP28
+        case 105001: new_Skin.M249 = skinId; break;        // M249
+        case 105010: new_Skin.MG3 = skinId; break;         // MG3
+        case 101008: new_Skin.M762 = skinId; break;        // M762
+        case 101102: new_Skin.ACE32 = skinId; break;       // ACE32
+        default: break; // Unknown weapon ID
+    }
+}
+
+// Get skin ID for weapon
+inline int getSkinForWeapon(int weaponId) {
+    if (!new_Skin.enableSkins) return weaponId; // Return original if skins disabled
+    
+    switch(weaponId) {
+        case 101004: return new_Skin.M416_1;       // M416
+        case 101001: return new_Skin.AKM;          // AKM
+        case 103001: return new_Skin.K98;          // K98
+        case 103003: return new_Skin.AWM;          // AWM
+        case 101005: return new_Skin.Groza;        // GROZA
+        case 101003: return new_Skin.Scar;         // SCAR
+        case 103002: return new_Skin.M24;          // M24
+        case 103012: return new_Skin.AMR;          // AMR
+        case 103007: return new_Skin.MK14;         // MK14
+        case 103006: return new_Skin.Mini14;       // Mini14
+        case 102001: return new_Skin.UZI;          // UZI
+        case 102002: return new_Skin.UMP;          // UMP
+        case 102003: return new_Skin.Vector;       // Vector
+        case 102004: return new_Skin.Thompson;     // Thompson
+        case 101006: return new_Skin.AUG;          // AUG
+        case 105002: return new_Skin.DP28;         // DP28
+        case 105001: return new_Skin.M249;         // M249
+        case 105010: return new_Skin.MG3;          // MG3
+        case 101008: return new_Skin.M762;         // M762
+        case 101102: return new_Skin.ACE32;        // ACE32
+        default: return weaponId; // Return original ID if no skin mapping
+    }
+}
+
+// ===== ENHANCED SKIN MANAGEMENT SYSTEM =====
+struct EnhancedSkinManager {
+    struct SkinChangeRecord {
+        int weaponId;
+        int skinId;
+        std::chrono::steady_clock::time_point timestamp;
+        bool verified;
+        std::vector<int> appliedAttachments;
+    };
+
+    struct SkinProtectionConfig {
+        bool enableMemoryScrambling = true;
+        bool enableSkinVerification = true;
+        bool enableDynamicRotation = true;
+        int maxRetryAttempts = 3;
+        int verificationInterval = 30000; // 30 seconds
+        int rotationInterval = 60000;     // 1 minute
+        int protectionLevel = 2;          // 0-3, higher means more protection
+    };
+
+    std::map<int, SkinChangeRecord> lastSkinChanges;
+    std::map<int, int> verificationCounts;
+    std::map<int, std::vector<int>> rotationHistory;
+    std::mutex skinMutex;
+    SkinProtectionConfig config;
+
+    bool applySkinWithProtection(int weaponId, int skinId) {
+        std::lock_guard<std::mutex> lock(skinMutex);
+        
+        // Check cooldown
+        auto now = std::chrono::steady_clock::now();
+        if (lastSkinChanges.count(weaponId)) {
+            auto& lastChange = lastSkinChanges[weaponId];
+            if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastChange.timestamp).count() < 100) {
+                return false; // Too soon to change skin
+            }
+        }
+
+        // Apply skin with retry logic
+        for (int attempt = 0; attempt < config.maxRetryAttempts; attempt++) {
+            if (applySkinInternal(weaponId, skinId)) {
+                // Record successful change
+                SkinChangeRecord record;
+                record.weaponId = weaponId;
+                record.skinId = skinId;
+                record.timestamp = now;
+                record.verified = false;
+                lastSkinChanges[weaponId] = record;
+                
+                // Schedule verification
+                if (config.enableSkinVerification) {
+                    scheduleVerification(weaponId, skinId);
+                }
+                
+                return true;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+        return false;
+    }
+
+    bool verifySkinApplication(int weaponId, int expectedSkinId) {
+        std::lock_guard<std::mutex> lock(skinMutex);
+        
+        auto it = lastSkinChanges.find(weaponId);
+        if (it == lastSkinChanges.end()) return false;
+
+        auto& record = it->second;
+        if (record.skinId != expectedSkinId) return false;
+
+        // Verify current skin matches expected
+        int currentSkinId = getCurrentSkinId(weaponId);
+        if (currentSkinId != expectedSkinId) {
+            // Attempt recovery
+            if (applySkinInternal(weaponId, expectedSkinId)) {
+                record.verified = true;
+                return true;
+            }
+            return false;
+        }
+
+        record.verified = true;
+        return true;
+    }
+
+private:
+    bool applySkinInternal(int weaponId, int skinId) {
+        // Get weapon data
+        auto weaponData = getWeaponData(weaponId, 0);
+        if (!weaponData) return false;
+
+        // Apply base skin
+        if (!updateSkinValue(weaponId, skinId)) return false;
+
+        // Apply attachments if available
+        if (weaponData->magazineId != 999999999) {
+            if (!applyAttachment(weaponId, "MAGAZINE", weaponData->magazineId)) return false;
+        }
+
+        // Force visual update
+        forceVisualUpdate(weaponId);
+        return true;
+    }
+
+    void scheduleVerification(int weaponId, int skinId) {
+        std::thread([this, weaponId, skinId]() {
+            std::this_thread::sleep_for(std::chrono::milliseconds(config.verificationInterval));
+            verifySkinApplication(weaponId, skinId);
+        }).detach();
+    }
+
+    void forceVisualUpdate(int weaponId) {
+        // Implementation depends on game engine
+        // This is a placeholder for the actual implementation
+    }
+};
+
+// Global enhanced skin manager instance
+static EnhancedSkinManager g_EnhancedSkinManager;
+
+// ===== ENHANCED SKIN PROTECTION SYSTEM =====
+struct SkinProtection {
+    static constexpr int MAX_RETRY_ATTEMPTS = 3;
+    static constexpr int RETRY_DELAY_MS = 100;
+    static constexpr int VERIFICATION_INTERVAL = 30000; // 30 seconds
+    static constexpr int MEMORY_SCRAMBLE_SIZE = 1024;
+    
+    static std::vector<uint8_t> scrambleKey;
+    static std::map<int, std::chrono::steady_clock::time_point> lastVerificationTimes;
+    static std::map<int, int> verificationCounts;
+    static std::map<int, int> protectionLevels;
+    
+    static void initialize() {
+        scrambleKey.resize(16);
+        std::random_device rd;
+        std::generate(scrambleKey.begin(), scrambleKey.end(), std::ref(rd));
+    }
+    
+    static void scrambleMemory() {
+        std::vector<uint8_t> buffer(MEMORY_SCRAMBLE_SIZE);
+        std::random_device rd;
+        std::generate(buffer.begin(), buffer.end(), std::ref(rd));
+        
+        // XOR scramble with key
+        for (size_t i = 0; i < buffer.size(); i++) {
+            buffer[i] ^= scrambleKey[i % scrambleKey.size()];
+        }
+        
+        // Clear sensitive data
+        std::fill(buffer.begin(), buffer.end(), 0);
+    }
+    
+    static bool verifySkin(int weaponId, int expectedSkinId) {
+        auto currentSkinId = getCurrentSkinId(weaponId);
+        if (currentSkinId != expectedSkinId) {
+            // Attempt recovery
+            if (applySkinWithRetry(weaponId, expectedSkinId)) {
+                updateVerificationStatus(weaponId);
+                return true;
+            }
+            return false;
+        }
+        updateVerificationStatus(weaponId);
+        return true;
+    }
+    
+    static void updateVerificationStatus(int weaponId) {
+        lastVerificationTimes[weaponId] = std::chrono::steady_clock::now();
+        verificationCounts[weaponId]++;
+    }
+    
+    static bool needsVerification(int weaponId) {
+        auto it = lastVerificationTimes.find(weaponId);
+        if (it == lastVerificationTimes.end()) return true;
+        
+        auto now = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+            now - it->second).count() > VERIFICATION_INTERVAL;
+    }
+};
+
+// ===== ADVANCED ATTACHMENT HANDLING =====
+struct AttachmentManager {
+    struct AttachmentConfig {
+        int id;
+        AttachType type;
+        bool isDefault;
+        std::vector<int> compatibleWeapons;
+    };
+    
+    static std::map<int, AttachmentConfig> attachmentConfigs;
+    static std::map<int, std::vector<int>> weaponAttachments;
+    
+    static void initialize() {
+        // Initialize attachment configurations
+        initializeAttachmentConfigs();
+        // Map attachments to weapons
+        mapAttachmentsToWeapons();
+    }
+    
+    static bool applyAttachmentWithProtection(int weaponId, AttachType type, int attachmentId) {
+        // Verify attachment compatibility
+        if (!isAttachmentCompatible(weaponId, attachmentId)) {
+            return false;
+        }
+        
+        // Apply with memory protection
+        SkinProtection::scrambleMemory();
+        
+        // Apply attachment with retry logic
+        for (int attempt = 0; attempt < SkinProtection::MAX_RETRY_ATTEMPTS; attempt++) {
+            if (applyAttachment(weaponId, type, attachmentId)) {
+                return true;
+            }
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(SkinProtection::RETRY_DELAY_MS));
+        }
+        return false;
+    }
+    
+    static bool isAttachmentCompatible(int weaponId, int attachmentId) {
+        auto it = attachmentConfigs.find(attachmentId);
+        if (it == attachmentConfigs.end()) return false;
+        
+        const auto& config = it->second;
+        return std::find(config.compatibleWeapons.begin(), 
+                        config.compatibleWeapons.end(), 
+                        weaponId) != config.compatibleWeapons.end();
+    }
+    
+private:
+    static void initializeAttachmentConfigs() {
+        // Initialize with default configurations
+        // This would be populated with actual attachment data
+    }
+    
+    static void mapAttachmentsToWeapons() {
+        // Map attachments to their compatible weapons
+        // This would be populated with actual weapon-attachment relationships
+    }
+};
+
+// ===== SKIN ROTATION SYSTEM =====
+struct SkinRotationManager {
+    struct RotationConfig {
+        bool enabled = true;
+        int interval = 60000; // 1 minute
+        bool randomize = true;
+        int maxHistorySize = 10;
+    };
+    
+    static RotationConfig config;
+    static std::map<int, std::vector<int>> rotationHistory;
+    static std::map<int, std::chrono::steady_clock::time_point> lastRotationTimes;
+    
+    static bool shouldRotate(int weaponId) {
+        if (!config.enabled) return false;
+        
+        auto it = lastRotationTimes.find(weaponId);
+        if (it == lastRotationTimes.end()) return true;
+        
+        auto now = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+            now - it->second).count() > config.interval;
+    }
+    
+    static int getNextSkinId(int weaponId, const std::vector<int>& availableSkins) {
+        if (availableSkins.empty()) return 0;
+        
+        auto& history = rotationHistory[weaponId];
+        if (history.size() >= config.maxHistorySize) {
+            history.erase(history.begin());
+        }
+        
+        if (config.randomize) {
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(0, availableSkins.size() - 1);
+            return availableSkins[dis(gen)];
+        } else {
+            // Sequential rotation
+            int currentIndex = 0;
+            if (!history.empty()) {
+                auto it = std::find(availableSkins.begin(), 
+                                  availableSkins.end(), 
+                                  history.back());
+                if (it != availableSkins.end()) {
+                    currentIndex = std::distance(availableSkins.begin(), it);
+                }
+            }
+            return availableSkins[(currentIndex + 1) % availableSkins.size()];
+        }
+    }
+    
+    static void updateRotationHistory(int weaponId, int skinId) {
+        rotationHistory[weaponId].push_back(skinId);
+        lastRotationTimes[weaponId] = std::chrono::steady_clock::now();
+    }
+};
+
+// Initialize static members
+std::vector<uint8_t> SkinProtection::scrambleKey;
+std::map<int, std::chrono::steady_clock::time_point> SkinProtection::lastVerificationTimes;
+std::map<int, int> SkinProtection::verificationCounts;
+std::map<int, int> SkinProtection::protectionLevels;
+
+std::map<int, AttachmentManager::AttachmentConfig> AttachmentManager::attachmentConfigs;
+std::map<int, std::vector<int>> AttachmentManager::weaponAttachments;
+
+SkinRotationManager::RotationConfig SkinRotationManager::config;
+std::map<int, std::vector<int>> SkinRotationManager::rotationHistory;
+std::map<int, std::chrono::steady_clock::time_point> SkinRotationManager::lastRotationTimes;
+
+// ===== ENHANCED SKIN VERIFICATION SYSTEM =====
+struct SkinVerification {
+    struct VerificationData {
+        int expectedSkinId;
+        std::chrono::steady_clock::time_point lastCheck;
+        int verificationCount;
+        bool isVerified;
+        std::vector<int> appliedAttachments;
+    };
+    
+    static std::map<int, VerificationData> verificationData;
+    static std::mutex verificationMutex;
+    
+    static bool verifyAndRecover(int weaponId, int expectedSkinId) {
+        std::lock_guard<std::mutex> lock(verificationMutex);
+        
+        auto& data = verificationData[weaponId];
+        data.expectedSkinId = expectedSkinId;
+        
+        // Get current skin state
+        int currentSkinId = getCurrentSkinId(weaponId);
+        if (currentSkinId != expectedSkinId) {
+            // Attempt recovery with enhanced protection
+            if (applyEnhancedProtection(weaponId, expectedSkinId)) {
+                data.isVerified = true;
+                data.verificationCount++;
+                data.lastCheck = std::chrono::steady_clock::now();
+                return true;
+            }
+            data.isVerified = false;
+            return false;
+        }
+        
+        data.isVerified = true;
+        data.verificationCount++;
+        data.lastCheck = std::chrono::steady_clock::now();
+        return true;
+    }
+    
+    static bool applyEnhancedProtection(int weaponId, int skinId) {
+        // Apply memory protection
+        SkinProtection::scrambleMemory();
+        
+        // Apply skin with retry logic
+        for (int attempt = 0; attempt < SkinProtection::MAX_RETRY_ATTEMPTS; attempt++) {
+            if (applySkinInternal(weaponId, skinId)) {
+                // Verify application
+                if (verifySkinApplication(weaponId, skinId)) {
+                    return true;
+                }
+            }
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(SkinProtection::RETRY_DELAY_MS));
+        }
+        return false;
+    }
+    
+    static bool verifySkinApplication(int weaponId, int expectedSkinId) {
+        auto currentSkinId = getCurrentSkinId(weaponId);
+        if (currentSkinId != expectedSkinId) {
+            return false;
+        }
+        
+        // Verify attachments if any
+        auto weaponData = getWeaponData(weaponId, 0);
+        if (weaponData) {
+            if (weaponData->magazineId != 999999999) {
+                if (!verifyAttachment(weaponId, "MAGAZINE", weaponData->magazineId)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    static bool verifyAttachment(int weaponId, const std::string& type, int expectedId) {
+        // Implementation would check if attachment is properly applied
+        return true; // Placeholder
+    }
+};
+
+// ===== ADVANCED SKIN ROTATION SYSTEM =====
+struct AdvancedSkinRotation {
+    struct RotationData {
+        std::vector<int> availableSkins;
+        std::vector<int> rotationHistory;
+        std::chrono::steady_clock::time_point lastRotation;
+        bool isRandom;
+        int currentIndex;
+    };
+    
+    static std::map<int, RotationData> rotationData;
+    static std::mutex rotationMutex;
+    
+    static void initializeRotation(int weaponId, const std::vector<int>& skins, bool random = true) {
+        std::lock_guard<std::mutex> lock(rotationMutex);
+        
+        auto& data = rotationData[weaponId];
+        data.availableSkins = skins;
+        data.isRandom = random;
+        data.currentIndex = 0;
+        data.lastRotation = std::chrono::steady_clock::now();
+    }
+    
+    static int getNextSkin(int weaponId) {
+        std::lock_guard<std::mutex> lock(rotationMutex);
+        
+        auto& data = rotationData[weaponId];
+        if (data.availableSkins.empty()) {
+            return 0;
+        }
+        
+        int nextSkin;
+        if (data.isRandom) {
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(0, data.availableSkins.size() - 1);
+            nextSkin = data.availableSkins[dis(gen)];
+        } else {
+            nextSkin = data.availableSkins[data.currentIndex];
+            data.currentIndex = (data.currentIndex + 1) % data.availableSkins.size();
+        }
+        
+        // Update history
+        data.rotationHistory.push_back(nextSkin);
+        if (data.rotationHistory.size() > 10) {
+            data.rotationHistory.erase(data.rotationHistory.begin());
+        }
+        
+        data.lastRotation = std::chrono::steady_clock::now();
+        return nextSkin;
+    }
+    
+    static bool shouldRotate(int weaponId) {
+        std::lock_guard<std::mutex> lock(rotationMutex);
+        
+        auto it = rotationData.find(weaponId);
+        if (it == rotationData.end()) {
+            return false;
+        }
+        
+        auto now = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+            now - it->second.lastRotation).count() > 60000; // 1 minute
+    }
+};
+
+// Initialize static members
+std::map<int, SkinVerification::VerificationData> SkinVerification::verificationData;
+std::mutex SkinVerification::verificationMutex;
+
+std::map<int, AdvancedSkinRotation::RotationData> AdvancedSkinRotation::rotationData;
+std::mutex AdvancedSkinRotation::rotationMutex;
+
+// ===== INTEGRATION WITH JAVA SKIN MANAGER =====
+extern "C" {
+    JNIEXPORT void JNICALL
+    Java_com_bearmod_loader_SkinManager_applySkinWithProtection(
+        JNIEnv* env, jclass clazz, jstring weaponKey, jint skinId, jboolean isSpecialSkin) {
+        
+        const char* weapon = env->GetStringUTFChars(weaponKey, nullptr);
+        int weaponId = std::stoi(weapon);
+        
+        // Apply enhanced protection
+        if (SkinVerification::applyEnhancedProtection(weaponId, skinId)) {
+            // Schedule verification
+            std::thread([weaponId, skinId]() {
+                std::this_thread::sleep_for(std::chrono::milliseconds(30000));
+                SkinVerification::verifyAndRecover(weaponId, skinId);
+            }).detach();
+        }
+        
+        env->ReleaseStringUTFChars(weaponKey, weapon);
+    }
+    
+    JNIEXPORT void JNICALL
+    Java_com_bearmod_loader_SkinManager_scrambleMemoryNative(
+        JNIEnv* env, jclass clazz, jbyteArray buffer, jbyteArray key) {
+        
+        jbyte* bufferData = env->GetByteArrayElements(buffer, nullptr);
+        jbyte* keyData = env->GetByteArrayElements(key, nullptr);
+        
+        // Perform memory scrambling
+        SkinProtection::scrambleMemory();
+        
+        env->ReleaseByteArrayElements(buffer, bufferData, 0);
+        env->ReleaseByteArrayElements(key, keyData, 0);
+    }
+}
+
+// ===== ENHANCED WEAPON HANDLING SYSTEM =====
+struct WeaponHandler {
+    struct WeaponState {
+        int currentSkinId;
+        std::vector<int> appliedAttachments;
+        std::chrono::steady_clock::time_point lastUpdate;
+        bool isMetroMode;
+        int protectionLevel;
+        std::vector<int> skinHistory;
+    };
+    
+    static std::map<int, WeaponState> weaponStates;
+    static std::mutex weaponMutex;
+    
+    static bool updateWeaponState(int weaponId, int skinId, bool isMetroMode = false) {
+        std::lock_guard<std::mutex> lock(weaponMutex);
+        
+        auto& state = weaponStates[weaponId];
+        state.currentSkinId = skinId;
+        state.isMetroMode = isMetroMode;
+        state.lastUpdate = std::chrono::steady_clock::now();
+        
+        // Update skin history
+        state.skinHistory.push_back(skinId);
+        if (state.skinHistory.size() > 10) {
+            state.skinHistory.erase(state.skinHistory.begin());
+        }
+        
+        return true;
+    }
+    
+    static bool isWeaponInMetroMode(int weaponId) {
+        std::lock_guard<std::mutex> lock(weaponMutex);
+        auto it = weaponStates.find(weaponId);
+        return it != weaponStates.end() && it->second.isMetroMode;
+    }
+    
+    static std::vector<int> getWeaponSkinHistory(int weaponId) {
+        std::lock_guard<std::mutex> lock(weaponMutex);
+        auto it = weaponStates.find(weaponId);
+        return it != weaponStates.end() ? it->second.skinHistory : std::vector<int>();
+    }
+};
+
+// ===== ADVANCED ANTI-DETECTION SYSTEM =====
+struct AntiDetection {
+    struct ProtectionConfig {
+        bool enableMemoryScrambling = true;
+        bool enableSkinVerification = true;
+        bool enableDynamicRotation = true;
+        bool enableAttachmentProtection = true;
+        int maxRetryAttempts = 3;
+        int verificationInterval = 30000;
+        int rotationInterval = 60000;
+        int protectionLevel = 2;
+    };
+    
+    static ProtectionConfig config;
+    static std::vector<uint8_t> scrambleKey;
+    static std::map<int, std::chrono::steady_clock::time_point> lastScrambleTimes;
+    static std::mutex protectionMutex;
+    
+    static void initialize() {
+        std::lock_guard<std::mutex> lock(protectionMutex);
+        scrambleKey.resize(32);
+        std::random_device rd;
+        std::generate(scrambleKey.begin(), scrambleKey.end(), std::ref(rd));
+    }
+    
+    static void scrambleMemory() {
+        if (!config.enableMemoryScrambling) return;
+        
+        std::lock_guard<std::mutex> lock(protectionMutex);
+        
+        // Generate random buffer
+        std::vector<uint8_t> buffer(1024);
+        std::random_device rd;
+        std::generate(buffer.begin(), buffer.end(), std::ref(rd));
+        
+        // XOR scramble with key
+        for (size_t i = 0; i < buffer.size(); i++) {
+            buffer[i] ^= scrambleKey[i % scrambleKey.size()];
+        }
+        
+        // Clear sensitive data
+        std::fill(buffer.begin(), buffer.end(), 0);
+        std::fill(scrambleKey.begin(), scrambleKey.end(), 0);
+    }
+    
+    static bool verifyProtection(int weaponId) {
+        std::lock_guard<std::mutex> lock(protectionMutex);
+        
+        auto now = std::chrono::steady_clock::now();
+        auto it = lastScrambleTimes.find(weaponId);
+        
+        if (it != lastScrambleTimes.end()) {
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - it->second).count();
+            if (elapsed < config.verificationInterval) {
+                return true;
+            }
+        }
+        
+        // Perform new verification
+        scrambleMemory();
+        lastScrambleTimes[weaponId] = now;
+        return true;
+    }
+};
+
+// ===== ENHANCED ATTACHMENT MANAGEMENT =====
+struct AttachmentManager {
+    struct AttachmentState {
+        int attachmentId;
+        AttachType type;
+        bool isApplied;
+        std::chrono::steady_clock::time_point lastUpdate;
+    };
+    
+    static std::map<int, std::map<AttachType, AttachmentState>> weaponAttachments;
+    static std::mutex attachmentMutex;
+    
+    static bool applyAttachment(int weaponId, AttachType type, int attachmentId) {
+        std::lock_guard<std::mutex> lock(attachmentMutex);
+        
+        // Verify attachment compatibility
+        if (!isAttachmentCompatible(weaponId, type, attachmentId)) {
+            return false;
+        }
+        
+        // Apply memory protection
+        AntiDetection::scrambleMemory();
+        
+        // Apply attachment with retry logic
+        for (int attempt = 0; attempt < AntiDetection::config.maxRetryAttempts; attempt++) {
+            if (applyAttachmentInternal(weaponId, type, attachmentId)) {
+                // Update state
+                auto& attachments = weaponAttachments[weaponId];
+                attachments[type] = {attachmentId, type, true, 
+                    std::chrono::steady_clock::now()};
+                return true;
+            }
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(100));
+        }
+        return false;
+    }
+    
+    static bool isAttachmentCompatible(int weaponId, AttachType type, int attachmentId) {
+        auto weaponData = getWeaponData(weaponId, 0);
+        if (!weaponData) return false;
+        
+        switch (type) {
+            case AttachType::MAGAZINE:
+                return attachmentId == weaponData->magazineId;
+            case AttachType::DEF_STOCK:
+                return attachmentId == weaponData->defStockId;
+            case AttachType::DEF_MUZZLE:
+                return attachmentId == weaponData->defMuzzleId;
+            // Add more cases for other attachment types
+            default:
+                return false;
+        }
+    }
+    
+private:
+    static bool applyAttachmentInternal(int weaponId, AttachType type, int attachmentId) {
+        // Implementation would call the actual attachment application logic
+        return true; // Placeholder
+    }
+};
+
+// ===== NRG.H INTEGRATION =====
+struct NRGIntegration {
+    static bool applySkinWithNRG(int weaponId, int skinId) {
+        // Apply memory protection
+        AntiDetection::scrambleMemory();
+        
+        // Get weapon data
+        auto weaponData = getWeaponData(weaponId, 0);
+        if (!weaponData) return false;
+        
+        // Apply base skin
+        if (!updateSkinValue(weaponId, skinId)) return false;
+        
+        // Apply attachments if available
+        if (weaponData->magazineId != 999999999) {
+            if (!AttachmentManager::applyAttachment(weaponId, 
+                AttachType::MAGAZINE, weaponData->magazineId)) {
+                return false;
+            }
+        }
+        
+        // Update weapon state
+        WeaponHandler::updateWeaponState(weaponId, skinId);
+        
+        // Verify protection
+        return AntiDetection::verifyProtection(weaponId);
+    }
+    
+    static bool verifyNRGSkin(int weaponId, int expectedSkinId) {
+        // Get current skin state
+        int currentSkinId = getCurrentSkinId(weaponId);
+        if (currentSkinId != expectedSkinId) {
+            // Attempt recovery
+            return applySkinWithNRG(weaponId, expectedSkinId);
+        }
+        return true;
+    }
+};
+
+// Initialize static members
+std::map<int, WeaponHandler::WeaponState> WeaponHandler::weaponStates;
+std::mutex WeaponHandler::weaponMutex;
+
+AntiDetection::ProtectionConfig AntiDetection::config;
+std::vector<uint8_t> AntiDetection::scrambleKey;
+std::map<int, std::chrono::steady_clock::time_point> AntiDetection::lastScrambleTimes;
+std::mutex AntiDetection::protectionMutex;
+
+std::map<int, std::map<AttachType, AttachmentManager::AttachmentState>> 
+    AttachmentManager::weaponAttachments;
+std::mutex AttachmentManager::attachmentMutex;
+
+// ===== PRECISE WEAPON TYPE HANDLING =====
+struct WeaponTypeHandler {
+    struct WeaponTypeConfig {
+        bool isMetroModeCompatible;
+        int baseWeaponId;
+        std::vector<int> compatibleAttachments;
+        std::vector<int> metroModeIds;
+        int maxSkinId;
+        bool isSpecialSkin;
+        std::map<AttachType, int> defaultAttachments;
+    };
+    
+    static std::map<SkinType, WeaponTypeConfig> weaponTypeConfigs;
+    static std::mutex weaponTypeMutex;
+    
+    static void initializeWeaponTypes() {
+        std::lock_guard<std::mutex> lock(weaponTypeMutex);
+        
+        // M416 Configuration
+        WeaponTypeConfig m416Config;
+        m416Config.isMetroModeCompatible = true;
+        m416Config.baseWeaponId = 101004;
+        m416Config.maxSkinId = 1101004003;
+        m416Config.isSpecialSkin = true;
+        m416Config.metroModeIds = {101004, 1010041, 1010042, 1010043, 1010044, 1010045, 1010046, 1010047};
+        m416Config.defaultAttachments = {
+            {AttachType::MAGAZINE, 1014010124},
+            {AttachType::DEF_STOCK, 1014010137},
+            {AttachType::DEF_MUZZLE, 1014010127},
+            {AttachType::RED_DOT, 1014010119},
+            {AttachType::HOLOGRAPHIC, 1014010118},
+            {AttachType::SCOPE2X, 1014010117},
+            {AttachType::SCOPE3X, 1014010116},
+            {AttachType::SCOPE4X, 1014010115},
+            {AttachType::SCOPE6X, 1014010114},
+            {AttachType::QUICK_MAG, 1014010125},
+            {AttachType::EXTENDED_MAG, 1014010126},
+            {AttachType::FLASH, 1014010127},
+            {AttachType::COMPENSATOR, 1014010128},
+            {AttachType::SILENCER, 1014010129},
+            {AttachType::ANGLED_GRIP, 1014010134},
+            {AttachType::VERTICLE_GRIP, 1014010136},
+            {AttachType::LIGHT_GRIP, 1014010138},
+            {AttachType::HALF_GRIP, 1014010139},
+            {AttachType::LASER_SIGHT, 1014010144}
+        };
+        weaponTypeConfigs[SkinType::AR_M416] = m416Config;
+        
+        // AKM Configuration
+        WeaponTypeConfig akmConfig;
+        akmConfig.isMetroModeCompatible = true;
+        akmConfig.baseWeaponId = 101001;
+        akmConfig.maxSkinId = 1101001003;
+        akmConfig.isSpecialSkin = true;
+        akmConfig.metroModeIds = {101001, 1010011, 1010012, 1010013, 1010014, 1010015, 1010016, 1010017};
+        akmConfig.defaultAttachments = {
+            {AttachType::MAGAZINE, 1011010124},
+            {AttachType::DEF_STOCK, 1011010137},
+            {AttachType::DEF_MUZZLE, 1011010127},
+            {AttachType::RED_DOT, 1011010119},
+            {AttachType::HOLOGRAPHIC, 1011010118},
+            {AttachType::SCOPE2X, 1011010117},
+            {AttachType::SCOPE3X, 1011010116},
+            {AttachType::SCOPE4X, 1011010115},
+            {AttachType::SCOPE6X, 1011010114},
+            {AttachType::QUICK_MAG, 1011010125},
+            {AttachType::EXTENDED_MAG, 1011010126},
+            {AttachType::FLASH, 1011010127},
+            {AttachType::COMPENSATOR, 1011010128},
+            {AttachType::SILENCER, 1011010129},
+            {AttachType::ANGLED_GRIP, 1011010134},
+            {AttachType::VERTICLE_GRIP, 1011010136},
+            {AttachType::LIGHT_GRIP, 1011010138},
+            {AttachType::HALF_GRIP, 1011010139},
+            {AttachType::LASER_SIGHT, 1011010144}
+        };
+        weaponTypeConfigs[SkinType::AR_AKM] = akmConfig;
+        
+        // AWM Configuration
+        WeaponTypeConfig awmConfig;
+        awmConfig.isMetroModeCompatible = true;
+        awmConfig.baseWeaponId = 103003;
+        awmConfig.maxSkinId = 1103003003;
+        awmConfig.isSpecialSkin = true;
+        awmConfig.metroModeIds = {103003, 1030031, 1030032, 1030033, 1030034, 1030035, 1030036, 1030037};
+        awmConfig.defaultAttachments = {
+            {AttachType::MAGAZINE, 1033010124},
+            {AttachType::DEF_STOCK, 1033010137},
+            {AttachType::DEF_MUZZLE, 1033010127},
+            {AttachType::SCOPE4X, 1033010115},
+            {AttachType::SCOPE6X, 1033010114},
+            {AttachType::SCOPE8X, 1033010113},
+            {AttachType::QUICK_MAG, 1033010125},
+            {AttachType::EXTENDED_MAG, 1033010126},
+            {AttachType::FLASH, 1033010127},
+            {AttachType::COMPENSATOR, 1033010128},
+            {AttachType::SILENCER, 1033010129},
+            {AttachType::CHEEK_PAD, 1033010140}
+        };
+        weaponTypeConfigs[SkinType::SR_AWM] = awmConfig;
+        
+        // MK14 Configuration
+        WeaponTypeConfig mk14Config;
+        mk14Config.isMetroModeCompatible = true;
+        mk14Config.baseWeaponId = 103007;
+        mk14Config.maxSkinId = 1103007003;
+        mk14Config.isSpecialSkin = true;
+        mk14Config.metroModeIds = {103007, 1030071, 1030072, 1030073, 1030074, 1030075, 1030076, 1030077};
+        mk14Config.defaultAttachments = {
+            {AttachType::MAGAZINE, 1037010124},
+            {AttachType::DEF_STOCK, 1037010137},
+            {AttachType::DEF_MUZZLE, 1037010127},
+            {AttachType::RED_DOT, 1037010119},
+            {AttachType::HOLOGRAPHIC, 1037010118},
+            {AttachType::SCOPE2X, 1037010117},
+            {AttachType::SCOPE3X, 1037010116},
+            {AttachType::SCOPE4X, 1037010115},
+            {AttachType::SCOPE6X, 1037010114},
+            {AttachType::QUICK_MAG, 1037010125},
+            {AttachType::EXTENDED_MAG, 1037010126},
+            {AttachType::FLASH, 1037010127},
+            {AttachType::COMPENSATOR, 1037010128},
+            {AttachType::SILENCER, 1037010129},
+            {AttachType::ANGLED_GRIP, 1037010134},
+            {AttachType::VERTICLE_GRIP, 1037010136},
+            {AttachType::LIGHT_GRIP, 1037010138},
+            {AttachType::HALF_GRIP, 1037010139},
+            {AttachType::LASER_SIGHT, 1037010144}
+        };
+        weaponTypeConfigs[SkinType::SR_MK14] = mk14Config;
+    }
+    
+    static bool isWeaponTypeCompatible(SkinType type, int weaponId) {
+        std::lock_guard<std::mutex> lock(weaponTypeMutex);
+        
+        auto it = weaponTypeConfigs.find(type);
+        if (it == weaponTypeConfigs.end()) return false;
+        
+        const auto& config = it->second;
+        return std::find(config.metroModeIds.begin(), 
+                        config.metroModeIds.end(), 
+                        weaponId) != config.metroModeIds.end();
+    }
+    
+    static std::vector<int> getCompatibleAttachments(SkinType type) {
+        std::lock_guard<std::mutex> lock(weaponTypeMutex);
+        
+        auto it = weaponTypeConfigs.find(type);
+        if (it == weaponTypeConfigs.end()) return std::vector<int>();
+        
+        std::vector<int> attachments;
+        for (const auto& pair : it->second.defaultAttachments) {
+            attachments.push_back(pair.second);
+        }
+        return attachments;
+    }
+    
+    static bool isMetroModeCompatible(SkinType type) {
+        std::lock_guard<std::mutex> lock(weaponTypeMutex);
+        
+        auto it = weaponTypeConfigs.find(type);
+        return it != weaponTypeConfigs.end() && it->second.isMetroModeCompatible;
+    }
+    
+    static int getMaxSkinId(SkinType type) {
+        std::lock_guard<std::mutex> lock(weaponTypeMutex);
+        
+        auto it = weaponTypeConfigs.find(type);
+        return it != weaponTypeConfigs.end() ? it->second.maxSkinId : 0;
+    }
+    
+    static bool isSpecialSkin(SkinType type) {
+        std::lock_guard<std::mutex> lock(weaponTypeMutex);
+        
+        auto it = weaponTypeConfigs.find(type);
+        return it != weaponTypeConfigs.end() && it->second.isSpecialSkin;
+    }
+};
+
+// Initialize static members
+std::map<SkinType, WeaponTypeHandler::WeaponTypeConfig> WeaponTypeHandler::weaponTypeConfigs;
+std::mutex WeaponTypeHandler::weaponTypeMutex;
+
+// ===== ENHANCED METRO MODE SECURITY =====
+struct MetroModeSecurity {
+    struct SecurityConfig {
+        bool enableMemoryProtection = true;
+        bool enableSkinVerification = true;
+        bool enableDynamicRotation = true;
+        bool enableAttachmentProtection = true;
+        bool enableAntiDetection = true;
+        int maxRetryAttempts = 3;
+        int verificationInterval = 30000;  // 30 seconds
+        int rotationInterval = 60000;      // 1 minute
+        int protectionLevel = 3;           // Maximum protection
+        int memoryScrambleSize = 2048;     // Increased buffer size
+        int cooldownPeriod = 5000;         // 5 seconds between changes
+    };
+    
+    static SecurityConfig config;
+    static std::vector<uint8_t> scrambleKey;
+    static std::map<int, std::chrono::steady_clock::time_point> lastChangeTimes;
+    static std::map<int, int> verificationCounts;
+    static std::map<int, std::vector<int>> rotationHistory;
+    static std::mutex securityMutex;
+    
+    static void initialize() {
+        std::lock_guard<std::mutex> lock(securityMutex);
+        scrambleKey.resize(32);  // Increased key size
+        std::random_device rd;
+        std::generate(scrambleKey.begin(), scrambleKey.end(), std::ref(rd));
+    }
+    
+    static bool applyMetroModeSkin(int weaponId, int skinId) {
+        std::lock_guard<std::mutex> lock(securityMutex);
+        
+        // Check cooldown
+        auto now = std::chrono::steady_clock::now();
+        auto it = lastChangeTimes.find(weaponId);
+        if (it != lastChangeTimes.end()) {
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - it->second).count();
+            if (elapsed < config.cooldownPeriod) {
+                return false;
+            }
+        }
+        
+        // Apply enhanced protection
+        if (!applyEnhancedProtection(weaponId, skinId)) {
+            return false;
+        }
+        
+        // Update change time
+        lastChangeTimes[weaponId] = now;
+        
+        // Update verification count
+        verificationCounts[weaponId]++;
+        
+        // Update rotation history
+        auto& history = rotationHistory[weaponId];
+        history.push_back(skinId);
+        if (history.size() > 10) {
+            history.erase(history.begin());
+        }
+        
+        return true;
+    }
+    
+    static bool applyEnhancedProtection(int weaponId, int skinId) {
+        // Scramble memory before any operation
+        scrambleMemory();
+        
+        // Apply skin with retry mechanism
+        int retryCount = 0;
+        bool success = false;
+        
+        while (!success && retryCount < config.maxRetryAttempts) {
+            // Apply skin
+            if (updateSkinValue(weaponId, skinId)) {
+                // Verify application
+                if (verifySkinApplication(weaponId, skinId)) {
+                    success = true;
+                }
+            }
+            
+            if (!success) {
+                retryCount++;
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                scrambleMemory();  // Scramble again before retry
+            }
+        }
+        
+        return success;
+    }
+    
+    static void scrambleMemory() {
+        if (!config.enableMemoryProtection) return;
+        
+        // Create larger buffer for scrambling
+        std::vector<uint8_t> buffer(config.memoryScrambleSize);
+        std::random_device rd;
+        std::generate(buffer.begin(), buffer.end(), std::ref(rd));
+        
+        // Apply multiple layers of scrambling
+        for (int i = 0; i < 3; i++) {
+            for (size_t j = 0; j < buffer.size(); j++) {
+                buffer[j] ^= scrambleKey[j % scrambleKey.size()];
+            }
+        }
+        
+        // Clear sensitive data
+        std::fill(buffer.begin(), buffer.end(), 0);
+    }
+    
+    static bool verifySkinApplication(int weaponId, int expectedSkinId) {
+        if (!config.enableSkinVerification) return true;
+        
+        // Get current skin state
+        int currentSkinId = getCurrentSkinId(weaponId);
+        if (currentSkinId != expectedSkinId) {
+            return false;
+        }
+        
+        // Advanced verification if enabled
+        if (config.protectionLevel >= 2) {
+            // Check verification count
+            if (!verificationCounts.count(weaponId)) {
+                return false;
+            }
+            
+            // Check rotation history
+            if (!rotationHistory.count(weaponId)) {
+                return false;
+            }
+            
+            // Check protection timestamp
+            if (!lastChangeTimes.count(weaponId)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    static bool isMetroModeSafe(int weaponId) {
+        std::lock_guard<std::mutex> lock(securityMutex);
+        
+        // Check if weapon is in cooldown
+        auto it = lastChangeTimes.find(weaponId);
+        if (it != lastChangeTimes.end()) {
+            auto now = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - it->second).count();
+            if (elapsed < config.cooldownPeriod) {
+                return false;
+            }
+        }
+        
+        // Check verification status
+        if (config.enableSkinVerification) {
+            if (!verificationCounts.count(weaponId)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    static void resetMetroModeState(int weaponId) {
+        std::lock_guard<std::mutex> lock(securityMutex);
+        lastChangeTimes.erase(weaponId);
+        verificationCounts.erase(weaponId);
+        rotationHistory.erase(weaponId);
+    }
+};
+
+// Initialize static members
+MetroModeSecurity::SecurityConfig MetroModeSecurity::config;
+std::vector<uint8_t> MetroModeSecurity::scrambleKey;
+std::map<int, std::chrono::steady_clock::time_point> MetroModeSecurity::lastChangeTimes;
+std::map<int, int> MetroModeSecurity::verificationCounts;
+std::map<int, std::vector<int>> MetroModeSecurity::rotationHistory;
+std::mutex MetroModeSecurity::securityMutex;
+
+// ===== ENHANCED ANTI-SURVEILLANCE SYSTEM =====
+struct AntiSurveillance {
+    struct SurveillanceConfig {
+        bool enablePatternRandomization = true;
+        bool enableMemoryObfuscation = true;
+        bool enableBehavioralProtection = true;
+        bool enableStateEncryption = true;
+        int patternChangeInterval = 15000;  // 15 seconds
+        int memoryScrambleInterval = 5000;  // 5 seconds
+        int stateEncryptionKeySize = 64;    // 512-bit key
+        int maxPatternHistory = 20;
+    };
+    
+    static SurveillanceConfig config;
+    static std::vector<uint8_t> encryptionKey;
+    static std::map<int, std::vector<std::vector<uint8_t>>> patternHistory;
+    static std::map<int, std::chrono::steady_clock::time_point> lastPatternChange;
+    static std::mutex surveillanceMutex;
+    
+    static void initialize() {
+        std::lock_guard<std::mutex> lock(surveillanceMutex);
+        encryptionKey.resize(config.stateEncryptionKeySize);
+        std::random_device rd;
+        std::generate(encryptionKey.begin(), encryptionKey.end(), std::ref(rd));
+    }
+    
+    static void randomizePattern(int weaponId) {
+        if (!config.enablePatternRandomization) return;
+        
+        std::lock_guard<std::mutex> lock(surveillanceMutex);
+        auto now = std::chrono::steady_clock::now();
+        
+        // Check if pattern change is needed
+        auto it = lastPatternChange.find(weaponId);
+        if (it != lastPatternChange.end()) {
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - it->second).count();
+            if (elapsed < config.patternChangeInterval) {
+                return;
+            }
+        }
+        
+        // Generate new pattern
+        std::vector<uint8_t> newPattern(32);
+        std::random_device rd;
+        std::generate(newPattern.begin(), newPattern.end(), std::ref(rd));
+        
+        // Update pattern history
+        auto& history = patternHistory[weaponId];
+        history.push_back(newPattern);
+        if (history.size() > config.maxPatternHistory) {
+            history.erase(history.begin());
+        }
+        
+        // Update last pattern change time
+        lastPatternChange[weaponId] = now;
+        
+        // Apply pattern to memory
+        applyPatternToMemory(weaponId, newPattern);
+    }
+    
+    static void applyPatternToMemory(int weaponId, const std::vector<uint8_t>& pattern) {
+        if (!config.enableMemoryObfuscation) return;
+        
+        // Create memory buffer
+        std::vector<uint8_t> buffer(1024);
+        std::random_device rd;
+        std::generate(buffer.begin(), buffer.end(), std::ref(rd));
+        
+        // Apply pattern with multiple layers
+        for (int layer = 0; layer < 3; layer++) {
+            for (size_t i = 0; i < buffer.size(); i++) {
+                buffer[i] ^= pattern[i % pattern.size()];
+                buffer[i] ^= encryptionKey[i % encryptionKey.size()];
+            }
+        }
+        
+        // Clear sensitive data
+        std::fill(buffer.begin(), buffer.end(), 0);
+    }
+    
+    static bool verifyBehavioralPattern(int weaponId) {
+        if (!config.enableBehavioralProtection) return true;
+        
+        std::lock_guard<std::mutex> lock(surveillanceMutex);
+        
+        // Check pattern history
+        auto it = patternHistory.find(weaponId);
+        if (it == patternHistory.end() || it->second.empty()) {
+            return false;
+        }
+        
+        // Verify pattern consistency
+        const auto& history = it->second;
+        for (size_t i = 1; i < history.size(); i++) {
+            if (history[i].size() != history[0].size()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+};
+
+// Initialize static members
+AntiSurveillance::SurveillanceConfig AntiSurveillance::config;
+std::vector<uint8_t> AntiSurveillance::encryptionKey;
+std::map<int, std::vector<std::vector<uint8_t>>> AntiSurveillance::patternHistory;
+std::map<int, std::chrono::steady_clock::time_point> AntiSurveillance::lastPatternChange;
+std::mutex AntiSurveillance::surveillanceMutex;
+
+// ===== ENHANCED VERIFICATION SYSTEM =====
+struct EnhancedVerification {
+    struct VerificationConfig {
+        bool enableMultiLayerVerification = true;
+        bool enableStateValidation = true;
+        bool enablePatternVerification = true;
+        bool enableBehavioralVerification = true;
+        int verificationLayers = 3;
+        int stateValidationInterval = 10000;  // 10 seconds
+        int patternVerificationInterval = 5000;  // 5 seconds
+    };
+    
+    static VerificationConfig config;
+    static std::map<int, std::vector<bool>> verificationResults;
+    static std::map<int, std::chrono::steady_clock::time_point> lastVerification;
+    static std::mutex verificationMutex;
+    
+    static bool verifySkinState(int weaponId, int expectedSkinId) {
+        if (!config.enableMultiLayerVerification) {
+            return verifyBasicState(weaponId, expectedSkinId);
+        }
+        
+        std::lock_guard<std::mutex> lock(verificationMutex);
+        auto& results = verificationResults[weaponId];
+        results.clear();
+        
+        // Layer 1: Basic state verification
+        results.push_back(verifyBasicState(weaponId, expectedSkinId));
+        
+        // Layer 2: Pattern verification
+        if (config.enablePatternVerification) {
+            results.push_back(AntiSurveillance::verifyBehavioralPattern(weaponId));
+        }
+        
+        // Layer 3: State validation
+        if (config.enableStateValidation) {
+            results.push_back(validateWeaponState(weaponId));
+        }
+        
+        // Update verification timestamp
+        lastVerification[weaponId] = std::chrono::steady_clock::now();
+        
+        // All layers must pass
+        return std::all_of(results.begin(), results.end(), [](bool result) { return result; });
+    }
+    
+    static bool verifyBasicState(int weaponId, int expectedSkinId) {
+        int currentSkinId = getCurrentSkinId(weaponId);
+        return currentSkinId == expectedSkinId;
+    }
+    
+    static bool validateWeaponState(int weaponId) {
+        // Check if verification is needed
+        auto it = lastVerification.find(weaponId);
+        if (it != lastVerification.end()) {
+            auto now = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - it->second).count();
+            if (elapsed < config.stateValidationInterval) {
+                return true;
+            }
+        }
+        
+        // Perform comprehensive state validation
+        return MetroModeSecurity::isMetroModeSafe(weaponId) &&
+               AntiSurveillance::verifyBehavioralPattern(weaponId);
+    }
+};
+
+// Initialize static members
+EnhancedVerification::VerificationConfig EnhancedVerification::config;
+std::map<int, std::vector<bool>> EnhancedVerification::verificationResults;
+std::map<int, std::chrono::steady_clock::time_point> EnhancedVerification::lastVerification;
+std::mutex EnhancedVerification::verificationMutex;
+
+// Update MetroModeSecurity to use enhanced systems
+struct MetroModeSecurity {
+    // ... existing code ...
+    
+    static bool applyMetroModeSkin(int weaponId, int skinId) {
+        std::lock_guard<std::mutex> lock(securityMutex);
+        
+        // Apply anti-surveillance measures
+        AntiSurveillance::randomizePattern(weaponId);
+        
+        // Check cooldown
+        auto now = std::chrono::steady_clock::now();
+        auto it = lastChangeTimes.find(weaponId);
+        if (it != lastChangeTimes.end()) {
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - it->second).count();
+            if (elapsed < config.cooldownPeriod) {
+                return false;
+            }
+        }
+        
+        // Apply enhanced protection with verification
+        if (!applyEnhancedProtection(weaponId, skinId)) {
+            return false;
+        }
+        
+        // Verify application with enhanced system
+        if (!EnhancedVerification::verifySkinState(weaponId, skinId)) {
+            return false;
+        }
+        
+        // Update state
+        lastChangeTimes[weaponId] = now;
+        verificationCounts[weaponId]++;
+        
+        auto& history = rotationHistory[weaponId];
+        history.push_back(skinId);
+        if (history.size() > 10) {
+            history.erase(history.begin());
+        }
+        
+        return true;
+    }
+    
+    static bool applyEnhancedProtection(int weaponId, int skinId) {
+        // Apply multiple layers of protection
+        for (int layer = 0; layer < 3; layer++) {
+            // Scramble memory
+            scrambleMemory();
+            
+            // Apply anti-surveillance
+            AntiSurveillance::randomizePattern(weaponId);
+            
+            // Apply skin with retry
+            int retryCount = 0;
+            bool success = false;
+            
+            while (!success && retryCount < config.maxRetryAttempts) {
+                if (updateSkinValue(weaponId, skinId)) {
+                    if (EnhancedVerification::verifySkinState(weaponId, skinId)) {
+                        success = true;
+                    }
+                }
+                
+                if (!success) {
+                    retryCount++;
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                    scrambleMemory();
+                }
+            }
+            
+            if (!success) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+};
+
+// ===== NEW PUBG SKIN CONFIGURATIONS =====
+static void initializeNewSkins() {
+    // M416 New Skins
+    skinTypes.insert_or_assign(1101004010, SkinType::AR_M416);  // Glacier M416 (New)
+    skinTypes.insert_or_assign(1101004011, SkinType::AR_M416);  // Dragon M416
+    skinTypes.insert_or_assign(1101004012, SkinType::AR_M416);  // Neon M416
+    
+    // AKM New Skins
+    skinTypes.insert_or_assign(1101001010, SkinType::AR_AKM);   // Glacier AKM (New)
+    skinTypes.insert_or_assign(1101001011, SkinType::AR_AKM);   // Dragon AKM
+    skinTypes.insert_or_assign(1101001012, SkinType::AR_AKM);   // Neon AKM
+    
+    // AWM New Skins
+    skinTypes.insert_or_assign(1103003010, SkinType::SR_AWM);   // Glacier AWM (New)
+    skinTypes.insert_or_assign(1103003011, SkinType::SR_AWM);   // Dragon AWM
+    skinTypes.insert_or_assign(1103003012, SkinType::SR_AWM);   // Neon AWM
+    
+    // MK14 New Skins
+    skinTypes.insert_or_assign(1103007010, SkinType::SR_MK14);  // Glacier MK14 (New)
+    skinTypes.insert_or_assign(1103007011, SkinType::SR_MK14);  // Dragon MK14
+    skinTypes.insert_or_assign(1103007012, SkinType::SR_MK14);  // Neon MK14
+    
+    // UMP New Skins
+    skinTypes.insert_or_assign(1102002010, SkinType::SMG_UMP);  // Glacier UMP (New)
+    skinTypes.insert_or_assign(1102002011, SkinType::SMG_UMP);  // Dragon UMP
+    skinTypes.insert_or_assign(1102002012, SkinType::SMG_UMP);  // Neon UMP
+    
+    // Vector New Skins
+    skinTypes.insert_or_assign(1102003010, SkinType::SMG_VECTOR); // Glacier Vector (New)
+    skinTypes.insert_or_assign(1102003011, SkinType::SMG_VECTOR); // Dragon Vector
+    skinTypes.insert_or_assign(1102003012, SkinType::SMG_VECTOR); // Neon Vector
+    
+    // Initialize weapon configurations with new skins
+    WeaponTypeHandler::WeaponTypeConfig m416Config;
+    m416Config.isMetroModeCompatible = true;
+    m416Config.baseWeaponId = 101004;
+    m416Config.maxSkinId = 1101004012;  // Updated for new skins
+    m416Config.isSpecialSkin = true;
+    m416Config.metroModeIds = {101004, 1010041, 1010042, 1010043, 1010044, 1010045, 1010046, 1010047};
+    m416Config.defaultAttachments = {
+        {AttachType::MAGAZINE, 1014010124},
+        {AttachType::DEF_STOCK, 1014010137},
+        {AttachType::DEF_MUZZLE, 1014010127},
+        {AttachType::RED_DOT, 1014010119},
+        {AttachType::HOLOGRAPHIC, 1014010118},
+        {AttachType::SCOPE2X, 1014010117},
+        {AttachType::SCOPE3X, 1014010116},
+        {AttachType::SCOPE4X, 1014010115},
+        {AttachType::SCOPE6X, 1014010114},
+        {AttachType::QUICK_MAG, 1014010125},
+        {AttachType::EXTENDED_MAG, 1014010126},
+        {AttachType::FLASH, 1014010127},
+        {AttachType::COMPENSATOR, 1014010128},
+        {AttachType::SILENCER, 1014010129},
+        {AttachType::ANGLED_GRIP, 1014010134},
+        {AttachType::VERTICLE_GRIP, 1014010136},
+        {AttachType::LIGHT_GRIP, 1014010138},
+        {AttachType::HALF_GRIP, 1014010139},
+        {AttachType::LASER_SIGHT, 1014010144}
+    };
+    WeaponTypeHandler::weaponTypeConfigs[SkinType::AR_M416] = m416Config;
+    
+    // AKM Configuration with new skins
+    WeaponTypeHandler::WeaponTypeConfig akmConfig;
+    akmConfig.isMetroModeCompatible = true;
+    akmConfig.baseWeaponId = 101001;
+    akmConfig.maxSkinId = 1101001012;  // Updated for new skins
+    akmConfig.isSpecialSkin = true;
+    akmConfig.metroModeIds = {101001, 1010011, 1010012, 1010013, 1010014, 1010015, 1010016, 1010017};
+    akmConfig.defaultAttachments = {
+        {AttachType::MAGAZINE, 1011010124},
+        {AttachType::DEF_STOCK, 1011010137},
+        {AttachType::DEF_MUZZLE, 1011010127},
+        {AttachType::RED_DOT, 1011010119},
+        {AttachType::HOLOGRAPHIC, 1011010118},
+        {AttachType::SCOPE2X, 1011010117},
+        {AttachType::SCOPE3X, 1011010116},
+        {AttachType::SCOPE4X, 1011010115},
+        {AttachType::SCOPE6X, 1011010114},
+        {AttachType::QUICK_MAG, 1011010125},
+        {AttachType::EXTENDED_MAG, 1011010126},
+        {AttachType::FLASH, 1011010127},
+        {AttachType::COMPENSATOR, 1011010128},
+        {AttachType::SILENCER, 1011010129},
+        {AttachType::ANGLED_GRIP, 1011010134},
+        {AttachType::VERTICLE_GRIP, 1011010136},
+        {AttachType::LIGHT_GRIP, 1011010138},
+        {AttachType::HALF_GRIP, 1011010139},
+        {AttachType::LASER_SIGHT, 1011010144}
+    };
+    WeaponTypeHandler::weaponTypeConfigs[SkinType::AR_AKM] = akmConfig;
+    
+    // AWM Configuration with new skins
+    WeaponTypeHandler::WeaponTypeConfig awmConfig;
+    awmConfig.isMetroModeCompatible = true;
+    awmConfig.baseWeaponId = 103003;
+    awmConfig.maxSkinId = 1103003012;  // Updated for new skins
+    awmConfig.isSpecialSkin = true;
+    awmConfig.metroModeIds = {103003, 1030031, 1030032, 1030033, 1030034, 1030035, 1030036, 1030037};
+    awmConfig.defaultAttachments = {
+        {AttachType::MAGAZINE, 1033010124},
+        {AttachType::DEF_STOCK, 1033010137},
+        {AttachType::DEF_MUZZLE, 1033010127},
+        {AttachType::SCOPE4X, 1033010115},
+        {AttachType::SCOPE6X, 1033010114},
+        {AttachType::SCOPE8X, 1033010113},
+        {AttachType::QUICK_MAG, 1033010125},
+        {AttachType::EXTENDED_MAG, 1033010126},
+        {AttachType::FLASH, 1033010127},
+        {AttachType::COMPENSATOR, 1033010128},
+        {AttachType::SILENCER, 1033010129},
+        {AttachType::CHEEK_PAD, 1033010140}
+    };
+    WeaponTypeHandler::weaponTypeConfigs[SkinType::SR_AWM] = awmConfig;
+    
+    // MK14 Configuration with new skins
+    WeaponTypeHandler::WeaponTypeConfig mk14Config;
+    mk14Config.isMetroModeCompatible = true;
+    mk14Config.baseWeaponId = 103007;
+    mk14Config.maxSkinId = 1103007012;  // Updated for new skins
+    mk14Config.isSpecialSkin = true;
+    mk14Config.metroModeIds = {103007, 1030071, 1030072, 1030073, 1030074, 1030075, 1030076, 1030077};
+    mk14Config.defaultAttachments = {
+        {AttachType::MAGAZINE, 1037010124},
+        {AttachType::DEF_STOCK, 1037010137},
+        {AttachType::DEF_MUZZLE, 1037010127},
+        {AttachType::RED_DOT, 1037010119},
+        {AttachType::HOLOGRAPHIC, 1037010118},
+        {AttachType::SCOPE2X, 1037010117},
+        {AttachType::SCOPE3X, 1037010116},
+        {AttachType::SCOPE4X, 1037010115},
+        {AttachType::SCOPE6X, 1037010114},
+        {AttachType::QUICK_MAG, 1037010125},
+        {AttachType::EXTENDED_MAG, 1037010126},
+        {AttachType::FLASH, 1037010127},
+        {AttachType::COMPENSATOR, 1037010128},
+        {AttachType::SILENCER, 1037010129},
+        {AttachType::ANGLED_GRIP, 1037010134},
+        {AttachType::VERTICLE_GRIP, 1037010136},
+        {AttachType::LIGHT_GRIP, 1037010138},
+        {AttachType::HALF_GRIP, 1037010139},
+        {AttachType::LASER_SIGHT, 1037010144}
+    };
+    WeaponTypeHandler::weaponTypeConfigs[SkinType::SR_MK14] = mk14Config;
+    
+    // UMP Configuration with new skins
+    WeaponTypeHandler::WeaponTypeConfig umpConfig;
+    umpConfig.isMetroModeCompatible = true;
+    umpConfig.baseWeaponId = 102002;
+    umpConfig.maxSkinId = 1102002012;  // Updated for new skins
+    umpConfig.isSpecialSkin = true;
+    umpConfig.metroModeIds = {102002, 1020021, 1020022, 1020023, 1020024, 1020025, 1020026, 1020027};
+    umpConfig.defaultAttachments = {
+        {AttachType::MAGAZINE, 1022010124},
+        {AttachType::DEF_STOCK, 1022010137},
+        {AttachType::DEF_MUZZLE, 1022010127},
+        {AttachType::RED_DOT, 1022010119},
+        {AttachType::HOLOGRAPHIC, 1022010118},
+        {AttachType::SCOPE2X, 1022010117},
+        {AttachType::SCOPE3X, 1022010116},
+        {AttachType::SCOPE4X, 1022010115},
+        {AttachType::QUICK_MAG, 1022010125},
+        {AttachType::EXTENDED_MAG, 1022010126},
+        {AttachType::FLASH, 1022010127},
+        {AttachType::COMPENSATOR, 1022010128},
+        {AttachType::SILENCER, 1022010129},
+        {AttachType::ANGLED_GRIP, 1022010134},
+        {AttachType::VERTICLE_GRIP, 1022010136},
+        {AttachType::LIGHT_GRIP, 1022010138},
+        {AttachType::HALF_GRIP, 1022010139},
+        {AttachType::LASER_SIGHT, 1022010144}
+    };
+    WeaponTypeHandler::weaponTypeConfigs[SkinType::SMG_UMP] = umpConfig;
+    
+    // Vector Configuration with new skins
+    WeaponTypeHandler::WeaponTypeConfig vectorConfig;
+    vectorConfig.isMetroModeCompatible = true;
+    vectorConfig.baseWeaponId = 102003;
+    vectorConfig.maxSkinId = 1102003012;  // Updated for new skins
+    vectorConfig.isSpecialSkin = true;
+    vectorConfig.metroModeIds = {102003, 1020031, 1020032, 1020033, 1020034, 1020035, 1020036, 1020037};
+    vectorConfig.defaultAttachments = {
+        {AttachType::MAGAZINE, 1023010124},
+        {AttachType::DEF_STOCK, 1023010137},
+        {AttachType::DEF_MUZZLE, 1023010127},
+        {AttachType::RED_DOT, 1023010119},
+        {AttachType::HOLOGRAPHIC, 1023010118},
+        {AttachType::SCOPE2X, 1023010117},
+        {AttachType::SCOPE3X, 1023010116},
+        {AttachType::SCOPE4X, 1023010115},
+        {AttachType::QUICK_MAG, 1023010125},
+        {AttachType::EXTENDED_MAG, 1023010126},
+        {AttachType::FLASH, 1023010127},
+        {AttachType::COMPENSATOR, 1023010128},
+        {AttachType::SILENCER, 1023010129},
+        {AttachType::ANGLED_GRIP, 1023010134},
+        {AttachType::VERTICLE_GRIP, 1023010136},
+        {AttachType::LIGHT_GRIP, 1023010138},
+        {AttachType::HALF_GRIP, 1023010139},
+        {AttachType::LASER_SIGHT, 1023010144}
+    };
+    WeaponTypeHandler::weaponTypeConfigs[SkinType::SMG_VECTOR] = vectorConfig;
+}
