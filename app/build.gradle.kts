@@ -53,10 +53,17 @@ android {
 dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    
+
+    // BearMod Integration
+    implementation(project(":bearmod"))
+
     // AndroidX UI Libraries
     implementation(libs.bundles.androidx.ui)
     implementation(libs.material)
+
+    // Kotlin Coroutines for async operations
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
     // Networking
     implementation(libs.bundles.networking)
@@ -66,4 +73,4 @@ dependencies {
 
     // Android Testing
     androidTestImplementation(libs.bundles.testing.android)
-} 
+}

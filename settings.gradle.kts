@@ -20,4 +20,9 @@ dependencyResolutionManagement {
 }
 
 include(":app")
-rootProject.name = "bearmod" 
+include(":bearmod")
+
+rootProject.name = "Bear-Loader"
+
+// Configure BearMod module path
+project(":bearmod").projectDir = file("modules/bearmod")
