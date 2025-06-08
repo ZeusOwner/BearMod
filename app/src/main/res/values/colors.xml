@@ -1,7 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Legacy Colors -->
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="home_yellow">#E8D655</color>
+
+    <!-- Modern Material Design 3 Color Scheme -->
+    <!-- Primary Colors -->
+    <color name="md_primary">#4CAF50</color>
+    <color name="md_primary_variant">#388E3C</color>
+    <color name="md_on_primary">#FFFFFF</color>
+
+    <!-- Secondary Colors -->
+    <color name="md_secondary">#2196F3</color>
+    <color name="md_secondary_variant">#1976D2</color>
+    <color name="md_on_secondary">#FFFFFF</color>
+
+    <!-- Background Colors -->
+    <color name="md_background">#121212</color>
+    <color name="md_surface">#1E1E1E</color>
+    <color name="md_surface_variant">#2A2A2A</color>
+    <color name="md_on_background">#FFFFFF</color>
+    <color name="md_on_surface">#FFFFFF</color>
+
+    <!-- Error Colors -->
+    <color name="md_error">#F44336</color>
+    <color name="md_on_error">#FFFFFF</color>
+
+    <!-- Outline Colors -->
+    <color name="md_outline">#444444</color>
+    <color name="md_outline_variant">#333333</color>
+
+    <!-- BearMod Specific Colors -->
+    <color name="bearmod_accent">#FFD700</color>
+    <color name="bearmod_success">#4CAF50</color>
+    <color name="bearmod_warning">#FF9800</color>
+    <color name="bearmod_danger">#F44336</color>
+    <color name="bearmod_info">#2196F3</color>
+
+    <!-- UI Component Colors -->
+    <color name="sidebar_background">#1E1E1E</color>
+    <color name="menu_background">#2A2A2A</color>
+    <color name="card_background">#2A2A2A</color>
+    <color name="button_background">#1A4CAF50</color>
+    <color name="button_stroke">#4CAF50</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#CCCCCC</color>
+    <color name="text_hint">#888888</color>
+    <color name="divider">#333333</color>
+
+    <!-- Switch Colors -->
+    <color name="switch_thumb_on">#FFFFFF</color>
+    <color name="switch_thumb_off">#CCCCCC</color>
+    <color name="switch_track_on">#4CAF50</color>
+    <color name="switch_track_off">#555555</color>
+
+    <!-- Status Colors -->
+    <color name="status_online">#4CAF50</color>
+    <color name="status_offline">#F44336</color>
+    <color name="status_warning">#FF9800</color>
+
+    <!-- Transparency Variants -->
+    <color name="black_10">#1A000000</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="white_10">#1AFFFFFF</color>
+    <color name="white_20">#33FFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+
+    <!-- Recording Protection Colors -->
+    <color name="recording_detected">#FF5252</color>
+    <color name="recording_safe">#4CAF50</color>
+    <color name="protection_background">#1A4CAF50</color>
+    <color name="protection_border">#4CAF50</color>
 </resources>

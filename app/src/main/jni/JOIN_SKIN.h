@@ -9,6 +9,9 @@
 #include <random>
 #include <algorithm>
 #include <cstdint>
+#include <functional>
+#include <jni.h>
+#include <android/log.h>
 
 // Comprehensive skin system header for BearMod
 // Compatible with existing NRG.h skin system
@@ -446,6 +449,60 @@ static int getAttachmentIdForWeapon(int weaponBaseId, int skinIndex, AttachType 
     }
 }
 
+// ===== MISSING FUNCTION DECLARATIONS =====
+// Forward declarations for functions used throughout the file
+
+/**
+ * Get current skin ID for a weapon
+ * @param weaponId The weapon ID to check
+ * @return Current skin ID, or 0 if not found
+ */
+static int getCurrentSkinId(int weaponId);
+
+/**
+ * Update skin value for a weapon
+ * @param weaponId The weapon ID to update
+ * @param skinId The new skin ID to apply
+ * @return true if successful, false otherwise
+ */
+static bool updateSkinValue(int weaponId, int skinId);
+
+/**
+ * Apply attachment to weapon (string version)
+ * @param weaponId The weapon ID
+ * @param type The attachment type as string
+ * @param attachmentId The attachment ID to apply
+ * @return true if successful, false otherwise
+ */
+static bool applyAttachment(int weaponId, const std::string& type, int attachmentId);
+
+/**
+ * Apply attachment to weapon (enum version)
+ * @param weaponId The weapon ID
+ * @param type The attachment type as enum
+ * @param attachmentId The attachment ID to apply
+ * @return true if successful, false otherwise
+ */
+static bool applyAttachment(int weaponId, AttachType type, int attachmentId);
+
+/**
+ * Apply skin with retry logic
+ * @param weaponId The weapon ID
+ * @param expectedSkinId The expected skin ID
+ * @return true if successful, false otherwise
+ */
+static bool applySkinWithRetry(int weaponId, int expectedSkinId);
+
+/**
+ * Internal skin application function
+ * @param weaponId The weapon ID
+ * @param skinId The skin ID to apply
+ * @return true if successful, false otherwise
+ */
+static bool applySkinInternal(int weaponId, int skinId);
+
+// isValidAttachment already declared at line 412
+
 // ===== LEGACY COMPATIBILITY LAYER =====
 // This allows the existing NRG.h code to work while adding the new system
 
@@ -680,8 +737,8 @@ static int M416stock[] = {205005}; // M416 stock (capitalized)
 static int M416angle[] = {202001}; // M416 angled foregrip (capitalized)
 static int M416thumb[] = {202002}; // M416 thumb grip (capitalized)
 
-// Variable for lastWeaponChangeTime referenced in NRG.h
-static auto lastWeaponChangeTime = std::chrono::steady_clock::now();
+// Variable for lastWeaponChangeTime referenced in NRG.h (declared in NRG.h)
+// extern std::chrono::steady_clock::time_point lastWeaponChangeTime;
 
 // ====== SKIN NAME MAPPINGS ======
 #include <map>
@@ -1631,66 +1688,9 @@ struct SkinProtection {
     }
 };
 
-// ===== ADVANCED ATTACHMENT HANDLING =====
-struct AttachmentManager {
-    struct AttachmentConfig {
-        int id;
-        AttachType type;
-        bool isDefault;
-        std::vector<int> compatibleWeapons;
-    };
-    
-    static std::map<int, AttachmentConfig> attachmentConfigs;
-    static std::map<int, std::vector<int>> weaponAttachments;
-    
-    static void initialize() {
-        // Initialize attachment configurations
-        initializeAttachmentConfigs();
-        // Map attachments to weapons
-        mapAttachmentsToWeapons();
-    }
-    
-    static bool applyAttachmentWithProtection(int weaponId, AttachType type, int attachmentId) {
-        // Verify attachment compatibility
-        if (!isAttachmentCompatible(weaponId, attachmentId)) {
-            return false;
-        }
-        
-        // Apply with memory protection
-        SkinProtection::scrambleMemory();
-        
-        // Apply attachment with retry logic
-        for (int attempt = 0; attempt < SkinProtection::MAX_RETRY_ATTEMPTS; attempt++) {
-            if (applyAttachment(weaponId, type, attachmentId)) {
-                return true;
-            }
-            std::this_thread::sleep_for(
-                std::chrono::milliseconds(SkinProtection::RETRY_DELAY_MS));
-        }
-        return false;
-    }
-    
-    static bool isAttachmentCompatible(int weaponId, int attachmentId) {
-        auto it = attachmentConfigs.find(attachmentId);
-        if (it == attachmentConfigs.end()) return false;
-        
-        const auto& config = it->second;
-        return std::find(config.compatibleWeapons.begin(), 
-                        config.compatibleWeapons.end(), 
-                        weaponId) != config.compatibleWeapons.end();
-    }
-    
-private:
-    static void initializeAttachmentConfigs() {
-        // Initialize with default configurations
-        // This would be populated with actual attachment data
-    }
-    
-    static void mapAttachmentsToWeapons() {
-        // Map attachments to their compatible weapons
-        // This would be populated with actual weapon-attachment relationships
-    }
-};
+// ===== ADVANCED ATTACHMENT HANDLING (REMOVED - DUPLICATE) =====
+// This section was removed to fix duplicate struct definition
+// The enhanced AttachmentManager is defined later in the file
 
 // ===== SKIN ROTATION SYSTEM =====
 struct SkinRotationManager {
@@ -1756,8 +1756,7 @@ std::map<int, std::chrono::steady_clock::time_point> SkinProtection::lastVerific
 std::map<int, int> SkinProtection::verificationCounts;
 std::map<int, int> SkinProtection::protectionLevels;
 
-std::map<int, AttachmentManager::AttachmentConfig> AttachmentManager::attachmentConfigs;
-std::map<int, std::vector<int>> AttachmentManager::weaponAttachments;
+// AttachmentManager static members removed due to duplicate definition
 
 SkinRotationManager::RotationConfig SkinRotationManager::config;
 std::map<int, std::vector<int>> SkinRotationManager::rotationHistory;
@@ -1919,40 +1918,7 @@ std::map<int, AdvancedSkinRotation::RotationData> AdvancedSkinRotation::rotation
 std::mutex AdvancedSkinRotation::rotationMutex;
 
 // ===== INTEGRATION WITH JAVA SKIN MANAGER =====
-extern "C" {
-    JNIEXPORT void JNICALL
-    Java_com_bearmod_loader_SkinManager_applySkinWithProtection(
-        JNIEnv* env, jclass clazz, jstring weaponKey, jint skinId, jboolean isSpecialSkin) {
-        
-        const char* weapon = env->GetStringUTFChars(weaponKey, nullptr);
-        int weaponId = std::stoi(weapon);
-        
-        // Apply enhanced protection
-        if (SkinVerification::applyEnhancedProtection(weaponId, skinId)) {
-            // Schedule verification
-            std::thread([weaponId, skinId]() {
-                std::this_thread::sleep_for(std::chrono::milliseconds(30000));
-                SkinVerification::verifyAndRecover(weaponId, skinId);
-            }).detach();
-        }
-        
-        env->ReleaseStringUTFChars(weaponKey, weapon);
-    }
-    
-    JNIEXPORT void JNICALL
-    Java_com_bearmod_loader_SkinManager_scrambleMemoryNative(
-        JNIEnv* env, jclass clazz, jbyteArray buffer, jbyteArray key) {
-        
-        jbyte* bufferData = env->GetByteArrayElements(buffer, nullptr);
-        jbyte* keyData = env->GetByteArrayElements(key, nullptr);
-        
-        // Perform memory scrambling
-        SkinProtection::scrambleMemory();
-        
-        env->ReleaseByteArrayElements(buffer, bufferData, 0);
-        env->ReleaseByteArrayElements(key, keyData, 0);
-    }
-}
+// JNI functions moved to ESP_SKIN_JNI.cpp to avoid duplicate symbols
 
 // ===== ENHANCED WEAPON HANDLING SYSTEM =====
 struct WeaponHandler {
@@ -2728,85 +2694,9 @@ std::map<int, std::vector<bool>> EnhancedVerification::verificationResults;
 std::map<int, std::chrono::steady_clock::time_point> EnhancedVerification::lastVerification;
 std::mutex EnhancedVerification::verificationMutex;
 
-// Update MetroModeSecurity to use enhanced systems
-struct MetroModeSecurity {
-    // ... existing code ...
-    
-    static bool applyMetroModeSkin(int weaponId, int skinId) {
-        std::lock_guard<std::mutex> lock(securityMutex);
-        
-        // Apply anti-surveillance measures
-        AntiSurveillance::randomizePattern(weaponId);
-        
-        // Check cooldown
-        auto now = std::chrono::steady_clock::now();
-        auto it = lastChangeTimes.find(weaponId);
-        if (it != lastChangeTimes.end()) {
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                now - it->second).count();
-            if (elapsed < config.cooldownPeriod) {
-                return false;
-            }
-        }
-        
-        // Apply enhanced protection with verification
-        if (!applyEnhancedProtection(weaponId, skinId)) {
-            return false;
-        }
-        
-        // Verify application with enhanced system
-        if (!EnhancedVerification::verifySkinState(weaponId, skinId)) {
-            return false;
-        }
-        
-        // Update state
-        lastChangeTimes[weaponId] = now;
-        verificationCounts[weaponId]++;
-        
-        auto& history = rotationHistory[weaponId];
-        history.push_back(skinId);
-        if (history.size() > 10) {
-            history.erase(history.begin());
-        }
-        
-        return true;
-    }
-    
-    static bool applyEnhancedProtection(int weaponId, int skinId) {
-        // Apply multiple layers of protection
-        for (int layer = 0; layer < 3; layer++) {
-            // Scramble memory
-            scrambleMemory();
-            
-            // Apply anti-surveillance
-            AntiSurveillance::randomizePattern(weaponId);
-            
-            // Apply skin with retry
-            int retryCount = 0;
-            bool success = false;
-            
-            while (!success && retryCount < config.maxRetryAttempts) {
-                if (updateSkinValue(weaponId, skinId)) {
-                    if (EnhancedVerification::verifySkinState(weaponId, skinId)) {
-                        success = true;
-                    }
-                }
-                
-                if (!success) {
-                    retryCount++;
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                    scrambleMemory();
-                }
-            }
-            
-            if (!success) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-};
+// ===== FORWARD DECLARATIONS =====
+// These structures and functions are defined in NRG.h to avoid redefinition errors
+// XSuitAntiDetection, MemoryProtectionState, InitializeMemoryProtection, ScrambleMemory
 
 // ===== NEW PUBG SKIN CONFIGURATIONS =====
 static void initializeNewSkins() {
@@ -3011,3 +2901,272 @@ static void initializeNewSkins() {
     };
     WeaponTypeHandler::weaponTypeConfigs[SkinType::SMG_VECTOR] = vectorConfig;
 }
+
+// ===== MISSING FUNCTION IMPLEMENTATIONS =====
+
+/**
+ * Get current skin ID for a weapon
+ */
+static int getCurrentSkinId(int weaponId) {
+    // This would typically read from game memory or internal state
+    // For now, return a placeholder implementation
+    static std::map<int, int> currentSkins;
+    auto it = currentSkins.find(weaponId);
+    if (it != currentSkins.end()) {
+        return it->second;
+    }
+    return 0; // Default/no skin
+}
+
+/**
+ * Update skin value for a weapon
+ */
+static bool updateSkinValue(int weaponId, int skinId) {
+    // This would typically write to game memory
+    // For now, store in internal map for consistency
+    static std::map<int, int> currentSkins;
+    try {
+        currentSkins[weaponId] = skinId;
+        return true;
+    } catch (...) {
+        return false;
+    }
+}
+
+/**
+ * Apply attachment to weapon (string version)
+ */
+static bool applyAttachment(int weaponId, const std::string& type, int attachmentId) {
+    // Convert string to AttachType enum
+    AttachType attachType = AttachType::MAGAZINE; // Default
+
+    if (type == "MAGAZINE") attachType = AttachType::MAGAZINE;
+    else if (type == "FLASH") attachType = AttachType::FLASH;
+    else if (type == "COMPENSATOR") attachType = AttachType::COMPENSATOR;
+    else if (type == "SILENCER") attachType = AttachType::SILENCER;
+    else if (type == "RED_DOT") attachType = AttachType::RED_DOT;
+    else if (type == "HOLOGRAPHIC") attachType = AttachType::HOLOGRAPHIC;
+    else if (type == "SCOPE2X") attachType = AttachType::SCOPE2X;
+    else if (type == "SCOPE3X") attachType = AttachType::SCOPE3X;
+    else if (type == "SCOPE4X") attachType = AttachType::SCOPE4X;
+    else if (type == "SCOPE6X") attachType = AttachType::SCOPE6X;
+    else if (type == "SCOPE8X") attachType = AttachType::SCOPE8X;
+    else if (type == "QUICK_MAG") attachType = AttachType::QUICK_MAG;
+    else if (type == "EXTENDED_MAG") attachType = AttachType::EXTENDED_MAG;
+    else if (type == "EXTENDED_QUICK_MAG") attachType = AttachType::EXTENDED_QUICK_MAG;
+    else if (type == "ANGLED_GRIP") attachType = AttachType::ANGLED_GRIP;
+    else if (type == "VERTICLE_GRIP") attachType = AttachType::VERTICLE_GRIP;
+    else if (type == "LIGHT_GRIP") attachType = AttachType::LIGHT_GRIP;
+    else if (type == "HALF_GRIP") attachType = AttachType::HALF_GRIP;
+    else if (type == "LASER_SIGHT") attachType = AttachType::LASER_SIGHT;
+    else if (type == "TACTICAL_STOCK") attachType = AttachType::TACTICAL_STOCK;
+    else if (type == "THUMB_GRIP") attachType = AttachType::THUMB_GRIP;
+    else {
+        return false; // Unknown attachment type
+    }
+
+    // Call the enum version
+    return applyAttachment(weaponId, attachType, attachmentId);
+}
+
+/**
+ * Apply attachment to weapon (enum version)
+ */
+static bool applyAttachment(int weaponId, AttachType type, int attachmentId) {
+    // This would typically write to game memory
+    // For now, store in internal map for consistency
+    static std::map<int, std::map<AttachType, int>> weaponAttachments;
+
+    try {
+        // Validate attachment ID
+        if (attachmentId == 999999999) {
+            return true; // No attachment to apply
+        }
+
+        // Verify attachment compatibility
+        if (!isValidAttachment(attachmentId, type)) {
+            return false;
+        }
+
+        // Store attachment
+        weaponAttachments[weaponId][type] = attachmentId;
+        return true;
+    } catch (...) {
+        return false;
+    }
+}
+
+/**
+ * Apply skin with retry logic
+ */
+static bool applySkinWithRetry(int weaponId, int expectedSkinId) {
+    const int maxRetries = 3;
+    const int retryDelayMs = 100;
+
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+        if (applySkinInternal(weaponId, expectedSkinId)) {
+            // Verify the application
+            if (getCurrentSkinId(weaponId) == expectedSkinId) {
+                return true;
+            }
+        }
+
+        // Wait before retry
+        if (attempt < maxRetries - 1) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(retryDelayMs));
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Internal skin application function
+ */
+static bool applySkinInternal(int weaponId, int skinId) {
+    // Get weapon data for this skin
+    auto weaponData = getWeaponData(weaponId, 0);
+    if (!weaponData) {
+        return false;
+    }
+
+    // Apply base skin
+    if (!updateSkinValue(weaponId, skinId)) {
+        return false;
+    }
+
+    // Apply attachments if available
+    if (weaponData->magazineId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::MAGAZINE, weaponData->magazineId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->flashId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::FLASH, weaponData->flashId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->compensatorId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::COMPENSATOR, weaponData->compensatorId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->silencerId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::SILENCER, weaponData->silencerId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->redDotId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::RED_DOT, weaponData->redDotId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->holographicId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::HOLOGRAPHIC, weaponData->holographicId)) {
+            return false;
+        }
+    }
+
+    // Apply scopes
+    if (weaponData->scope2xId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::SCOPE2X, weaponData->scope2xId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->scope3xId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::SCOPE3X, weaponData->scope3xId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->scope4xId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::SCOPE4X, weaponData->scope4xId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->scope6xId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::SCOPE6X, weaponData->scope6xId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->scope8xId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::SCOPE8X, weaponData->scope8xId)) {
+            return false;
+        }
+    }
+
+    // Apply magazines
+    if (weaponData->quickMagId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::QUICK_MAG, weaponData->quickMagId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->extendedMagId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::EXTENDED_MAG, weaponData->extendedMagId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->extendedQuickMagId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::EXTENDED_QUICK_MAG, weaponData->extendedQuickMagId)) {
+            return false;
+        }
+    }
+
+    // Apply grips
+    if (weaponData->angledGripId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::ANGLED_GRIP, weaponData->angledGripId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->verticleGripId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::VERTICLE_GRIP, weaponData->verticleGripId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->lightGripId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::LIGHT_GRIP, weaponData->lightGripId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->halfGripId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::HALF_GRIP, weaponData->halfGripId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->thumbGripId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::THUMB_GRIP, weaponData->thumbGripId)) {
+            return false;
+        }
+    }
+
+    // Apply other attachments
+    if (weaponData->laserSightId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::LASER_SIGHT, weaponData->laserSightId)) {
+            return false;
+        }
+    }
+
+    if (weaponData->tacicalStockId != 999999999) {
+        if (!applyAttachment(weaponId, AttachType::TACTICAL_STOCK, weaponData->tacicalStockId)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Duplicate isValidAttachment function removed - using existing one at line 412

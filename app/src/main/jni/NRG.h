@@ -1,3 +1,6 @@
+#ifndef NRG_H
+#define NRG_H
+
 #include "Helper/StrEnc.h"
 #include "Helper/struct.h"
 #include "Helper/Includes.h"
@@ -20,6 +23,10 @@
 #include "ESP.h"
 #include "timer.h"
 #include "all_items_data.h"
+
+// ===== MODULAR SKIN SYSTEM =====
+#include "JOIN_SKIN.h"  // Basic skin data structures and application logic
+#include "ESP_SKIN.h"   // Advanced skin features and anti-detection systems
 
 ESP espOverlay;
 using json = nlohmann::json;
@@ -1470,38 +1477,6 @@ unsigned long getModuleBase(char *module_name) {
 }
 
 
-
-/*
-
-
-void GetLocalPlayer()
-{
-    if (auto GWorld = GetWorld())
-    {
-        if (auto NetDriver = GWorld->NetDriver)
-        {
-            if (auto PlayerController = NetDriver->ServerConnection->PlayerController)
-            {
-                ASTExtraPlayerController *localController = (ASTExtraPlayerController *)PlayerController;
-                ASTExtraPlayerCharacter *localPlayer = (ASTExtraPlayerCharacter *)localController->AcknowledgedPawn;
-
-                if (localController && localPlayer)
-                {
-
-                    g_LocalPlayer = localPlayer;
-                   g_PlayerController = localController;
-
-                }
-            }
-        }
-    }
-}
-
-*/
-
-//static Canvas *m_Canvas = 0;
-
-
 // TODO : FPS DATA
 uint64_t GetTickCount() {
     using namespace std::chrono;
@@ -1550,20 +1525,6 @@ FPS m_fps;
 
 float BulletFireSpeed = 0;
 
-
-/*
-   if (!Config["AIM_KNOCKED"]) {
-                    if (Player->Health == 0.0f)
-                        continue;
-                }
-                   if (Config["AIM_VISCHECK"]) {
-                      //  if (!localController->LineOfSightTo(Actor, {0, 0, 0}, true)) {
-                            if(!localController->LineOfSightTo(localController->PlayerCameraManager,Player->GetBonePos("Head", {}), true)) {
-                            continue;
-                            }
-                       // }
-                    }
-*/
 FRotator aimproAIM(FVector targetAimPos) {
 
 
@@ -1601,40 +1562,7 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
     */
         sprintf(extra, "%s", "BEAR-ENGINE");
         esp.DrawText(Color::White(), extra, FVector2D(screenWidth / 2, 95), 45);
-        /*
-
-        char *tsr = OBFUSCATE(" FPS : ");
-                std::string Str = std::string(tsr);
-                Str += std::to_string((int)m_fps.get());
-
-                esp.DrawText(Color(255, 255, 255), Str.c_str(), FVector2D(210, 80), 26);
-				*/
-        /*
-    std::string GGGGG = std::to_string(Config["AIM::SPEED"]);
-
-   //  sprintf(extra, "NRG-ENGINE");
-    esp.DrawText(Color::White(), GGGGG.c_str(), FVector2D(screenWidth / 2, screenHeight / 2), 45);
-
-*/
-
-        /*
-            int ENEM_ICON = 2;
-            int BOT_ICON = 3;
-
-
-
-
-
-            char cn[10];
-            sprintf(cn, "0");
-            char bt[10];
-            sprintf(bt, "0");
-            esp.DrawOTH(FVector2D(screenWidth / 2 - (80), 60), ENEM_ICON);
-            esp.DrawOTH(FVector2D(screenWidth / 2, 60), BOT_ICON);
-            esp.DrawText(Color(255, 255, 255, 255), cn, FVector2D(screenWidth / 2 - (20), 87), 23);
-            esp.DrawText(Color(255, 255, 255, 255), bt, FVector2D(screenWidth / 2 + (50), 87), 23);
-
-    */
+       
 
 
         if (!bScanPatternCompleted)
@@ -1647,12 +1575,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
             if (GWorld->PersistentLevel) {
                 TArray<AActor *> Actors = *(TArray<AActor *> *) ((uintptr_t) PersistentLevel +
                                                                  0xA0);
-/*UGameplayStatics *gGameplayStatics = (UGameplayStatics *)gGameplayStatics->StaticClass();
-
-            TArray<AActor *> Actors;
-        gGameplayStatics->GetAllActorsOfClass((UObject *)GWorld, T::StaticClass(), &Actors);
-
-            */
 
                 int totalEnemies = 0, totalBots = 0;
                 auto localPlayer = g_LocalPlayer;
@@ -1689,56 +1611,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
                     }
                     if (localPlayer) {
 
-
-
-
-                        /*
-
-        WeaponManagerComponent = localPlayer->WeaponManagerComponent;
-        if (IsValidAddress((kaddr)WeaponManagerComponent)) {
-            CurrentWeaponReplicated = (ASTExtraShootWeapon*)WeaponManagerComponent->CurrentWeaponReplicated;
-
-            if(IsValidAddress((kaddr)CurrentWeaponReplicated) ){
-
-
-
-
-
-                ShootWeaponEntityComp = CurrentWeaponReplicated->ShootWeaponEntityComp;
-
-                if (IsValidAddress((kaddr)ShootWeaponEntityComp) ) {
-
-                    if(bull == false){
-
-                        // method for edit weapon
-                        weapon(ShootWeaponEntityComp);
-
-
-                        bull = true;
-                    }
-                }
-
-
-
-
-            }else{
-                BulletFireSpeed = 0;
-                bull = false;
-
-            } //curent
-
-
-
-
-            if(WeaponManagerComponent->bIsSwitching  ){
-
-                bull = false;
-
-
-            }
-
-        }  // weapon manager
-        */
 
 
                         for (int i = 0; i < Actors.Num(); i++) {
@@ -1877,13 +1749,7 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
                                     RootPos2.Z -= 6.5f;//5.5f;
                                     //targetAimPos.Z -= 25.f;
 
-
-
-
-
                                     auto Head_RootZ = HeadPos2.Z - RootPos2.Z;
-
-
                                     FVector uparmr = GetBoneLocation(Player,
                                                                      "upperarm_r");//GetBoneLocationByName
                                     FVector uparml = GetBoneLocation(Player, "upperarm_l");
@@ -1911,10 +1777,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
 
                                     FVector footr = GetBoneLocation(Player, "foot_r");
                                     FVector footl = GetBoneLocation(Player, "foot_l");
-
-                                    // FVector2D uparmrSC, uparmlSC, lowarmrSC, lowarmlSC, handrSC, handlSC, itemrSC, itemlSC, upperarmtwist01rSC, upperarmtwist01lSC, claviclerSC, claviclelSC, neckSC, spain01SC, spain02SC, spain03SC, pelvisSC;
-                                    //   FVector2D calflSC,calfrSC,thighlSC,thighrSC,calftwist01lSC,calftwist01rSC,thightwist01lSC,thightwist01rSC,footrSC,footlSC,lowerarmtwist01lSC,lowerarmtwist01rSC;
-
 
                                     FVector uparmrSC = WorldToScreen(uparmr);
                                     FVector uparmlSC = WorldToScreen(uparml);
@@ -1970,54 +1832,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
                                         //   auto Root = Player->GetBonePos("Root", {});
                                         //   auto Head = Player->GetBonePos("Head", {});
 
-
-
-/*
-
-                        FVector Head = GetBoneLocationByName(Player, "Head");
-                        Head.Z += 12.5f;
-                        FVector Root = GetBoneLocationByName(Player, "Root");
-
-
-
-                        FVector uparmr = GetBoneLocationByName(Player, "upperarm_r");
-                        FVector uparml = GetBoneLocationByName(Player, "upperarm_l");
-                        FVector lowarmr = GetBoneLocationByName(Player, "lowerarm_r");
-                        FVector lowarml = GetBoneLocationByName(Player, "lowerarm_l");
-                        FVector handr = GetBoneLocationByName(Player, "hand_r");
-                        FVector handl = GetBoneLocationByName(Player, "hand_l");
-                        FVector itemr = GetBoneLocationByName(Player, "item_r");
-                        FVector iteml = GetBoneLocationByName(Player, "item_l");
-
-
-
-                        FVector clavicler = GetBoneLocationByName(Player, "clavicle_r");
-                        FVector claviclel = GetBoneLocationByName(Player, "clavicle_l");
-
-                        FVector neck = GetBoneLocationByName(Player, "neck_01");
-                        FVector spain01 = GetBoneLocationByName(Player, "spine_01");
-                        FVector spain02 = GetBoneLocationByName(Player, "spine_02");
-                        FVector spain03 = GetBoneLocationByName(Player, "spine_03");
-                        FVector pelvis = GetBoneLocationByName(Player, "pelvis");
-
-                        FVector calfl = GetBoneLocationByName(Player, "calf_l");
-                        FVector calfr = GetBoneLocationByName(Player, "calf_r");
-                        FVector thighl = GetBoneLocationByName(Player, "thigh_l");
-                        FVector thighr = GetBoneLocationByName(Player, "thigh_r");
-
-
-
-                        FVector footr = GetBoneLocationByName(Player, "foot_r");
-                        FVector footl = GetBoneLocationByName(Player, "foot_l");
-
-                        FVector2D uparmrSC, uparmlSC, lowarmrSC, lowarmlSC, handrSC, handlSC, itemrSC, itemlSC, upperarmtwist01rSC, upperarmtwist01lSC, claviclerSC, claviclelSC, neckSC, spain01SC, spain02SC, spain03SC, pelvisSC;
-                        FVector2D calflSC,calfrSC,thighlSC,thighrSC,calftwist01lSC,calftwist01rSC,thightwist01lSC,thightwist01rSC,footrSC,footlSC,lowerarmtwist01lSC,lowerarmtwist01rSC;
-
-
-                        FVector2D RootSc, HeadSc;
-                     //   if (W2S(Head, &HeadSc) && W2S(Root, &RootSc))  {
-                                if(W2S(Head, (FVector2D *) & HeadSc) && W2S(Root, (FVector2D *) & RootSc) &&W2S(uparmr, (FVector2D *) & uparmrSC) && W2S(uparml, (FVector2D *) & uparmlSC) &&W2S(lowarml, (FVector2D *) & lowarmlSC) &&W2S(lowarmr, (FVector2D *) & lowarmrSC) &&W2S(handr, (FVector2D *) & handrSC)&&W2S(handl, (FVector2D *) & handlSC) &&W2S(itemr, (FVector2D *) & itemrSC)&&W2S(iteml, (FVector2D *) & itemlSC)&&W2S(clavicler, (FVector2D *) & claviclerSC)&&W2S(claviclel, (FVector2D *) & claviclelSC) &&W2S(neck, (FVector2D *) & neckSC) &&W2S(spain01, (FVector2D *) & spain01SC) &&W2S(spain02, (FVector2D *) & spain02SC) &&W2S(spain03, (FVector2D *) & spain03SC) &&W2S(pelvis, (FVector2D *) & pelvisSC) &&W2S(calfl, (FVector2D *) & calflSC)&&W2S(calfr, (FVector2D *) & calfrSC) &&W2S(thighl, (FVector2D *) & thighlSC)&&W2S(thighr, (FVector2D *) & thighrSC)&&W2S(footr, (FVector2D *) & footrSC)&&W2S(footl, (FVector2D *) & footlSC)) {
-                                    */
                                         if (Config["ESP_LINE"]) {
 
                                             auto gunHead = Player->GetHeadLocation(true);
@@ -2038,18 +1852,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
                                                           FVector2D(HeadSc.X,
                                                                     GunHeadSc.Y - 16));//- 56
                                         }
-
-
-
-                                        /*
-                             if (Config["ESP::BOX"]) {
-                                     float boxHeight = abs(HeadSc.Y - RootSc.Y);
-                                float boxWidth = boxHeight * 0.65f;
-                              esp.DrawBox4Line(HeadSc.X - (boxWidth / 2), HeadSc.Y, boxWidth, boxHeight,Color::White(),2);
-
-                              }
-
-                               */
 
 
 
@@ -2371,9 +2173,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
                                             HpHeadSc.Y -= (mHeightGun * 1.4f + 8);//10
 
 
-
-
-
                                             esp.DrawFilledRect(clrHealth,
                                                                FVector2D(HeadSc.X, HpHeadSc.Y),
                                                                FVector2D(CurHP * mWidth / MaxHP,
@@ -2465,9 +2264,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
                                             }
                                         }
 
-
-
-
                                             //  esp.DrawText(Color::White(), ws.c_str(), FVector2D(HeadSc.X - 9, HeadSc.Y - 7), 18);
 
 
@@ -2528,113 +2324,6 @@ void DrawESP(ESP esp, int screenWidth, int screenHeight) {
                                     }
 
 
-
-
-
-/*
-
-             if (Config["NRG_AIMBOT"]) {
-
-
-                    ASTExtraPlayerCharacter *Target = GetTargetByCrosshairDistance();
-
-
-
-                    if (Target)
-                    {
-                        bool triggerOk = false;
-                       if (Config["AIM::TRIGGER1"]) {
-                    triggerOk = g_LocalPlayer->bIsWeaponFiring;
-                } else if (Config["AIM::TRIGGER2"]) {
-                    triggerOk = g_LocalPlayer->bIsGunADS;
-                } else if (Config["AIM::TRIGGER3"]) {
-                    triggerOk = g_LocalPlayer->bIsWeaponFiring || g_LocalPlayer->bIsGunADS;
-
-            } else triggerOk = true;
-                        if (triggerOk)
-                        {
-
-
-                                        FVector targetAimPos = Target->GetBonePos("Head", {});
-
-
-
-
-                                                  if (Config["RECOI_LCOMPARISON"]) {
-                                                    if (g_LocalPlayer->bIsGunADS) {
-                                                        if (g_LocalPlayer->bIsWeaponFiring) {
-                                                            float dist = g_LocalPlayer->GetDistanceTo(Target) / 100.f;
-                                                            targetAimPos.Z -= dist * (float) Config["RECOIL_SIZE"] * 0.1f; //
-                                                        }
-                                                    }
-                                                }
-
-
-
-
-                                        auto WeaponManagerComponent = g_LocalPlayer->WeaponManagerComponent;
-                                        if (WeaponManagerComponent) {
-                                            auto propSlot = WeaponManagerComponent->GetCurrentUsingPropSlot();
-                                            if ((int)propSlot.GetValue() >= 1 && (int)propSlot.GetValue() <= 3) {
-                                                auto CurrentWeaponReplicated = (ASTExtraShootWeapon *)WeaponManagerComponent->CurrentWeaponReplicated;
-                                                if (CurrentWeaponReplicated) {
-                                                    auto ShootWeaponComponent = CurrentWeaponReplicated->ShootWeaponComponent;
-                                                    if (ShootWeaponComponent) {
-                                                        UShootWeaponEntity * ShootWeaponEntityComponent = ShootWeaponComponent->ShootWeaponEntityComponent;
-                                                        if (ShootWeaponEntityComponent) {
-
-                                                            ASTExtraVehicleBase * CurrentVehicle = Target->CurrentVehicle;
-                                                            if (CurrentVehicle) {
-                                                                FVector LinearVelocity = CurrentVehicle->ReplicatedMovement.LinearVelocity;
-                                                                float dist = g_LocalPlayer->GetDistanceTo(Target);
-
-                                                            auto timeToTravel = dist / ShootWeaponEntityComponent->BulletFireSpeed;
-                                                                targetAimPos = UKismetMathLibrary::Add_VectorVector(targetAimPos, UKismetMathLibrary::Multiply_VectorFloat(LinearVelocity, timeToTravel));
-                                                            } else {
-                                                                FVector Velocity = Target->GetVelocity();
-                                                                float dist = g_LocalPlayer->GetDistanceTo(Target);
-                                                                auto timeToTravel = dist / ShootWeaponEntityComponent->BulletFireSpeed;
-                                                                targetAimPos = UKismetMathLibrary::Add_VectorVector(targetAimPos, UKismetMathLibrary::Multiply_VectorFloat(Velocity, timeToTravel));
-                                                            }
-
-
-
-
-                                                if (Config["NRG_AIMBOT"]) {
-
-                                            if (g_PlayerController) {
-                                            auto ControlRotator =  g_PlayerController->ControlRotation;
-                                            auto PlayerCameraManage = g_PlayerController->PlayerCameraManager;
-                                            if (PlayerCameraManage) {
-                                                FVector currViewAngle = PlayerCameraManage->CameraCache.POV.Location;
-                                                auto aimRotation = ToRotator(currViewAngle, targetAimPos);
-
-                 if (Config["NRG_AIMBOT"]) {
-
-                                               aimRotation.Yaw -= ControlRotator.Yaw;
-                                                aimRotation.Pitch -= ControlRotator.Pitch;
-                                                AimAngle(aimRotation);
-                                                ControlRotator.Pitch += aimRotation.Pitch / (float)Config["AIM_SPEED"] * 0.1f;
-                                              ControlRotator.Yaw += aimRotation.Yaw / (float)Config["AIM_SPEED"] * 0.1f;
-                                                }else{
-                                                ControlRotator.Yaw = aimRotation.Yaw;
-                                                ControlRotator.Pitch = aimRotation.Pitch;
-                                                 }
-                                                g_PlayerController->SetControlRotation(ControlRotator,"");
-
-                                            }
-                                            }
-                                        }
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-							}
-            */
 
                                 }
 
@@ -2905,1455 +2594,8 @@ static UFont *tslFont = nullptr, *robotoTinyFont = nullptr;
 }
 
 
-struct snew_Skin {
-    [[maybe_unused]] int XSuits = 403003;
-    [[maybe_unused]] int XSuits1 = 40604002;
-    [[maybe_unused]] int Balo1 = 501001;
-    [[maybe_unused]] int Balo2 = 501002;
-    [[maybe_unused]] int Balo3 = 501003;
-    [[maybe_unused]] int Balo4 = 501004;
-    [[maybe_unused]] int Balo5 = 501005;
-    [[maybe_unused]] int Balo6 = 501006;
-    [[maybe_unused]] int Helmet1 = 502001;
-    [[maybe_unused]] int Helmet2 = 502002;
-    [[maybe_unused]] int Helmet3 = 502003;
-    [[maybe_unused]] int Helmet4 = 502004;
-    [[maybe_unused]] int Helmet5 = 502005;
 
-    [[maybe_unused]] int Helmet6 = 502114;
-    [[maybe_unused]] int Helmet7 = 502115;
-    [[maybe_unused]] int Helmet8 = 502116;
-    int Parachute = 703001;
-
-    int AKM = 101001;
-    int AKM_Mag = 291001;
-    int M16A4 = 101002;
-    int M16A4_Stock = 205007;
-    int M16A4_Mag = 291002;
-    int Scar = 101003;
-    int Scar_Mag = 291003;
-    int Pan = 108004;
-
-    int M416_1 = 101004;
-    int M416_2 = 291004;
-    int M416_3 = 203008;
-    int M416_4 = 205005;
-    int M416_flash = 201010;
-    int M416_compe = 201009;
-    int M416_silent = 201011;
-    int M416_reddot = 203001;
-    int M416_holo = 203001;
-    int M416_x2 = 203003;
-    int M416_x3 = 203014;
-    int M416_x4 = 203004;
-    int M416_x6 = 203015;
-    int M416_quickMag = 204012;
-    int M416_extendedMag = 204011;
-    int M416_quickNextended = 204013;
-    int M416_stock = 205002;
-    int M416_verical = 203015;
-    int M416_angle = 202001;
-    int M416_lightgrip = 202004;
-    int M416_pink = 202005;
-    int M416_lazer = 202007;
-    int M416_thumb = 202006;
-
-    int Groza = 101005;
-    int QBZ = 101007;
-    int AUG = 101006;
-    int M762 = 101008;
-    int M762_Mag = 291008;
-    int ACE32 = 101102;
-    int Honey = 101012;
-    int UZI = 102001;
-    int UMP = 102002;
-    int Vector = 102003;
-    int Thompson = 102004;
-    int Bizon = 102005;
-    int K98 = 103001;
-    int M24 = 103002;
-    int AWM = 103003;
-    int AMR = 103012;
-    int VSS = 103005;
-    int SKS = 103004;
-    int Mini14 = 103006;
-    int MK14 = 103007;
-    int SLR = 103009;
-    int S1897 = 104002;
-    int DP28 = 105002;
-    int M249 = 105001;
-    int MG3 = 105010;
-    int Skorpion = 106008;
-    int Moto = 1901001;
-    int CoupeRP = 1961001;
-    int Dacia = 1903001;
-    int UAZ = 1908001;
-    int Bigfoot = 1953001;
-    int Mirado = 1914004;
-    int OMirado = 1915001;
-    int Buggy = 1907001;
-    int MiniBus = 1904001;
-    int Boat = 1911001;
-    int M249s = 205009;
-
-    int baglv1 = 501001;
-    int baglv2 = 501002;
-    int baglv3 = 501003;
-
-    int helmetlv1 = 502001;
-    int helmetlv2 = 502002;
-    int helmetlv3 = 502003;
-
-};
-
-inline snew_Skin new_Skin;
-
-
-void updateSkin() {
-    if (Config["SKIN_AKM"] == 0) {
-        new_Skin.AKM = 101001;//AKM
-        new_Skin.AKM_Mag = 205005;
-    }
-    if (Config["SKIN_AKM"] == 1) {
-        new_Skin.AKM = 1101001089;// Glacier - AKM (Lv. 7)
-        new_Skin.AKM_Mag = 1010010891;
-    }
-    if (Config["SKIN_AKM"] == 2) {
-        new_Skin.AKM = 1101001103;//Desert Fossil - AKM (Lv. 7)
-        new_Skin.AKM_Mag = 1010011031;
-    }
-    if (Config["SKIN_AKM"] == 3) {
-        new_Skin.AKM = 1101001116;//Jack-o'-lantern - AKM (Lv. 7)
-        new_Skin.AKM_Mag = 1010011161;
-    }
-    if (Config["SKIN_AKM"] == 4) {
-        new_Skin.AKM = 1101001128;//Ghillie Dragon - AKM (Lv. 7)
-        new_Skin.AKM_Mag = 1010011281;
-    }
-    if (Config["SKIN_AKM"] == 5) {
-        new_Skin.AKM = 1101001143;//Gold Pirate - AKM (Lv. 7)
-        new_Skin.AKM_Mag = 1010011431;
-    }
-    if (Config["SKIN_AKM"] == 6) {
-        new_Skin.AKM = 1101001154;//Codebreaker - AKM (Lv. 7)
-        new_Skin.AKM_Mag = 1010011541;
-    }
-    if (Config["SKIN_AKM"] == 7) {
-        new_Skin.AKM = 1101001174;//Wandering Tyrant - AKM (Lv. 8)
-        new_Skin.AKM_Mag = 1010011741;
-    }
-    if (Config["SKIN_AKM"] == 8) {
-        new_Skin.AKM = 1101001213;//Starsea Admiral - AKM (Lv. 8)
-        new_Skin.AKM_Mag = 1010012131;
-    }
-    if (Config["SKIN_AKM"] == 9) {
-        new_Skin.AKM = 1101001231;//Bunny Munchkin - AKM (Lv. 7)
-        new_Skin.AKM_Mag = 1010012311;
-    }
-    if (Config["SKIN_AKM"] == 10) {
-        new_Skin.AKM = 1101001242;//Decisive Day - AKM (Lv. 8)
-        new_Skin.AKM_Mag = 1010012421;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_KAR98K"] == 0)
-        new_Skin.K98 = 103001;
-    if (Config["SKIN_KAR98K"] == 1)
-        new_Skin.K98 = 1103001060;//Terror Fang - Kar98K (Lv. 7)
-    if (Config["SKIN_KAR98K"] == 2)
-        new_Skin.K98 = 1103001079;//Kukulkan Fury - Kar98K (Lv. 7)
-    if (Config["SKIN_KAR98K"] == 3)
-        new_Skin.K98 = 1103001101;//Moonlit Grace - Kar98K (Lv. 7)
-    if (Config["SKIN_KAR98K"] == 4)
-        new_Skin.K98 = 1103001146;//Titanium Shark - Kar98K (Lv. 7)
-    if (Config["SKIN_KAR98K"] == 5)
-        new_Skin.K98 = 1103001160;//Nebula Hunter - Kar98K (Lv. 5)
-    if (Config["SKIN_KAR98K"] == 6)
-        new_Skin.K98 = 1103001179;//Violet Volt - Kar98K (Lv. 7)
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_AWM"] == 0)
-        new_Skin.AWM = 103003;
-    if (Config["SKIN_AWM"] == 1)
-        new_Skin.AWM = 1103003022;//Mauve Avenger - AWM (Lv. 7)
-    if (Config["SKIN_AWM"] == 2)
-        new_Skin.AWM = 1103003030;//Field Commander - AWM (Lv. 7)
-    if (Config["SKIN_AWM"] == 3)
-        new_Skin.AWM = 1103003042;//Godzilla - AWM (Lv. 7)
-    if (Config["SKIN_AWM"] == 4)
-        new_Skin.AWM = 1103003051;//Rainbow Drake - AWM (Lv. 7)
-    if (Config["SKIN_AWM"] == 5)
-        new_Skin.AWM = 1103003062;//Flamewave - AWM (Lv. 7)
-    if (Config["SKIN_AWM"] == 6)
-        new_Skin.AWM = 1103003087;//Serpengleam - AWM (Lv. 7)
-    if (Config["SKIN_AWM"] == 7)
-        new_Skin.AWM = 1103003055;//Bramble Overlord - AWM
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_M24"] == 0)
-        new_Skin.M24 = 103002;
-    if (Config["SKIN_M24"] == 1)
-        new_Skin.M24 = 1103002018;
-    if (Config["SKIN_M24"] == 2)
-        new_Skin.M24 = 1103002030;
-    if (Config["SKIN_M24"] == 3)
-        new_Skin.M24 = 1103002049;
-    if (Config["SKIN_M24"] == 4)
-        new_Skin.M24 = 1103002059;
-    if (Config["SKIN_M24"] == 5)
-        new_Skin.M24 = 1103002087;
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-  if (mini14SkinHackHudSdk == 0)
-    new_Skin.Mini14 = 103006;
-  if (mini14SkinHackHudSdk == 1)
-    new_Skin.Mini14 = 1103006030;
-  if (mini14SkinHackHudSdk == 2)
-    new_Skin.Mini14 = 1103006046;
-  if (mini14SkinHackHudSdk == 3)
-    new_Skin.Mini14 = 1103006058;
-  */
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_ACE32"] == 0)
-        new_Skin.ACE32 = 101102;
-    if (Config["SKIN_ACE32"] == 1)
-        new_Skin.ACE32 = 1101102007;//ADD
-    if (Config["SKIN_ACE32"] == 2)
-        new_Skin.ACE32 = 1101102017;//ADD
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_VECTOR"] == 0)
-        new_Skin.Vector = 102003;
-    if (Config["SKIN_VECTOR"] == 1)
-        new_Skin.Vector = 1102003020;//ADD
-    if (Config["SKIN_VECTOR"] == 2)
-        new_Skin.Vector = 1102003031;//ADD
-    if (Config["SKIN_VECTOR"] == 3)
-        new_Skin.Vector = 1102003065;//ADD
-    if (Config["SKIN_VECTOR"] == 4)
-        new_Skin.Vector = 1102003080;//ADD
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_UMP45"] == 0)
-        new_Skin.UMP = 102002;
-    if (Config["SKIN_UMP45"] == 1)
-        new_Skin.UMP = 1102002043;//ADD
-    if (Config["SKIN_UMP45"] == 2)
-        new_Skin.UMP = 1102002061;//ADD
-    if (Config["SKIN_UMP45"] == 3)
-        new_Skin.UMP = 1102002090;//ADD
-    if (Config["SKIN_UMP45"] == 4)
-        new_Skin.UMP = 1102002117;//ADD
-    if (Config["SKIN_UMP45"] == 5)
-        new_Skin.UMP = 1102002124;//ADD
-    if (Config["SKIN_UMP45"] == 6)
-        new_Skin.UMP = 1102002129;//ADD
-    if (Config["SKIN_UMP45"] == 7)
-        new_Skin.UMP = 1102002136;//ADD
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_UZI"] == 0)
-        new_Skin.UZI = 102001;
-    if (Config["SKIN_UZI"] == 1)
-        new_Skin.UZI = 1102001024;//ADD
-    if (Config["SKIN_UZI"] == 2)
-        new_Skin.UZI = 1102001036;//ADD
-    if (Config["SKIN_UZI"] == 3)
-        new_Skin.UZI = 1102001058;//ADD
-    if (Config["SKIN_UZI"] == 4)
-        new_Skin.UZI = 1102001069;//ADD
-    if (Config["SKIN_UZI"] == 5)
-        new_Skin.UZI = 1102001089;//ADD
-    if (Config["SKIN_UZI"] == 6)
-        new_Skin.UZI = 1102001102;//ADD
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_THOMPSON"] == 0)
-        new_Skin.Thompson = 102004;
-    if (Config["SKIN_THOMPSON"] == 1)
-        new_Skin.Thompson = 1102004018;//Candy Cane - Thompson SMG (Lv. 5)
-    if (Config["SKIN_THOMPSON"] == 2)
-        new_Skin.Thompson = 1102004034;//Steampunk - Thompson SMG (Lv. 5)
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_M16A4"] == 0) {
-        new_Skin.M16A4 = 101002;
-        new_Skin.M16A4_Stock = 205007;
-        new_Skin.M16A4_Mag = 291002;
-    }
-    if (Config["SKIN_M16A4"] == 1) {
-        new_Skin.M16A4 = 1101002029;//ADD
-        new_Skin.M16A4_Stock = 1010020292;
-        new_Skin.M16A4_Mag = 1010020291;
-    }
-    if (Config["SKIN_M16A4"] == 2) {
-        new_Skin.M16A4 = 1101002056;//ADD
-        new_Skin.M16A4_Stock = 1010020562;
-        new_Skin.M16A4_Mag = 1010020561;
-    }
-    if (Config["SKIN_M16A4"] == 3) {
-        new_Skin.M16A4 = 1101002068;//ADD
-        new_Skin.M16A4_Stock = 1010020682;
-        new_Skin.M16A4_Mag = 1010020681;
-    }
-    if (Config["SKIN_M16A4"] == 4) {
-        new_Skin.M16A4 = 1101002081;//ADD
-        new_Skin.M16A4_Stock = 1010020812;
-        new_Skin.M16A4_Mag = 1010020811;
-    }
-    if (Config["SKIN_M16A4"] == 5) {
-        new_Skin.M16A4 = 1101002103;//ADD
-        new_Skin.M16A4_Stock = 1010021032;
-        new_Skin.M16A4_Mag = 1010021031;
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_AUG"] == 0)
-        new_Skin.AUG = 101006;
-    if (Config["SKIN_AUG"] == 1)
-        new_Skin.AUG = 1101006033;//ADD
-    if (Config["SKIN_AUG"] == 2)
-        new_Skin.AUG = 1101006044;//ADD
-    if (Config["SKIN_AUG"] == 3)
-        new_Skin.AUG = 1101006062;//ADD
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_GROZAR"] == 0) //
-        new_Skin.Groza = 101005;
-    if (Config["SKIN_GROZAR"] == 1)
-        new_Skin.Groza = 1101005019;
-    if (Config["SKIN_GROZAR"] == 2)
-        new_Skin.Groza = 1101005025;
-    if (Config["SKIN_GROZAR"] == 3)
-        new_Skin.Groza = 1101005038;
-    if (Config["SKIN_GROZAR"] == 4)
-        new_Skin.Groza = 1101005043;
-    if (Config["SKIN_GROZAR"] == 5)
-        new_Skin.Groza = 1101005052;
-    if (Config["SKIN_GROZAR"] == 6)
-        new_Skin.Groza = 1101005082;
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_DP28"] == 0)
-        new_Skin.DP28 = 105002;
-    if (Config["SKIN_DP28"] == 1)
-        new_Skin.DP28 = 1105002018;
-    if (Config["SKIN_DP28"] == 2)
-        new_Skin.DP28 = 1105002035;
-    if (Config["SKIN_DP28"] == 3)
-        new_Skin.DP28 = 1105002058;
-    if (Config["SKIN_DP28"] == 4)
-        new_Skin.DP28 = 1105002063;
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_M249"] == 0) {
-        new_Skin.M249 = 105001;
-        new_Skin.M249s = 205009;
-    }
-    if (Config["SKIN_M249"] == 1) {
-        new_Skin.M249 = 1105001020;
-        new_Skin.M249s = 1050010351;
-    }
-    if (Config["SKIN_M249"] == 2) {
-        new_Skin.M249 = 1105001034;
-        new_Skin.M249s = 1050010412;
-    }
-    if (Config["SKIN_M249"] == 3) {
-        new_Skin.M249 = 1105001048;
-        new_Skin.M249s = 1050010482;
-    }
-    if (Config["SKIN_M249"] == 4) {
-        new_Skin.M249 = 1105001054;
-        new_Skin.M249s = 1050010542;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_SCARL"] == 0) {
-        new_Skin.Scar = 101003;
-        new_Skin.Scar_Mag = 291003;
-    }
-    if (Config["SKIN_SCARL"] == 1) {
-        new_Skin.Scar = 1101003057;
-        new_Skin.Scar_Mag = 1010030571;
-    }
-    if (Config["SKIN_SCARL"] == 2) {
-        new_Skin.Scar = 1101003070;
-        new_Skin.Scar_Mag = 1010030701;
-    }
-    if (Config["SKIN_SCARL"] == 3) {
-        new_Skin.Scar = 1101003080;
-        new_Skin.Scar_Mag = 1010030801;
-    }
-    if (Config["SKIN_SCARL"] == 4) {
-        new_Skin.Scar = 1101003119;
-        new_Skin.Scar_Mag = 1010031191;
-    }
-    if (Config["SKIN_SCARL"] == 5) {
-        new_Skin.Scar = 1101003146;
-        new_Skin.Scar_Mag = 1010031461;
-    }
-    if (Config["SKIN_SCARL"] == 6) {
-        new_Skin.Scar = 1101003167;
-        new_Skin.Scar_Mag = 1010031671;
-    }
-    if (Config["SKIN_SCARL"] == 7) {
-        new_Skin.Scar = 1101003181;
-        new_Skin.Scar_Mag = 1010031811;
-    }
-    ///////////////////////////////////
-    if (Config["SKIN_M762"] == 0) {
-        new_Skin.M762 = 101008;
-        new_Skin.M762_Mag = 291008;
-    }
-    if (Config["SKIN_M762"] == 1) {
-        new_Skin.M762 = 1101008026;
-        new_Skin.M762_Mag = 1010080261;
-    }
-    if (Config["SKIN_M762"] == 2) {
-        new_Skin.M762 = 1101008051;
-        new_Skin.M762_Mag = 1010080511;
-    }
-    if (Config["SKIN_M762"] == 3) {
-        new_Skin.M762 = 1101008061;
-        new_Skin.M762_Mag = 1010080611;
-    }
-    if (Config["SKIN_M762"] == 4) {
-        new_Skin.M762 = 1101008081;
-        new_Skin.M762_Mag = 1010080811;
-    }
-    if (Config["SKIN_M762"] == 5) {
-        new_Skin.M762 = 1101008104;
-        new_Skin.M762_Mag = 1010081041;
-    }
-    if (Config["SKIN_M762"] == 6) {
-        new_Skin.M762 = 1101008116;
-        new_Skin.M762_Mag = 1010081161;
-    }
-    if (Config["SKIN_M762"] == 7) {
-        new_Skin.M762 = 1101008126;
-        new_Skin.M762_Mag = 1010081261;
-    }
-
-    if (Config["SKIN_M762"] == 8) {
-        new_Skin.M762 = 1101008013;
-        new_Skin.M762_Mag = 1010081261;
-    }
-    if (Config["SKIN_M762"] == 9) {
-        new_Skin.M762 = 1101008070;
-        new_Skin.M762_Mag = 1010030801;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (Config["SKIN_M416"] == 0) {
-        new_Skin.M416_1 = 101004;
-        new_Skin.M416_2 = 291004;
-        new_Skin.M416_3 = 203008;
-        new_Skin.M416_4 = 205005;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 1) {
-        new_Skin.M416_1 = 1101004046;
-        new_Skin.M416_2 = 1010040461;
-        new_Skin.M416_3 = 1010040462;
-        new_Skin.M416_4 = 1010040463;
-        new_Skin.M416_flash = 1010040474;
-        new_Skin.M416_compe = 1010040475;
-        new_Skin.M416_silent = 1010040476;
-        new_Skin.M416_reddot = 1010040470;
-        new_Skin.M416_holo = 1010040469;
-        new_Skin.M416_x2 = 1010040468;
-        new_Skin.M416_x3 = 1010040467;
-        new_Skin.M416_x4 = 1010040466;
-        new_Skin.M416_x6 = 1010040481;
-        new_Skin.M416_quickMag = 1010040472;
-        new_Skin.M416_extendedMag = 1010040473;
-        new_Skin.M416_quickNextended = 1010040473;
-        new_Skin.M416_stock = 1010040480;
-        new_Skin.M416_verical = 1010040481;
-        new_Skin.M416_thumb = 1010040478;
-        new_Skin.M416_angle = 1010040477;
-        new_Skin.M416_lightgrip = 1010040482;
-        new_Skin.M416_pink = 1010040483;
-        new_Skin.M416_lazer = 1010040484;
-    }
-    if (Config["SKIN_M416"] == 2) {
-        new_Skin.M416_1 = 1101004062;
-        new_Skin.M416_2 = 1010040611;
-        new_Skin.M416_3 = 1010040612;
-        new_Skin.M416_4 = 1010040613;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 3) {
-        new_Skin.M416_1 = 1101004078;
-        new_Skin.M416_2 = 1010040781;
-        new_Skin.M416_3 = 1010040782;
-        new_Skin.M416_4 = 1010040783;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 4) {
-        new_Skin.M416_1 = 1101004086;
-        new_Skin.M416_2 = 1010040861;
-        new_Skin.M416_3 = 1010040862;
-        new_Skin.M416_4 = 1010040863;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 5) {
-        new_Skin.M416_1 = 1101004098;
-        new_Skin.M416_2 = 1010040981;
-        new_Skin.M416_3 = 1010040982;
-        new_Skin.M416_4 = 1010040983;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 201009;
-        new_Skin.M416_silent = 201011;
-        new_Skin.M416_reddot = 203001;
-        new_Skin.M416_holo = 203002;
-        new_Skin.M416_x2 = 203003;
-        new_Skin.M416_x3 = 203014;
-        new_Skin.M416_x4 = 203004;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 204012;
-        new_Skin.M416_extendedMag = 204011;
-        new_Skin.M416_quickNextended = 204013;
-        new_Skin.M416_stock = 205002;
-        new_Skin.M416_verical = 203015;
-        new_Skin.M416_angle = 202001;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 6) {
-        new_Skin.M416_1 = 1101004138;
-        new_Skin.M416_2 = 1010041381;
-        new_Skin.M416_3 = 1010041382;
-        new_Skin.M416_4 = 1010041383;
-        new_Skin.M416_flash = 1010041136;
-        new_Skin.M416_compe = 1010041137;
-        new_Skin.M416_silent = 1010041138;
-        new_Skin.M416_reddot = 1010041128;
-        new_Skin.M416_holo = 1010041127;
-        new_Skin.M416_x2 = 1010041126;
-        new_Skin.M416_x3 = 1010041125;
-        new_Skin.M416_x4 = 1010041124;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 1010041134;
-        new_Skin.M416_extendedMag = 1010041129;
-        new_Skin.M416_quickNextended = 1010041135;
-        new_Skin.M416_stock = 1010041146;
-        new_Skin.M416_verical = 1010041145;
-        new_Skin.M416_angle = 1010041139;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 7) {
-        new_Skin.M416_1 = 1101004163;
-        new_Skin.M416_2 = 1010041631;
-        new_Skin.M416_3 = 1010041632;
-        new_Skin.M416_4 = 1010041633;
-        new_Skin.M416_flash = 201010;
-        new_Skin.M416_compe = 1010041574;
-        new_Skin.M416_silent = 1010041575;
-        new_Skin.M416_reddot = 1010041566;
-        new_Skin.M416_holo = 1010041565;
-        new_Skin.M416_x2 = 1010041564;
-        new_Skin.M416_x3 = 1010041560;
-        new_Skin.M416_x4 = 1010041554;
-        new_Skin.M416_x6 = 203015;
-        new_Skin.M416_quickMag = 1010041568;
-        new_Skin.M416_extendedMag = 1010041569;
-        new_Skin.M416_quickNextended = 1010041567;
-        new_Skin.M416_stock = 1010041579;
-        new_Skin.M416_verical = 1010041578;
-        new_Skin.M416_angle = 1010041576;
-        new_Skin.M416_lightgrip = 20200400;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 1010041577;
-    }
-    if (Config["SKIN_M416"] == 8) {
-        new_Skin.M416_1 = 1101004201;
-        new_Skin.M416_2 = 1010042011;
-        new_Skin.M416_3 = 1010042012;
-        new_Skin.M416_4 = 1010042013;
-        new_Skin.M416_flash = 1010041956;
-        new_Skin.M416_compe = 1010041957;
-        new_Skin.M416_silent = 1010041958;
-        new_Skin.M416_reddot = 1010041948;
-        new_Skin.M416_holo = 1010041947;
-        new_Skin.M416_x2 = 1010041946;
-        new_Skin.M416_x3 = 1010041945;
-        new_Skin.M416_x4 = 1010041944;
-        new_Skin.M416_x6 = 1010041967;
-        new_Skin.M416_quickMag = 1010041949;
-        new_Skin.M416_extendedMag = 1010041950;
-        new_Skin.M416_quickNextended = 1010041955;
-        new_Skin.M416_stock = 1010041966;
-        new_Skin.M416_verical = 1010041965;
-        new_Skin.M416_angle = 1010041959;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 9) {
-        new_Skin.M416_1 = 1101004209;
-        new_Skin.M416_2 = 1010042073;
-        new_Skin.M416_3 = 1010042083;
-        new_Skin.M416_4 = 1010042093;
-        new_Skin.M416_flash = 20101000;
-        new_Skin.M416_compe = 1010042037;
-        new_Skin.M416_silent = 1010042039;
-        new_Skin.M416_reddot = 1010042029;
-        new_Skin.M416_holo = 1010042028;
-        new_Skin.M416_x2 = 1010042027;
-        new_Skin.M416_x3 = 1010042026;
-        new_Skin.M416_x4 = 1010042025;
-        new_Skin.M416_x6 = 1010042024;
-        new_Skin.M416_quickMag = 1010042034;
-        new_Skin.M416_extendedMag = 1010042035;
-        new_Skin.M416_quickNextended = 1010042036;
-        new_Skin.M416_stock = 1010042047;
-        new_Skin.M416_verical = 1010042046;
-        new_Skin.M416_angle = 1010042044;
-        new_Skin.M416_lightgrip = 202004;
-        new_Skin.M416_pink = 202005;
-        new_Skin.M416_lazer = 203015;
-        new_Skin.M416_thumb = 202006;
-    }
-    if (Config["SKIN_M416"] == 10) {
-        new_Skin.M416_1 = 1101004218;
-        new_Skin.M416_2 = 1010042153;
-        new_Skin.M416_3 = 1010042163;
-        new_Skin.M416_4 = 1010042173;
-        new_Skin.M416_flash = 1010042128;
-        new_Skin.M416_compe = 1010042127;
-        new_Skin.M416_silent = 1010042129;
-        new_Skin.M416_reddot = 1010042119;
-        new_Skin.M416_holo = 1010042118;
-        new_Skin.M416_x2 = 1010042117;
-        new_Skin.M416_x3 = 1010042116;
-        new_Skin.M416_x4 = 1010042115;
-        new_Skin.M416_x6 = 1010042114;
-        new_Skin.M416_quickMag = 1010042124;
-        new_Skin.M416_extendedMag = 1010042125;
-        new_Skin.M416_quickNextended = 1010042126;
-        new_Skin.M416_stock = 1010042137;
-        new_Skin.M416_verical = 1010042136;
-        new_Skin.M416_angle = 1010042134;
-        new_Skin.M416_lightgrip = 1010042138;
-        new_Skin.M416_pink = 1010042139;
-        new_Skin.M416_lazer = 1010042144;
-        new_Skin.M416_thumb = 1010042135;
-    }
-
-    if (Config["SKIN_M416"] == 11) {
-        new_Skin.M416_1 = 1101004226;
-        new_Skin.M416_2 = 1010042206;
-        new_Skin.M416_3 = 1010042209;
-        new_Skin.M416_4 = 1010042213;
-        new_Skin.M416_flash = 1010042238;
-        new_Skin.M416_compe = 1010042237;
-        new_Skin.M416_silent = 1010042239;
-        new_Skin.M416_reddot = 1010042233;
-        new_Skin.M416_holo = 1010042232;
-        new_Skin.M416_x2 = 1010042231;
-        new_Skin.M416_x3 = 1010042219;
-        new_Skin.M416_x4 = 1010042218;
-        new_Skin.M416_x6 = 1010042217;
-        new_Skin.M416_quickMag = 1010042235;
-        new_Skin.M416_extendedMag = 1010042234;
-        new_Skin.M416_quickNextended = 1010042236;
-        new_Skin.M416_stock = 1010042244;
-        new_Skin.M416_verical = 1010042243;
-        new_Skin.M416_angle = 1010042241;
-        new_Skin.M416_lightgrip = 1010042245;
-        new_Skin.M416_pink = 1010042246;
-        new_Skin.M416_lazer = 1010042247;
-        new_Skin.M416_thumb = 1010042242;
-    }
-
-    if (Config["SKIN_AMR"] == 0)
-        new_Skin.AMR = 103012;
-    if (Config["SKIN_AMR"] == 1)
-        new_Skin.AMR = 1103012010;//ADD
-
-    if (Config["SKIN_MK14"] == 0)
-        new_Skin.MK14 = 103007;
-    if (Config["SKIN_MK14"] == 1)
-        new_Skin.MK14 = 1103007020;//ADD
-    if (Config["SKIN_MK14"] == 2)
-        new_Skin.MK14 = 1103007028;//ADD
-
-
-    if (Config["SKIN_MG3"] == 0)
-        new_Skin.MG3 = 105010;
-    if (Config["SKIN_MG3"] == 1)
-        new_Skin.MG3 = 1105010008;//ADD
-
-/*
-//LV-1
-//if (bagSkinHackHudSdk == 0)
-//new_Skin.baglv1 = 501001; //LV 1
-if (bagSkinHackHudSdk == 1)
-new_Skin.baglv1 = 1501001220; //Blood Raven Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 2)
-new_Skin.baglv1 = 1501001174; //Pharaoh's Regalia Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 3)
-new_Skin.baglv1 = 1501001051; //The Fool Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 4)
-new_Skin.baglv1 = 1501001443; //Luminous Galaxy Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 5)
-new_Skin.baglv1 = 1501001265; //Poseidon Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 6)
-new_Skin.baglv1 = 1501001321; //Gackt Moonsaga Backpack(Lv. 1)
-if (bagSkinHackHudSdk == 7)
-new_Skin.baglv1 = 1501001277; //Godzilla Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 8)
-new_Skin.baglv1 = 1501001550;//Frosty Snowglobe Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 9)
-new_Skin.baglv1 = 1501001552; //Ebil Bunny Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 10)
-new_Skin.baglv1 = 1501001061; //Godzilla Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 11)
-new_Skin.baglv1 = 1501001058; //BAPE X PUBGM CAMO Backpack
-if (bagSkinHackHudSdk == 12)
-new_Skin.baglv1 = 1501001062; //King Ghidorah Backpack (Lv. 3)
-if (bagSkinHackHudSdk == 13)
-new_Skin.baglv1 = 1501001422; // Bramble Overlord Backpack (Lv. 3)
-if (bagSkinHackHudSdk == 14)
-new_Skin.baglv1 = 1501001503; // Silver Guru Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 15)
-new_Skin.baglv1 = 1501001546; // Silver Guru Backpack (Lv. 1)
-if (bagSkinHackHudSdk == 16)
-new_Skin.baglv1 = 1501000558; // Silver Guru Backpack (Lv. 1)
-
-
-
-//LV-2
-//if (bagSkinHackHudSdk == 0)
-//new_Skin.baglv2 = 501002; //LV 2
-if (bagSkinHackHudSdk == 1)
-new_Skin.baglv2 = 1501002220; //Blood Raven Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 2)
-new_Skin.baglv2 = 1501002174; //Pharaoh's Regalia Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 3)
-new_Skin.baglv2 = 1501002051; //The Fool Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 4)
-new_Skin.baglv2 = 1501002443; //Luminous Galaxy Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 5)
-new_Skin.baglv2 = 1501002265; //Poseidon Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 6)
-new_Skin.baglv2 = 1501002321; //Gackt Moonsaga Backpack(Lv. 2)
-if (bagSkinHackHudSdk == 7)
-new_Skin.baglv2 = 1501002277; //Godzilla Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 8)
-new_Skin.baglv2 = 1501002550; //Frosty Snowglobe Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 9)
-new_Skin.baglv2 = 1501002552; //Ebil Bunny Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 10)
-new_Skin.baglv2 = 1501002061; //Godzilla Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 11)
-new_Skin.baglv2 = 1501002058; //BAPE X PUBGM CAMO Backpack
-if (bagSkinHackHudSdk == 12)
-new_Skin.baglv2 = 1501002062; //King Ghidorah Backpack (Lv. 3)
-if (bagSkinHackHudSdk == 13)
-new_Skin.baglv2 = 1501002422; // Bramble Overlord Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 14)
-new_Skin.baglv2 = 1501002503; // Silver Guru Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 15)
-new_Skin.baglv2 = 1501002546; // Silver Guru Backpack (Lv. 2)
-if (bagSkinHackHudSdk == 16)
-new_Skin.baglv2 = 1501000558; // Silver Guru Backpack (Lv. 2)
-
-*/
-//3
-//if (bagSkinHackHudSdk == 0)
-//new_Skin.baglv3 = 501003; //LV 3
-    if (Config["SKIN_BACKPACK"] == 1)
-        new_Skin.baglv3 = 1501003220; //Blood Raven Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 2)
-        new_Skin.baglv3 = 1501003174; //Pharaoh's Regalia Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 3)
-        new_Skin.baglv3 = 1501003051; //The Fool Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 4)
-        new_Skin.baglv3 = 1501003443; //Luminous Galaxy Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 5)
-        new_Skin.baglv3 = 1501003265; //Poseidon Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 6)
-        new_Skin.baglv3 = 1501003321; //Gackt Moonsaga Backpack(Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 7)
-        new_Skin.baglv3 = 1501003277; //Godzilla Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 8)
-        new_Skin.baglv3 = 1501003550; //Frosty Snowglobe Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 9)
-        new_Skin.baglv3 = 1501003552; //Ebil Bunny Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 10)
-        new_Skin.baglv3 = 1501003061; //Godzilla Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 11)
-        new_Skin.baglv3 = 1501003058; //BAPE X PUBGM CAMO Backpack
-    if (Config["SKIN_BACKPACK"] == 12)
-        new_Skin.baglv3 = 1501003062; //King Ghidorah Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 13)
-        new_Skin.baglv3 = 1501003422; // Bramble Overlord Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 14)
-        new_Skin.baglv3 = 1501003502; // Silver Guru Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 15)
-        new_Skin.baglv3 = 1501003546; // Silver Guru Backpack (Lv. 3)
-    if (Config["SKIN_BACKPACK"] == 16)
-        new_Skin.baglv3 = 1501000558; // Silver Guru Backpack (Lv. 3)
-
-
-
-/*
-
-
-//lv-1
-//if (helmetSkinHackHudSdk == 0)
-//new_Skin.helmetlv1 = 502001; //lv 1
-if (helmetSkinHackHudSdk == 1)
-new_Skin.helmetlv1 = 1502001028; //Scarlet Beast Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 2)
-new_Skin.helmetlv1 = 1502001014; //Inferno Rider Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 3)
-new_Skin.helmetlv1 = 1502001023; //Glacier Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 4)
-new_Skin.helmetlv1 = 1502001065; //Moon Bunny Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 5)
-new_Skin.helmetlv1 = 1502001031; //Mutated Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 6)
-new_Skin.helmetlv1 = 1502001033; //Intergalactic Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 7)
-new_Skin.helmetlv1 = 1502001069; //Masked Psychic Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 8)
-new_Skin.helmetlv1 = 1502001261; //Atlantic Tech Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 9)
-new_Skin.helmetlv1 = 1502001272; //Mystic Battle Helmet (Lv. 1)
-if (helmetSkinHackHudSdk == 10)
-new_Skin.helmetlv1 = 1502001183; //Godzilla Helmet (Lv. 1)
-
-
-//lv-2
-//if (helmetSkinHackHudSdk == 0)
-//new_Skin.helmetlv2 = 502002; //lv 2
-if (helmetSkinHackHudSdk == 1)
-new_Skin.helmetlv2 = 1502002028; //Scarlet Beast Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 2)
-new_Skin.helmetlv2 = 1502002014; //Inferno Rider Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 3)
-new_Skin.helmetlv2 = 1502002023; //Glacier Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 4)
-new_Skin.helmetlv2 = 1502002065; //Moon Bunny Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 5)
-new_Skin.helmetlv2 = 1502002031; //Mutated Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 6)
-new_Skin.helmetlv2 = 1502002033; //Intergalactic Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 7)
-new_Skin.helmetlv2 = 1502002069; //Masked Psychic Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 8)
-new_Skin.helmetlv2 = 1502002261; //Atlantic Tech Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 9)
-new_Skin.helmetlv2 = 1502002272; //Mystic Battle Helmet (Lv. 2)
-if (helmetSkinHackHudSdk == 10)
-new_Skin.helmetlv2 = 1502002183; //Godzilla Helmet (Lv. 2)
-
-*/
-//lv-3
-//if (helmetSkinHackHudSdk == 0)
-//new_Skin.helmetlv3 = 502003; //lv 3
-    if (Config["SKIN_HELMET"] == 1)
-        new_Skin.helmetlv3 = 1502003028; //Scarlet Beast Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 2)
-        new_Skin.helmetlv3 = 1502003014; //Inferno Rider Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 3)
-        new_Skin.helmetlv3 = 1502003023; //Glacier Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 4)
-        new_Skin.helmetlv3 = 1502003065; //Moon Bunny Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 5)
-        new_Skin.helmetlv3 = 1502003031; //Mutated Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 6)
-        new_Skin.helmetlv3 = 1502003033; //Intergalactic Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 7)
-        new_Skin.helmetlv3 = 1502003069; //Masked Psychic Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 8)
-        new_Skin.helmetlv3 = 1502003261; //Atlantic Tech Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 9)
-        new_Skin.helmetlv3 = 1502003272; //Mystic Battle Helmet (Lv. 3)
-    if (Config["SKIN_HELMET"] == 10)
-        new_Skin.helmetlv3 = 1502003183; //Godzilla Helmet (Lv. 3)
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*Monster Truck
-BigfootSkinHackSdk
-*/
-/*
-   if (BigfootSkinHackSdk == 0)
-    new_Skin.Bigfoot = 1953001;
-  if (BigfootSkinHackSdk == 1)
-    new_Skin.Bigfoot = 1953004;
-
- //   Mirado (Open Top)
- //   MiradoSkinHackSdk
-  if (MiradoSkinHackSdk == 0)
-    new_Skin.OMirado = 1915001;
-  if (MiradoSkinHackSdk == 1)
-    new_Skin.OMirado = 1915011;
-  if (MiradoSkinHackSdk == 2)
-    new_Skin.OMirado = 1915099;
-
-   // Mirado (Closed Top)
-    //FMiradoSkinHackSdk
-  if (MiradoSkinHackSdk == 0)
-    new_Skin.Mirado = 1914001;
-  if (FMiradoSkinHackSdk == 1)
-    new_Skin.Mirado = 1914011;
-
-    //Motorcycle
-    //MotoSkinHackSdk
-  if (MotoSkinHackSdk == 0)
-    new_Skin.Moto = 1901001;
-  if (MotoSkinHackSdk == 1)
-    new_Skin.Moto = 1901073;
-  if (MotoSkinHackSdk == 2)
-    new_Skin.Moto = 1901074;
-  if (MotoSkinHackSdk == 3)
-    new_Skin.Moto = 1901075;
-  if (MotoSkinHackSdk == 4)
-    new_Skin.Moto = 1901047;
-  if (MotoSkinHackSdk == 5)
-    new_Skin.Moto = 1901085;
-  if (MotoSkinHackSdk == 6)
-    new_Skin.Moto = 1901076;
-  if (MotoSkinHackSdk == 7)
-    new_Skin.Moto = 1901027;
-  if (MotoSkinHackSdk == 8)
-    new_Skin.Moto = 1901018;
-  if (MotoSkinHackSdk == 9)
-    new_Skin.Moto = 1901085;
-  if (MotoSkinHackSdk == 10)
-    new_Skin.Moto = 1901070; // Nether Visage Motorcycle
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  //Buggy
-  //BuggySkinHackSdk
-if (BuggySkinHackSdk == 0)
-    new_Skin.Buggy = 1907001;
-  if (BuggySkinHackSdk == 1)
-    new_Skin.Buggy = 1907047;
-  if (BuggySkinHackSdk == 2)
-    new_Skin.Buggy = 1907009;
-if (BuggySkinHackSdk == 3)
-    new_Skin.Buggy = 1907010;
-if (BuggySkinHackSdk == 4)
-    new_Skin.Buggy = 1907011;
-if (BuggySkinHackSdk == 5)
-    new_Skin.Buggy = 1907012;
-if (BuggySkinHackSdk == 6)
-    new_Skin.Buggy = 1907013;
-if (BuggySkinHackSdk == 7)
-    new_Skin.Buggy = 1907014;
-if (BuggySkinHackSdk == 8)
-    new_Skin.Buggy = 1907015;
-if (BuggySkinHackSdk == 9)
-    new_Skin.Buggy = 1907016;
-if (BuggySkinHackSdk == 10)
-    new_Skin.Buggy = 1907017;
-if (BuggySkinHackSdk == 11)
-    new_Skin.Buggy = 1907018;
-if (BuggySkinHackSdk == 12)
-    new_Skin.Buggy = 1907019;
-if (BuggySkinHackSdk == 13)
-    new_Skin.Buggy = 1907020;
-if (BuggySkinHackSdk == 14)
-    new_Skin.Buggy = 1907021;
-if (BuggySkinHackSdk == 15)
-    new_Skin.Buggy = 1907022;
-if (BuggySkinHackSdk == 16)
-    new_Skin.Buggy = 1907023;
-if (BuggySkinHackSdk == 17)
-    new_Skin.Buggy = 1907024;
-if (BuggySkinHackSdk == 18)
-    new_Skin.Buggy = 1907025;
-if (BuggySkinHackSdk == 19)
-    new_Skin.Buggy = 1907026;
-if (BuggySkinHackSdk == 20)
-    new_Skin.Buggy = 1907027;
-if (BuggySkinHackSdk == 21)
-    new_Skin.Buggy = 1907028;
-if (BuggySkinHackSdk == 22)
-    new_Skin.Buggy = 1907029;
-if (BuggySkinHackSdk == 23)
-    new_Skin.Buggy = 1907030;
-if (BuggySkinHackSdk == 24)
-    new_Skin.Buggy = 1907031;
-if (BuggySkinHackSdk == 25)
-    new_Skin.Buggy = 1907032;
-if (BuggySkinHackSdk == 26)
-    new_Skin.Buggy = 1907033;
-if (BuggySkinHackSdk == 27)
-    new_Skin.Buggy = 1907034;
-if (BuggySkinHackSdk == 28)
-    new_Skin.Buggy = 1907035;
-if (BuggySkinHackSdk == 29)
-    new_Skin.Buggy = 1907036;
-if (BuggySkinHackSdk == 30)
-    new_Skin.Buggy = 1907037;
-if (BuggySkinHackSdk == 31)
-    new_Skin.Buggy = 1907038;
-if (BuggySkinHackSdk == 32)
-    new_Skin.Buggy = 1907039;
-if (BuggySkinHackSdk == 33)
-    new_Skin.Buggy = 1907040;
-
-    //Dacia
-    //DaciaSkinHackSdk
-
-                  if (DaciaSkinHackSdk == 1) {
-                    new_Skin.Dacia = 1903075; //Koenigsegg Gemera (Rainbow)
-                    } else if (DaciaSkinHackSdk == 2) {
-                    new_Skin.Dacia = 1903080; //Koenigsegg Gemera (Silver Grey)
-                    } else if (DaciaSkinHackSdk == 3) {
-                    new_Skin.Dacia = 1903076; //Koenigsegg Gemera (Drawn)
-                    } else if (DaciaSkinHackSdk == 4) {
-                    new_Skin.Dacia = 1903073; //Tesla Roadster (Digital Water) ( DACIA )
-                    } else if (DaciaSkinHackSdk == 5) {
-                    new_Skin.Dacia = 1903074; //Koenigsegg Gemera (Silver Gray) ( DACIA )
-                    } else if (DaciaSkinHackSdk == 6) {
-                    new_Skin.Dacia = 1903072; //Koenigsegg Gemera (Rainbow) ( DACIA )
-                    } else if (DaciaSkinHackSdk == 7) {
-                    new_Skin.Dacia = 1903189; //Lamborghini Estoque Metal Grey ( DACIA )
-                    } else if (DaciaSkinHackSdk == 8) {
-                    new_Skin.Dacia = 1903071; //Tesla Roadster (Diamond) ( DACIA )
-                    } else if (DaciaSkinHackSdk == 9) {
-                    new_Skin.Dacia = 1903190; //Lamborghini Estoque Metal Grey
-                    } else if (DaciaSkinHackSdk == 10) {
-                    new_Skin.Dacia = 1903079; //Lamborghini Estoque Oro
-                    } else if (DaciaSkinHackSdk == 11) {
-                    new_Skin.Dacia = 1903193; //Lamborghini Estoque Oro
-                    } else if (DaciaSkinHackSdk == 12) {
-                    new_Skin.Dacia = 1903200; //
-                    } else if (DaciaSkinHackSdk == 13) {
-                    new_Skin.Dacia = 1903201; //
-                    } else if (DaciaSkinHackSdk == 14) {
-                    new_Skin.Dacia = 1903001; //
-                    } else if (DaciaSkinHackSdk == 15) {
-                    new_Skin.Dacia = 1903014; //
-                    } else if (DaciaSkinHackSdk == 16) {
-                    new_Skin.Dacia = 1903017; //
-                    } else if (DaciaSkinHackSdk == 17) {
-                    new_Skin.Dacia = 1903035; //
-                    } else if (DaciaSkinHackSdk == 18) {
-                    new_Skin.Dacia = 1903087; //
-                    } else if (DaciaSkinHackSdk == 19) {
-                    new_Skin.Dacia = 1903088; //
-                    } else if (DaciaSkinHackSdk == 20) {
-                    new_Skin.Dacia = 1903089; //
-                    } else if (DaciaSkinHackSdk == 21) {
-                    new_Skin.Dacia = 1903090; //
-                    } else if (DaciaSkinHackSdk == 22) {
-                    new_Skin.Dacia = 1903191; //
-                    } else if (DaciaSkinHackSdk == 23) {
-                    new_Skin.Dacia = 1903192; //
-                    } else if (DaciaSkinHackSdk == 24) {
-                    new_Skin.Dacia = 1903197; //
-                    }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  //Mini Bus
-  //MiniBusSkinHackSdk
-if (MiniBusSkinHackSdk == 0)
-    new_Skin.MiniBus = 1904001;
-  if (MiniBusSkinHackSdk == 1)
-    new_Skin.MiniBus = 1904005;
-  if (MiniBusSkinHackSdk == 2)
-    new_Skin.MiniBus = 1904006;
-if (MiniBusSkinHackSdk == 3)
-    new_Skin.MiniBus = 1904007;
-if (MiniBusSkinHackSdk == 4)
-    new_Skin.MiniBus = 1904008;
-if (MiniBusSkinHackSdk == 5)
-    new_Skin.MiniBus = 1904009;
-if (MiniBusSkinHackSdk == 6)
-    new_Skin.MiniBus = 1904010;
-if (MiniBusSkinHackSdk == 7)
-    new_Skin.MiniBus = 1904011;
-if (MiniBusSkinHackSdk == 8)
-    new_Skin.MiniBus = 1904012;
-if (MiniBusSkinHackSdk == 9)
-    new_Skin.MiniBus = 1904013;
-if (MiniBusSkinHackSdk == 10)
-    new_Skin.MiniBus = 1904014;
-if (MiniBusSkinHackSdk == 11)
-    new_Skin.MiniBus = 1904015;
-if (MiniBusSkinHackSdk == 12)
-    new_Skin.MiniBus = 1904004;
-
-
-    //Coupe RB
-    //CoupeRPSkinHackSdk
-                 if (CoupeRPSkinHackSdk == 1) {
-                    new_Skin.CoupeRP = 1961020; //Lamborghini Aventador (Green) - CoupleRB
-                    } else if (CoupeRPSkinHackSdk == 2) {
-                    new_Skin.CoupeRP = 1961033; //Warp Green - CoupleRB
-                    } else if (CoupeRPSkinHackSdk == 3) {
-                    new_Skin.CoupeRP = 1961032; //Koenigsegg One:1 Phoenix - CoupleRB
-                    } else if (CoupeRPSkinHackSdk == 4) {
-                    new_Skin.CoupeRP = 1961039; //Maserati MC20 Rosso Vincente - CoupleRB
-                    } else if (CoupeRPSkinHackSdk == 5) {
-                    new_Skin.CoupeRP = 1961046; //Bugatti La Voiture Noire (Warrior)
-                    } else if (CoupeRPSkinHackSdk == 6) {
-                    new_Skin.CoupeRP = 1961048; //Aston Martin Valkyrie (Luminous Diamond)
-                    } else if (CoupeRPSkinHackSdk == 7) {
-                    new_Skin.CoupeRP = 1961029; //Koenigsegg One:1 Gilt
-                    } else if (CoupeRPSkinHackSdk == 8) {
-                    new_Skin.CoupeRP = 1961025; //Lamborghini Centenario Carbon Fiber
-                    } else if (CoupeRPSkinHackSdk == 9) {
-                    new_Skin.CoupeRP = 1961021; //Lamborghini Centenario Carbon Fiber
-                    } else if (CoupeRPSkinHackSdk == 10) {
-                    new_Skin.CoupeRP = 1961017; //Koenigsegg Jesko (Rainbow)
-                    } else if (CoupeRPSkinHackSdk == 11) {
-                    new_Skin.CoupeRP = 1961042; //Koenigsegg Jesko (Rainbow)
-                    } else if (CoupeRPSkinHackSdk == 12) {
-                    new_Skin.CoupeRP = 1961051; //
-                    } else if (CoupeRPSkinHackSdk == 13) {
-                    new_Skin.CoupeRP = 1961052; //
-                    } else if (CoupeRPSkinHackSdk == 14) {
-                    new_Skin.CoupeRP = 1961053; //
-                    } else if (CoupeRPSkinHackSdk == 15) {
-                    new_Skin.CoupeRP = 1961054; //
-                    } else if (CoupeRPSkinHackSdk == 16) {
-                    new_Skin.CoupeRP = 1961055; //
-                    } else if (CoupeRPSkinHackSdk == 17) {
-                    new_Skin.CoupeRP = 1961056; //
-                    } else if (CoupeRPSkinHackSdk == 18) {
-                    new_Skin.CoupeRP = 1961057; //
-                    } else if (CoupeRPSkinHackSdk == 19) {
-                    new_Skin.CoupeRP = 1961016; //
-                    } else if (CoupeRPSkinHackSdk == 20) {
-                    new_Skin.CoupeRP = 1961007; //
-                    } else if (CoupeRPSkinHackSdk == 21) {
-                    new_Skin.CoupeRP = 1961010; //
-                    } else if (CoupeRPSkinHackSdk == 22) {
-                    new_Skin.CoupeRP = 1961012; //
-                    } else if (CoupeRPSkinHackSdk == 23) {
-                    new_Skin.CoupeRP = 1961013; //
-                    } else if (CoupeRPSkinHackSdk == 24) {
-                    new_Skin.CoupeRP = 1961014; //
-                    } else if (CoupeRPSkinHackSdk == 25) {
-                    new_Skin.CoupeRP = 1961015; //
-                    } else if (CoupeRPSkinHackSdk == 26) {
-                    new_Skin.CoupeRP = 1961047; //
-                    } else if (CoupeRPSkinHackSdk == 27) {
-                    new_Skin.CoupeRP = 1961137; //
-                    } else if (CoupeRPSkinHackSdk == 28) {
-                    new_Skin.CoupeRP = 1961138; //
-                    } else if (CoupeRPSkinHackSdk == 29) {
-                    new_Skin.CoupeRP = 1961139; //
-                    } else if (CoupeRPSkinHackSdk == 30) {
-                    new_Skin.CoupeRP = 1961043; //
-                    } else if (CoupeRPSkinHackSdk == 31) {
-                    new_Skin.CoupeRP = 1961044; //
-                    } else if (CoupeRPSkinHackSdk == 32) {
-                    new_Skin.CoupeRP = 1961045; //
-                    } else if (CoupeRPSkinHackSdk == 33) {
-                    new_Skin.CoupeRP = 1961046; //
-                    } else if (CoupeRPSkinHackSdk == 34) {
-                    new_Skin.CoupeRP = 1961050; //
-                    } else if (CoupeRPSkinHackSdk == 35) {
-                    new_Skin.CoupeRP = 1961001; //
-                    } else if (CoupeRPSkinHackSdk == 36) {
-                    new_Skin.CoupeRP = 1961024; //
-                    } else if (CoupeRPSkinHackSdk == 37) {
-                    new_Skin.CoupeRP = 1961034; //
-                    } else if (CoupeRPSkinHackSdk == 38) {
-                    new_Skin.CoupeRP = 1961018; //
-                    } else if (CoupeRPSkinHackSdk == 39) {
-                    new_Skin.CoupeRP = 1961049; //
-                    } else if (CoupeRPSkinHackSdk == 40) {
-                    new_Skin.CoupeRP = 1961030; //
-                    } else if (CoupeRPSkinHackSdk == 41) {
-                    new_Skin.CoupeRP = 1961031; //
-                    } else if (CoupeRPSkinHackSdk == 42) {
-                    new_Skin.CoupeRP = 1961035; //
-                    } else if (CoupeRPSkinHackSdk == 43) {
-                    new_Skin.CoupeRP = 1961036; //
-                    } else if (CoupeRPSkinHackSdk == 44) {
-                    new_Skin.CoupeRP = 1961037; //
-                    } else if (CoupeRPSkinHackSdk == 45) {
-                    new_Skin.CoupeRP = 1961038; //
-                    } else if (CoupeRPSkinHackSdk == 46) {
-                    new_Skin.CoupeRP = 1961040; //
-                    } else if (CoupeRPSkinHackSdk == 47) {
-                    new_Skin.CoupeRP = 1961041; //
-                    } else if (CoupeRPSkinHackSdk == 48) {
-                    new_Skin.CoupeRP = 1961140; // SSC Tuatara Rose Phantom
-                    } else if (CoupeRPSkinHackSdk == 49) {
-                    new_Skin.CoupeRP = 1961141; //SSC Tuatara Sky Crane
-                    }
-
-
-                   if (UAZSkinHackSdk == 1) {
-                    new_Skin.UAZ = 1908070; //Robust Universe
-                    } else if (UAZSkinHackSdk == 2) {
-                    new_Skin.UAZ = 1908077; //Maserati Levante Neon Urbano
-                    } else if (UAZSkinHackSdk == 3) {
-                    new_Skin.UAZ = 1908078; //Maserati Levante Firmamento
-                    } else if (UAZSkinHackSdk == 4) {
-                    new_Skin.UAZ = 1908076; //Maserati Luce Arancione
-                    } else if (UAZSkinHackSdk == 5) {
-                    new_Skin.UAZ = 1908075; //Maserati Levante Blu Emozione
-                    } else if (UAZSkinHackSdk == 6) {
-                    new_Skin.UAZ = 1908067; //Lamborghini Urus Gialla Inti
-                    } else if (UAZSkinHackSdk == 7) {
-                    new_Skin.UAZ = 1908075; //Maserati Levante Blu Emozione
-                    } else if (UAZSkinHackSdk == 8) {
-                    new_Skin.UAZ = 1908094; //
-                    } else if (UAZSkinHackSdk == 9) {
-                    new_Skin.UAZ = 1908095; //
-                    } else if (UAZSkinHackSdk == 10) {
-                    new_Skin.UAZ = 1957001; //
-                    } else if (UAZSkinHackSdk == 11) {
-                    new_Skin.UAZ = 1908086; //
-                    } else if (UAZSkinHackSdk == 12) {
-                    new_Skin.UAZ = 1908066; //
-                    } else if (UAZSkinHackSdk == 13) {
-                    new_Skin.UAZ = 1908189; //
-                    } else if (UAZSkinHackSdk == 14) {
-                    new_Skin.UAZ = 1908001; //
-                    }
- //BoatSkinHackSdk
-    //PG-117
- if (BoatSkinHackSdk == 0)
-    new_Skin.Boat = 1911001;
-  if (BoatSkinHackSdk == 1)
-    new_Skin.Boat = 1911013;
-  if (BoatSkinHackSdk == 2)
-    new_Skin.Boat = 1911003;
-if (BoatSkinHackSdk == 3)
-    new_Skin.Boat = 1911004;
-if (BoatSkinHackSdk == 4)
-    new_Skin.Boat = 1911005;
-if (BoatSkinHackSdk == 5)
-    new_Skin.Boat = 1911006;
-if (BoatSkinHackSdk == 6)
-    new_Skin.Boat = 1911007;
-if (BoatSkinHackSdk == 7)
-    new_Skin.Boat = 1911008;
-if (BoatSkinHackSdk == 8)
-    new_Skin.Boat = 1911009;
-if (BoatSkinHackSdk == 9)
-    new_Skin.Boat = 1911010;
-if (BoatSkinHackSdk == 10)
-    new_Skin.Boat = 1911011;
-if (BoatSkinHackSdk == 11)
-    new_Skin.Boat = 1911012;
-*/
-
-}
-
-
-int bag111[] = {501001, 1501001220, 1501001174, 1501001051, 1501001443, 1501001265, 1501001321,
-                1501001277, 1501001550, 1501001552, 1501001061, 1501001058, 1501001062, 1501001422,
-                1501001503};
-int bag222[] = {501002, 1501002220, 1501002174, 1501002051, 1501002443, 1501002265, 1501002321,
-                1501002277, 1501002550, 1501002552, 1501002061, 1501002058, 1501002062, 1501002422,
-                1501002503};
-int bag333[] = {501006, 501005, 501004, 501003, 501002, 501001, 1501003220, 1501003174, 1501003051,
-                1501003443, 1501003265, 1501003321, 1501003277, 1501003550, 1501003552, 1501003061,
-                1501003058, 1501003062, 1501003422, 1501003503};
-
-
-int Helmet1[] = {502001, 1502001028, 1502001014, 1502001023, 1502001065, 1502001031, 1502001033,
-                 1502001069, 1502001261, 1502001272, 1502001183};
-int Helmet2[] = {502002, 1502002028, 1502002014, 1502002023, 1502002065, 1502002031, 1502002033,
-                 1502002069, 1502002261, 1502002272, 1502002183};
-int Helmet3[] = {502001, 502002, 502003, 1502003028, 1502003014, 1502003023, 1502003065, 1502003031,
-                 1502003033, 1502003069, 1502003261, 1502003272, 1502003183};
-
-
-int m4v[] = {101004, 1101004046, 1101004062, 1101004078, 1101004086, 1101004098, 1101004138,
-             1101004163, 1101004201, 1101004209, 1101004218, 1101004226};
-int scar[] = {101003, 1101003057, 1101003070, 1101003080, 1101003119, 1101003146, 1101003167,
-              1101003181};
-int akmv[] = {101001, 1101001089, 1101001103, 1101001116, 1101001128, 1101001143, 1101001154,
-              1101001174, 1101001213, 1101001231, 1101001242};
-int m7[] = {101008, 1101008026, 1101008051, 1101008061, 1101008081, 1101008104, 1101008116,
-            1101008126, 1101008070};
-int awm[] = {103003, 1103003022, 1103003030, 1103003042, 1103003051, 1103003062};
-int amr[] = {103012, 1103012010};
-int mk14[] = {103007, 1103007020, 1103007028};
-int mg3[] = {105010, 1105010008};
-
-int kar[] = {103001, 1103001060, 1103001079, 1103001101, 1103001145, 1103001160, 1103001179};
-int m24[] = {103002, 1103002018, 1103002030, 1103002048, 1103002056, 1103002087};
-int mini14[] = {103006, 1103006030, 1103006046, 1103006058};
-int dp[] = {105002, 1105002018, 1105002035, 1105002058, 1105002063};
-int m249[] = {105001, 1105001020, 1105001034, 1105001048, 1105001054};
-int groza[] = {101005, 1101005019, 1101005025, 1101005038, 1101005043, 1101005052, 1101005082};
-int aug[] = {101006, 1101006033, 1101006044, 1101006062};
-int m16[] = {101002, 1101002029, 1101002056, 1101002068, 1101002081, 1101002103};
-int uzi[] = {102001, 1102001024, 1102001036, 1102001058, 1102001069, 1102001089, 1102001102};
-int ump[] = {102002, 1102002043, 1102002061, 1102002090, 1102002117, 1102002124, 1102002129,
-             1102002136};
-int thompson[] = {102004, 1102004018, 1102004034};
-int vector2[] = {102003, 1102003020, 1102003031, 1102003065, 1102003080};
-int tommy[] = {102004, 1102004018, 1102004034};
-int bizon[] = {102005, 1102005007, 1102005020, 1102005041};
-int ace32[] = {101102, 1101102007, 1101102017};
-int pan[] = {108004, 1108004125, 1108004145, 1108004160, 1108004283, 1108004337, 1108004356,
-             1108004365, 1108004054, 1108004008};
-
-int m249s[] = {205009, 1050010351, 1050010412, 1050010482, 1050010542};
-int akmmag[] = {291001, 204013, 204011, 204012, 1010010891, 1010011031, 1010011161, 1010011281,
-                1010011431, 1010011541, 1010011741, 1010012131, 1010012311, 1010012421};
-int m7mag[] = {291008, 204013, 204011, 204012, 1010080261, 1010080511, 1010080611, 1010080811,
-               1010081041, 1010081161, 1010081261};
-int scarmag[] = {291003, 204013, 204011, 204012, 1010030571, 1010030701, 1010030801, 1010031191,
-                 1010031461, 1010031671, 1010031811};
-int m4mag[] = {291004, 204013, 204011, 204012, 1010040461, 1010040611, 1010040781, 1010040861,
-               1010040981, 1010041381, 1010041631, 1010042011, 1010042073, 1010042153, 1010042206};
-
-int m4sight[] = {203008, 1010040462, 1010040612, 1010040782, 1010040862, 1010040982, 1010041382,
-                 1010041632, 1010042012, 1010042083, 1010042163, 1010042209};
-
-int m4stock[] = {205005, 1010040463, 1010040613, 1010040783, 1010040863, 1010040983, 1010041383,
-                 1010041633, 1010042013, 1010042093, 1010042173, 1010042213};
-
-int m4stock1[] = {205002, 1010040480, 205002, 205002, 205002, 205002, 1010041146, 1010041579,
-                  1010041966, 1010042137, 1010042173, 1010042213, 1010042244};
-
-int m4reddot[] = {203001, 1010040470, 203001, 203001, 203001, 203001, 1010041128, 1010041566,
-                  1010041948, 1010042029, 1010042119, 1010042233};
-
-int m16s[] = {205007, 1010020292, 1010020562, 1010020682, 1010020812, 1010021032};
-int m16mag[] = {291002, 204013, 204011, 204012, 1010020291, 1010020561, 1010020681, 1010020811,
-                1010021031};
-
-/*
-int emote1[] = { 2200101,12220023,12219677,12219716,12209401,12220028,12209701,12209801,12209901 };
-int emote2[] = { 2200201,12210201,12210601,12220028,12219819,12211801,12212001,12212201,12212401 };
-int emote3[] = { 2200301,12212601,12213201,12219715,12219814,12213601,12213801,12214001,12214201 };
-*/
-int SuitX[] = {403003, 1405628, 1405870, 1405983, 1406152, 1406311, 1406475, 1406638, 1406872,
-               1406810, 1407275, 1407276};
-
-int Bag[] = {501006, 501005, 501004, 501003, 501002, 501001, 1501003220, 1501003174, 1501003051,
-             1501003443, 1501003265, 1501003321, 1501003277, 1501003550, 1501003552, 1501003061,
-             1501003058, 1501003062, 1501003422, 1501003503};
-
-int Helmet[] = {502001, 502002, 502003, 1502003014, 1502003028, 1502003023, 1501002443, 1502003031,
-                1502003033, 1502003069, 1502003261};
-
-
-//M416 ONLY
-int M4161[] = {101004, 1101004046, 1101004062, 1101004078, 1101004086, 1101004098, 1101004138,
-               1101004163, 1101004201, 1101004209, 1101004218, 1101004226};
-int M4162[] = {291004, 1010040461, 1010040611, 1010040781, 1010040861, 1010040981, 1010041381,
-               1010041631, 1010042011, 1010042073, 1010042153, 1010042206};
-int M4163[] = {203008, 1010040462, 1010040612, 1010040782, 1010040862, 1010040982, 1010041382,
-               1010041632, 1010042012, 1010042083, 1010042163, 1010042209};
-int M4164[] = {205005, 1010040463, 1010040613, 1010040783, 1010040863, 1010040983, 1010041383,
-               1010041633, 1010042013, 1010042093, 1010042173, 1010042213};
-int M416flash[] = {201010, 1010040474, 201010, 201010, 201010, 201010, 1010041136, 201010,
-                   1010041956, 20101000, 1010042128, 1010042238};
-int M416compe[] = {201009, 1010040475, 201009, 201009, 201009, 201009, 1010041137, 1010041574,
-                   1010041957, 1010042037, 1010042127, 1010042237};
-int M416silent[] = {201011, 1010040476, 201011, 201011, 201011, 201011, 1010041138, 1010041575,
-                    1010041958, 1010042039, 1010042129, 1010042239};
-//int M416reddot[] = { 203001, 1010040470, 203001, 203001, 203001, 203001, 1010041128, 1010041566, 1010041948, 1010042029, 1010042119};
-int M416holo[] = {203002, 1010040469, 203002, 203002, 203002, 203002, 1010041127, 1010041565,
-                  1010041947, 1010042028, 1010042118, 1010042232};
-int M416x2[] = {203003, 1010040468, 203003, 203003, 203003, 203003, 1010041126, 1010041564,
-                1010041946, 1010042027, 1010042117, 1010042231};
-int M416x3[] = {203014, 1010040467, 203014, 203014, 203014, 203014, 1010041125, 1010041560,
-                1010041945, 1010042026, 1010042116, 1010042219};
-int M416x4[] = {203004, 1010040466, 203004, 203004, 203004, 203004, 1010041124, 1010041554,
-                1010041944, 1010042025, 1010042115, 1010042218};
-int M416x6[] = {203015, 1010040481, 203015, 203015, 203015, 203015, 203015, 203015, 1010041967,
-                1010042024, 1010042114, 1010042217};
-int M416quickMag[] = {204012, 1010040472/*1010040471*/, 204012, 204012, 204012, 204012, 1010041134,
-                      1010041568, 1010041949, 1010042034, 1010042124, 1010042235};
-int M416extendedMag[] = {204011, 1010040473, 204011, 204011, 204011, 204011, 1010041129, 1010041569,
-                         1010041950, 1010042035, 1010042125, 1010042234};
-int M416quickNextended[] = {204013, 1010040473, 204013, 204013, 204013, 204013, 1010041135,
-                            1010041567, 1010041955, 1010042036, 1010042126, 1010042236};
-int M416stock[] = {205002, 1010040480, 205002, 205002, 205002, 205002, 1010041146, 1010041579,
-                   1010041966, 1010042047, 1010042137, 1010042244};
-//int M416verical[] = { 203015, 1010040481, 203015, 203015, 203015, 203015, 1010041145, 1010041578, 1010041965, 1010042046, 1010042136};
-int M416angle[] = {202001, 1010040477, 202001, 202001, 202001, 202001, 1010041139, 1010041576,
-                   1010041959, 1010042044, 1010042134, 1010042241};
-//int M416lightgrip[] = { 202004, 1010040482, 202004, 202004, 202004, 202004, 202004, 20200400, 202004, 202004, 1010042138};
-//int M416pink[] = { 202005, 1010040483, 202005, 202005, 202005, 202005, 202005, 202005, 202005, 202005, 1010042139};
-//int M416lazer[] = { 203015, 1010040484, 203015, 203015, 203015, 203015, 203015, 203015, 203015, 203015, 1010042144};
-int M416thumb[] = {202006, 1010040478, 202006, 202006, 202006, 202006, 202006, 1010041577, 202006,
-                   202006, 1010042135, 1010042242};
-
-
-std::chrono::steady_clock::time_point lastWeaponChangeTimei;
+// Weapon change timing for skin application
 std::chrono::steady_clock::time_point lastWeaponChangeTime;
 
 
@@ -4377,21 +2619,6 @@ void RenderESP(/*AHUD *HUD, *int SizeX, int SizeY*/) {
             }
         }
 
-/*
-        template<class T>
-        void GetAllActors(std::vector<T *> &Actors) {
-            UGameplayStatics *gGameplayStatics = (UGameplayStatics *)UGameplayStatics::StaticClass();
-            auto GWorld = GetWorld();
-            if (GWorld) {
-                TArray<AActor *> FoundActors;
-                gGameplayStatics->GetAllActorsOfClass((UObject *)GWorld, T::StaticClass(), &FoundActors);
-                for (auto Actor : FoundActors) {
-                    Actors.push_back((T *)Actor);
-                }
-            }
-        }
-
-        */
 
         if (localPlayerController) {
             std::vector<ASTExtraPlayerCharacter *> PlayerCharacter;
@@ -4407,48 +2634,6 @@ void RenderESP(/*AHUD *HUD, *int SizeX, int SizeY*/) {
             }
             if (localPlayer) {
 
-
-
-                /*
-
-if (localPlayer && localPlayer->AvatarComponent2) {
-auto AvatarComp = localPlayer->AvatarComponent2;
-FNetAvatarSyncData NetAvatarComp = *(FNetAvatarSyncData*)((uintptr_t)AvatarComp + 0x388);
-
-auto Slotsybc = NetAvatarComp.SlotSyncData;
-
-if (Config["SKIN_SUIT"] == 1) {
-Slotsybc[5].ItemId = 1405909; //Blood Raven X-Suit
-} else if (Config["SKIN_SUIT"] == 2) {
-Slotsybc[5].ItemId = 1405628; //Golden Pharaoh X-Suit
-} else if (Config["SKIN_SUIT"] == 3) {
-Slotsybc[5].ItemId = 1406152; //Avalanche X-suit
-} else if (Config["SKIN_SUIT"] == 4) {
-Slotsybc[5].ItemId = 1406475; //Irresidence X-suit
-} else if (Config["SKIN_SUIT"] == 5) {
-Slotsybc[5].ItemId = 1405983; //Poseidon X-suit
-} else if (Config["SKIN_SUIT"] == 6) {
-Slotsybc[5].ItemId = 1406638; //Arcane Jester X-Suit
-} else if (Config["SKIN_SUIT"] == 7) {
-Slotsybc[5].ItemId = 1406311; //Silvanus X-Suit
-} else if (Config["SKIN_SUIT"] == 8) {
-Slotsybc[5].ItemId = 1406971;//Marmoris X-Suit
-} else if (Config["SKIN_SUIT"] == 9) {
-Slotsybc[5].ItemId = 1407103; //Fiore X-Suit
-}
-/
-if (MainSuit != Slotsybc[5].ItemId) {
-MainSuit = Slotsybc[5].ItemId;
-
-/
-if (MainSuit != Config["SKIN_SUIT"]) {
-MainSuit = Config["SKIN_SUIT"];
-localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-}
-}
-
-
-        */
 
                 if (Config["SKIN_ENABLE"]) {
                     if (localPlayerController->BackpackComponent) {
@@ -4486,39 +2671,67 @@ localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
                                 (uintptr_t) AvatarComp + 0x388);
 
                         auto Slotsybc = NetAvatarComp.SlotSyncData;
-/*
-if (Hair) {
-Slotsybc[2].ItemId = 40601012;
-}
-*/
+
+                        // ===== ENHANCED ANTI-DETECTION X-SUIT APPLICATION =====
+                        // Replace direct assignment with protected scrambling
+                        int targetXSuitId = 0;
+                        int targetMaskId = 0;
+
                         if (Config["SKIN_XSUIT"] == 1) {
-                            Slotsybc[5].ItemId = 1405909; //Blood Raven X-Suit
+                            targetXSuitId = 1405909; //Blood Raven X-Suit
                         } else if (Config["SKIN_XSUIT"] == 2) {
-                            Slotsybc[5].ItemId = 1405628; //Golden Pharaoh X-Suit
+                            targetXSuitId = 1405628; //Golden Pharaoh X-Suit
                         } else if (Config["SKIN_XSUIT"] == 3) {
-                            Slotsybc[5].ItemId = 1406152; //Avalanche X-suit
+                            targetXSuitId = 1406152; //Avalanche X-suit
                         } else if (Config["SKIN_XSUIT"] == 4) {
-                            Slotsybc[5].ItemId = 1406475; //Irresidence X-suit
+                            targetXSuitId = 1406475; //Irresidence X-suit
                         } else if (Config["SKIN_XSUIT"] == 5) {
-                            Slotsybc[5].ItemId = 1405983; //Poseidon X-suit
+                            targetXSuitId = 1405983; //Poseidon X-suit
                         } else if (Config["SKIN_XSUIT"] == 6) {
-                            Slotsybc[5].ItemId = 1406638; //Arcane Jester X-Suit
+                            targetXSuitId = 1406638; //Arcane Jester X-Suit
                         } else if (Config["SKIN_XSUIT"] == 7) {
-                            Slotsybc[5].ItemId = 1406311; //Silvanus X-Suit
+                            targetXSuitId = 1406311; //Silvanus X-Suit
                         } else if (Config["SKIN_XSUIT"] == 8) {
-                            Slotsybc[5].ItemId = 1406971;//Marmoris X-Suit
+                            targetXSuitId = 1406971;//Marmoris X-Suit
                         } else if (Config["SKIN_XSUIT"] == 9) {
-                            Slotsybc[5].ItemId = 1407103; //Fiore X-Suit
+                            targetXSuitId = 1407103; //Fiore X-Suit
                         } else if (Config["SKIN_XSUIT"] == 10) {
-                            Slotsybc[5].ItemId = 1407259; // Ignis X-Suit
+                            targetXSuitId = 1407259; // Ignis X-Suit
                         } else if (Config["SKIN_XSUIT"] == 11) {
-                            Slotsybc[5].ItemId = 1406872; // Stygian Liege X-Suit
-                            Slotsybc[4].ItemId = 1403577; // Stygian Liege Mask
+                            targetXSuitId = 1406872; // Stygian Liege X-Suit
+                            targetMaskId = 1403577; // Stygian Liege Mask
                         } else if (Config["SKIN_XSUIT"] == 12) {
-                            Slotsybc[5].ItemId = 1407275; // Temperance's Virtue Set
-                            Slotsybc[4].ItemId = 1410646; // Temperance's Virtue Mask
+                            targetXSuitId = 1407275; // Temperance's Virtue Set
+                            targetMaskId = 1410646; // Temperance's Virtue Mask
                         } else if (Config["SKIN_XSUIT"] == 13) {
-                            Slotsybc[5].ItemId = 1407276; // The Lover's Grace Set
+                            targetXSuitId = 1407276; // The Lover's Grace Set
+                        }
+
+                        // Apply with enhanced protection if valid ID
+                        if (targetXSuitId > 0 && XSuitAntiDetection::isSafeToApply(targetXSuitId)) {
+                            // Enhanced memory scrambling before application
+                            if (!memoryProtection.isProtected) {
+                                InitializeMemoryProtection();
+                            }
+                            ScrambleMemory(memoryProtection.scrambleKey.data(), memoryProtection.scrambleKey.size());
+
+                            // Apply scrambled X-Suit ID
+                            int scrambledXSuitId = XSuitAntiDetection::scrambleXSuitId(targetXSuitId);
+                            Slotsybc[5].ItemId = scrambledXSuitId;
+
+                            // Apply mask if present
+                            if (targetMaskId > 0) {
+                                int scrambledMaskId = XSuitAntiDetection::scrambleXSuitId(targetMaskId);
+                                Slotsybc[4].ItemId = scrambledMaskId;
+                            }
+
+                            // Update tracking
+                            auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
+                                std::chrono::steady_clock::now().time_since_epoch()).count();
+                            XSuitAntiDetection::lastApplicationTimes[targetXSuitId] = now;
+                            XSuitAntiDetection::applicationCounts[targetXSuitId]++;
+
+                            LOGI("🛡️ Protected X-Suit Applied: %d -> %d", targetXSuitId, scrambledXSuitId);
                         }
 
 ///new
@@ -4748,17 +2961,7 @@ Slotsybc[2].ItemId = 40601012;
                             MainSuit = Slotsybc[5].ItemId;
                             localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
                         }
-/*
-//if (SuitSkinHackHudSdk == 22) {
-if (MainSuit != Slotsybc[6].ItemId) {
-MainSuit = Slotsybc[6].ItemId;
-localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-}
-if (MainSuit != Slotsybc[7].ItemId) {
-MainSuit = Slotsybc[7].ItemId;
-localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-//}
-}*/
+
                     }
 
                 }
@@ -5143,12 +3346,6 @@ localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
                                         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
                                     }
                                     localPlayer->WeaponManagerComponent->CurrentWeaponReplicated->DelayHandleAvatarMeshChanged();
                                     lastWeaponChangeTime = currentTime;
@@ -5157,40 +3354,7 @@ localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
                         }
                     }
                 }
-                /*
-
-    if (!Config["SKIN_SUIT"] == 0){
-if (localPlayer && localPlayer->AvatarComponent2) {
-auto AvatarComp = localPlayer->AvatarComponent2;
-FNetAvatarSyncData NetAvatarComp = *(FNetAvatarSyncData*)((uintptr_t)AvatarComp + 0x388);
-
-auto Slotsybc = NetAvatarComp.SlotSyncData;
-
-if (Config["SKIN_SUIT"] == 1) {
-Slotsybc[5].ItemId = 1406971;//Marmoris X-Suit
- //localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-} else if (Config["SKIN_SUIT"] == 2) {
-Slotsybc[5].ItemId = 1407103; //Fiore X-Suit
-//localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-} else if (Config["SKIN_SUIT"] == 3) {
-Slotsybc[5].ItemId = 1406152; //Avalanche X-suit
-//localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-} else if (Config["SKIN_SUIT"] == 4) {
-Slotsybc[5].ItemId = 1405628; //Golden Pharaoh X-Suit
-//localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-} else if (Config["SKIN_SUIT"] == 5) {
-Slotsybc[5].ItemId = 1405983; //Poseidon X-suit
-//localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-}
-
-if (MainSuit != Slotsybc[5].ItemId) {
-MainSuit = Slotsybc[5].ItemId;
-localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
-}
-
-}
-        }
-        */
+              
 
                 if (Config["MEMORY_WIDEVIEW"]) {
                     localPlayer->ThirdPersonCameraComponent->SetFieldOfView(110);
@@ -5203,48 +3367,7 @@ localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
                     }
                     localPlayer->PartHitComponent->ConfigCollisionDistSqAngles = ConfigCollisionDistSqAngles;
                 }
-                /*
-                        if (Config["NRG_AIMBOT"]) {
-                //   if (Config["AIM_MOD2"]) {
-                     if (Config["AIM_MOD2"] || Config["AIM_MOD3"]) {
-                        auto WeaponManagerComponent = localPlayer->WeaponManagerComponent;
-                        if (WeaponManagerComponent) {
-                            auto propSlot = WeaponManagerComponent->GetCurrentUsingPropSlot();
-                            if ((int)propSlot.GetValue() >= 1 && (int)propSlot.GetValue() <= 3) {
-                                auto CurrentWeaponReplicated = (ASTExtraShootWeapon*)WeaponManagerComponent->CurrentWeaponReplicated;
-                                if (CurrentWeaponReplicated) {
-                                    auto ShootWeaponComponent = CurrentWeaponReplicated->ShootWeaponComponent;
-                                    if (ShootWeaponComponent) {
-                                        int shoot_event_idx = 168;
-                                        auto VTable = (void**)ShootWeaponComponent->VTable;
-                                        auto f_mprotect = [](uintptr_t addr, size_t len,
-                                            int32_t prot) -> int32_t {
-                                                static_assert(PAGE_SIZE == 4096);
-                                                constexpr
-                                                    size_t page_size = static_cast<size_t>(PAGE_SIZE);
-                                                void* start = reinterpret_cast<void*>(addr &
-                                                    -page_size);
-                                                uintptr_t end =
-                                                    (addr + len + page_size - 20) & -page_size;
-                                                return mprotect(start, end -
-                                                    reinterpret_cast<uintptr_t>(start),
-                                                    prot);
-                                            };
-                                        if (VTable && (VTable[shoot_event_idx] != shoot_event)) {
-                                            orig_shoot_event = decltype(orig_shoot_event)(
-                                                VTable[shoot_event_idx]);
-
-                                            f_mprotect((uintptr_t)(&VTable[shoot_event_idx]),
-                                                sizeof(uintptr_t), PROT_READ | PROT_WRITE);
-                                            VTable[shoot_event_idx] = (void*)shoot_event;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-}
-*/
+              
                 if (Config["NRG_AIMBOT"]) {
                     if (Config["AIM_MOD1"]) {
                         ASTExtraPlayerCharacter *Target = GetTargetByCrosshairDistance();
@@ -5312,45 +3435,7 @@ localPlayer->AvatarComponent2->OnRep_BodySlotStateChanged();
                                                                                           timeToTravel));
                                                     }
 
-                                                    /*
-
-
-               if (aimbotspeednrg == 0) {
-AimSpeed2 = 14.f;
-}else     if (aimbotspeednrg == 1) {
-AimSpeed2= 5.f; //6
-}else     if (aimbotspeednrg == 2) {
-AimSpeed2 = 1.f;
-}else     if (aimbotspeednrg == 3) {
-AimSpeed2 = AimCustomSpeed;
-}
-
-
-
-                            if (Config.AimBot.Enable) {
-                                            if (localPlayerController) {
-                                            auto ControlRotator =  localPlayerController->ControlRotation;
-                                            auto PlayerCameraManage = localPlayerController->PlayerCameraManager;
-                                            if (PlayerCameraManage) {
-                                                FVector currViewAngle = PlayerCameraManage->CameraCache.POV.Location;
-                                                auto aimRotation = ToRotator(currViewAngle, targetAimPos);
-
-                            if (Config.AimBot.Enable) {
-                                                aimRotation.Yaw -= ControlRotator.Yaw;
-                                                aimRotation.Pitch -= ControlRotator.Pitch;
-                                                AimAngle(aimRotation);
-                                                ControlRotator.Pitch += aimRotation.Pitch / (float) AimSpeed2;
-                                                ControlRotator.Yaw += aimRotation.Yaw / (float) AimSpeed2;
-                                                }else{
-                                                ControlRotator.Yaw = aimRotation.Yaw;
-                                                ControlRotator.Pitch = aimRotation.Pitch;
-                                                 }
-
-localPlayerController->ControlRotation = ControlRotator;
-                                            }
-                                            }
-                                            }
-                                            */
+                                                    
                                                     localPlayerController->ClientSetLocation(
                                                             localPlayer->K2_GetActorLocation(),
                                                             ToRotator(
@@ -5367,286 +3452,6 @@ localPlayerController->ControlRotation = ControlRotator;
                         }
                     }
                 }
-
-
-                /*
-             if (Config["NRG_AIMBOT"]) {
-
-    ASTExtraPlayerCharacter *Target = GetTargetByCrosshairDistance();
-
-
-
-                    if (Target)
-                    {
-                        bool triggerOk = false;
-                       if (Config["AIM::TRIGGER1"]) {
-                    triggerOk = g_LocalPlayer->bIsWeaponFiring;
-                } else if (Config["AIM::TRIGGER2"]) {
-                    triggerOk = g_LocalPlayer->bIsGunADS;
-                } else if (Config["AIM::TRIGGER3"]) {
-                    triggerOk = g_LocalPlayer->bIsWeaponFiring || g_LocalPlayer->bIsGunADS;
-
-            } else triggerOk = true;
-                        if (triggerOk)
-                        {
-            FVector targetAimPos = Target->GetBonePos("Head", {});
-
-
-                                auto WeaponManagerComponent = localPlayer->WeaponManagerComponent;
-                                if (WeaponManagerComponent) {
-                                    auto propSlot = WeaponManagerComponent->GetCurrentUsingPropSlot();
-                                    if ((int) propSlot.GetValue() >= 1 && (int) propSlot.GetValue() <= 3) {
-                                        auto CurrentWeaponReplicated = (ASTExtraShootWeapon *) WeaponManagerComponent->CurrentWeaponReplicated;
-                                        if (CurrentWeaponReplicated) {
-                                            auto ShootWeaponComponent = CurrentWeaponReplicated->ShootWeaponComponent;
-                                            if (ShootWeaponComponent) {
-                                                UShootWeaponEntity *ShootWeaponEntityComponent = ShootWeaponComponent->ShootWeaponEntityComponent;
-                                    if (ShootWeaponEntityComponent) {
-
-                                                        ASTExtraVehicleBase *CurrentVehicle = Target->CurrentVehicle;
-                                                        if (CurrentVehicle) {
-                                                            FVector LinearVelocity = CurrentVehicle->ReplicatedMovement.LinearVelocity;
-                                                            float dist = localPlayer->GetDistanceTo(Target);
-                                                            auto timeToTravel = dist / ShootWeaponEntityComponent->BulletFireSpeed;
-                                                            targetAimPos = UKismetMathLibrary::Add_VectorVector(targetAimPos, UKismetMathLibrary::Multiply_VectorFloat(LinearVelocity, timeToTravel));
-                                                            targetAimPos.Z += LinearVelocity.Z * timeToTravel + 0.5 * 573.f*  timeToTravel * timeToTravel;
-                                                        } else {
-                                                            FVector Velocity = Target->GetVelocity();
-                                                            float dist = localPlayer->GetDistanceTo(Target);
-                                                            auto timeToTravel = dist / ShootWeaponEntityComponent->BulletFireSpeed;
-                                                            targetAimPos = UKismetMathLibrary::Add_VectorVector(targetAimPos, UKismetMathLibrary::Multiply_VectorFloat(Velocity, timeToTravel));
-                                                            targetAimPos.Z += Velocity.Z * timeToTravel + 0.5 * 573.f * timeToTravel * timeToTravel;
-                                                        }
-
-                                                             if (Config["RECOI_LCOMPARISON"]) {
-                                                    if (localPlayer->bIsGunADS) {
-                                                        if (localPlayer->bIsWeaponFiring) {
-                                                            float dist = localPlayer->GetDistanceTo(Target) / 100.f;
-                                                            targetAimPos.Z -= dist * (float) Config["RECOIL_SIZE"] * 0.1f; //
-                                                        }
-                                                    }
-                                                }
-
-                                  FVector fDir = UKismetMathLibrary::Subtract_VectorVector(targetAimPos, localPlayerController->PlayerCameraManager->CameraCache.POV.Location);
-                FRotator Yaptr = UKismetMathLibrary::Conv_VectorToRotator(fDir);
-
-                FRotator CpYaT = localPlayerController->PlayerCameraManager->CameraCache.POV.Rotation;
-
-
-
-                                            Yaptr.Pitch -= CpYaT.Pitch;
-                                            Yaptr.Yaw -= CpYaT.Yaw;
-                                            Yaptr.Roll = 0.f;
-                                            NekoHook(Yaptr);
-
-
-                                            CpYaT.Pitch += Yaptr.Pitch / Config["AIM_SPEED"]; // Aim X Speed Make Float : Xs
-                                            CpYaT.Yaw += Yaptr.Yaw / Config["AIM_SPEED"]; // Aim Y Speed Make Float : Ys
-                                            CpYaT.Roll = 0.f;
-
-
-
-
-
-                                                    localPlayerController->SetControlRotation(CpYaT,"");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-					}
-
-                    */
-
-
-
-                //aai bool for aimbot auto
-                /*
-             if (Config["NRG_AIMBOT"]) {
-
-
-                    ASTExtraPlayerCharacter *Target = GetTargetByCrosshairDistance();
-
-
-
-                    if (Target)
-                    {
-                        bool triggerOk = false;
-                       if (Config["AIM::TRIGGER1"]) {
-                    triggerOk = g_LocalPlayer->bIsWeaponFiring;
-                } else if (Config["AIM::TRIGGER2"]) {
-                    triggerOk = g_LocalPlayer->bIsGunADS;
-                } else if (Config["AIM::TRIGGER3"]) {
-                    triggerOk = g_LocalPlayer->bIsWeaponFiring || g_LocalPlayer->bIsGunADS;
-
-            } else triggerOk = true;
-                        if (triggerOk)
-                        {
-            FVector targetAimPos = Target->GetBonePos("Head", {});
-
-            if (auto WeaponManagerComponent = localPlayer->WeaponManagerComponent) {
-                auto PropSlot = WeaponManagerComponent->GetCurrentUsingPropSlot();
-
-                if ((int)PropSlot.GetValue() >= 1 && (int)PropSlot.GetValue() <= 3) {
-                    if (auto CurrentWeaponReplicated = (ASTExtraShootWeapon*)WeaponManagerComponent->CurrentWeaponReplicated) {
-                        if (auto ShootWeaponComponent = CurrentWeaponReplicated->ShootWeaponComponent) {
-                            if (auto ShootWeaponEntityComponent = ShootWeaponComponent->ShootWeaponEntityComponent) {
-                                float BulletFireSpeed = CurrentWeaponReplicated->GetBulletFireSpeedFromEntity();
-
-                                if (auto CurrentVehicle = Target->CurrentVehicle) {
-                                    FVector LinearVelocity = CurrentVehicle->ReplicatedMovement.LinearVelocity;
-
-                                    float dist = localPlayer->GetDistanceTo(Target);
-                                    auto timeToTravel = dist / BulletFireSpeed;
-                                    targetAimPos = UKismetMathLibrary::Add_VectorVector(targetAimPos, UKismetMathLibrary::Multiply_VectorFloat(LinearVelocity, timeToTravel));
-                                } else {
-                                    FVector Velocity = Target->GetVelocity();
-                                    float dist = localPlayer->GetDistanceTo(Target);
-                                    auto timeToTravel = dist / BulletFireSpeed;
-                                    targetAimPos = UKismetMathLibrary::Add_VectorVector(targetAimPos,UKismetMathLibrary::Multiply_VectorFloat(Velocity, timeToTravel));
-                                }
-
-                                 if (Config["RECOI_LCOMPARISON"]) {
-                                                    if (localPlayer->bIsGunADS) {
-                                                        if (localPlayer->bIsWeaponFiring) {
-                                                            float dist = localPlayer->GetDistanceTo(Target) / 100.f;
-                                                            targetAimPos.Z -= dist * (float) Config["RECOIL_SIZE"] * 0.1f; //
-                                                        }
-                                                    }
-                                                }
-
-                                FVector gunlocation = localPlayerController->PlayerCameraManager->CameraCache.POV.Location;
-                                FRotator aimrotation = ToRotator(gunlocation, targetAimPos);
-                                FRotator gunrotaton = localPlayerController->PlayerCameraManager->CameraCache.POV.Rotation;
-
-                                aimrotation.Pitch -= gunrotaton.Pitch;
-                                aimrotation.Yaw -= gunrotaton.Yaw;
-                                aimrotation.Roll = 0.0f;
-
-                                AimAngle(aimrotation);
-
-                                gunrotaton.Pitch += aimrotation.Pitch / Config["AIM_SPEED"];
-                                gunrotaton.Yaw += aimrotation.Yaw / Config["AIM_SPEED"];
-                              gunrotaton.Roll = 0.0f;
-
-                                localPlayerController->SetControlRotation(gunrotaton, "");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}*/
-
-/*
-
-             if (Config["NRG_AIMBOT"]) {
-
-                                  float AimSpeed2;
-                    ASTExtraPlayerCharacter *Target = GetTargetByCrosshairDistance();
-
-
-
-                    if (Target)
-                    {
-                        bool triggerOk = false;
-                       if (Config["AIM::TRIGGER1"]) {
-                    triggerOk = localPlayer->bIsWeaponFiring;
-                } else if (Config["AIM::TRIGGER2"]) {
-                    triggerOk = localPlayer->bIsGunADS;
-                } else if (Config["AIM::TRIGGER3"]) {
-                    triggerOk = localPlayer->bIsWeaponFiring || localPlayer->bIsGunADS;
-
-            } else triggerOk = true;
-                        if (triggerOk)
-                        {
-                                FVector targetAimPos = Target->GetBonePos("Head", {});
-
-                            auto WeaponManagerComponent = g_LocalPlayer->WeaponManagerComponent;
-                            if (WeaponManagerComponent) {
-                                auto propSlot = WeaponManagerComponent->GetCurrentUsingPropSlot();
-                                if ((int) propSlot.GetValue() >= 1 &&
-                                    (int) propSlot.GetValue() <= 3) {
-                                    auto CurrentWeaponReplicated = (ASTExtraShootWeapon *) WeaponManagerComponent->CurrentWeaponReplicated;
-                                    if (CurrentWeaponReplicated) {
-                                        auto ShootWeaponComponent = CurrentWeaponReplicated->ShootWeaponComponent;
-                                        if (ShootWeaponComponent) {
-                                            UShootWeaponEntity *ShootWeaponEntityComponent = ShootWeaponComponent->ShootWeaponEntityComponent;
-                                            if (ShootWeaponEntityComponent) {
-                                                ASTExtraVehicleBase *CurrentVehicle = Target->CurrentVehicle;
-                                                if (CurrentVehicle) {
-                                                    FVector LinearVelocity = CurrentVehicle->ReplicatedMovement.LinearVelocity;
-
-                                                    float dist = g_LocalPlayer->GetDistanceTo(Target);
-                                                    auto timeToTravel = dist /
-                                                                        ShootWeaponEntityComponent->BulletFireSpeed;
-
-                                                    targetAimPos = UKismetMathLibrary::Add_VectorVector(
-                                                            targetAimPos,
-                                                            UKismetMathLibrary::Multiply_VectorFloat(
-                                                                    LinearVelocity, timeToTravel));
-                                                } else {
-                                                    FVector Velocity = Target->GetVelocity();
-
-                                                    float dist = g_LocalPlayer->GetDistanceTo(Target);
-                                                    auto timeToTravel = dist /
-                                                                        ShootWeaponEntityComponent->BulletFireSpeed;
-
-                                                    targetAimPos = UKismetMathLibrary::Add_VectorVector(
-                                                            targetAimPos,
-                                                            UKismetMathLibrary::Multiply_VectorFloat(
-                                                                    Velocity, timeToTravel));
-                                                }
-
-
-                                                  if (Config["RECOI_LCOMPARISON"]) {
-                                                    if (g_LocalPlayer->bIsGunADS) {
-                                                        if (g_LocalPlayer->bIsWeaponFiring) {
-                                                            float dist = g_LocalPlayer->GetDistanceTo(Target) / 100.f;
-                                                            targetAimPos.Z -= dist * (float) Config["RECOIL_SIZE"] * 0.1f; //
-                                                        }
-                                                    }
-                                                }
-
-
-
-                                            if (localPlayerController) {
-                                                     if (Config["NRG_AIMBOT"]) {
-                                            auto ControlRotator =  localPlayerController->ControlRotation;
-                                            auto PlayerCameraManage = localPlayerController->PlayerCameraManager;
-                                            if (PlayerCameraManage) {
-                                                FVector currViewAngle = PlayerCameraManage->CameraCache.POV.Location;
-                                                auto aimRotation = ToRotator(currViewAngle, targetAimPos);
-                                                    //  if (Config["NRG::AIMBOT"]) {
-                                                aimRotation.Yaw -= ControlRotator.Yaw;
-                                                aimRotation.Pitch -= ControlRotator.Pitch;
-                                                AimAngle(aimRotation);
-                           ControlRotator.Pitch += aimRotation.Pitch / (float) 15;
-                           ControlRotator.Yaw += aimRotation.Yaw / (float) 15;
-
-//localController->ControlRotation = ControlRotator;
-localPlayerController->SetControlRotation(ToRotator(localPlayerController->PlayerCameraManager->CameraCache.POV.Location, targetAimPos),"");
-// localController->AController::SetControlRotation(targetAimPos, "");
-
-                                                   }
-
-                                                   }
-                                                   }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }*/
-
-
-
 
             }
 
@@ -5709,175 +3514,6 @@ sleep(15);
 }
 
 
-/*
-void *GameSdkData(void *){
-while (bScanPatternCompleted) {
-auto t1 = std::chrono::steady_clock::now();
-
-ASTExtraPlayerCharacter *localPlayer = 0;
-    ASTExtraPlayerController *localPlayerController = 0;
-
-
-        UGameplayStatics *gGameplayStatics = (UGameplayStatics *)UGameplayStatics::StaticClass();
-
-        auto GWorld = GetWorld();
-        if (GWorld) {
-            UNetDriver *NetDriver = GWorld->NetDriver;
-            if (NetDriver) {
-                UNetConnection *ServerConnection = NetDriver->ServerConnection;
-                if (ServerConnection) {
-                    localPlayerController = (ASTExtraPlayerController *)ServerConnection->PlayerController;
-                }
-            }
-
-            if (localPlayerController)
-            {
-                std::vector<ASTExtraPlayerCharacter *> PlayerCharacter;
-                GetAllActors(PlayerCharacter);
-
-                for (auto actor = PlayerCharacter.begin(); actor != PlayerCharacter.end(); actor++) {
-                    auto Actor = *actor;
-                    if (Actor->PlayerKey == ((ASTExtraPlayerController *)localPlayerController)->PlayerKey) {
-                        localPlayer = Actor;
-                        break;
-                    }
-                }
-    if (localPlayer) {
-
-            if (Config["MEMORY::WIDEVIEW"]) {
-                        localPlayer->ThirdPersonCameraComponent->SetFieldOfView(110);
-                        }
-                             if (localPlayer->PartHitComponent) {
-                        auto ConfigCollisionDistSqAngles = localPlayer->PartHitComponent->ConfigCollisionDistSqAngles;
-                        for (int j = 0; j < ConfigCollisionDistSqAngles.Num(); j++) {
-                            ConfigCollisionDistSqAngles[j].Angle = 180.0f;
-                        }
-                        localPlayer->PartHitComponent->ConfigCollisionDistSqAngles = ConfigCollisionDistSqAngles;
-                    }
-
-             if (Config["NRG::AIMBOT"]) {
-
-                                  float AimSpeed2;
-                    ASTExtraPlayerCharacter *Target = GetTargetForAimBot();
-
-
-
-                    if (Target)
-                    {
-                        bool triggerOk = false;
-                       if (Config["AIM::TRIGGER1"]) {
-                    triggerOk = localPlayer->bIsWeaponFiring;
-                } else if (Config["AIM::TRIGGER2"]) {
-                    triggerOk = localPlayer->bIsGunADS;
-                } else if (Config["AIM::TRIGGER3"]) {
-                    triggerOk = localPlayer->bIsWeaponFiring || localPlayer->bIsGunADS;
-
-            } else triggerOk = true;
-                        if (triggerOk)
-                        {
-                                        FVector targetAimPos = Target->GetBonePos("Head", {});
-
-                            auto WeaponManagerComponent = g_LocalPlayer->WeaponManagerComponent;
-                            if (WeaponManagerComponent) {
-                                auto propSlot = WeaponManagerComponent->GetCurrentUsingPropSlot();
-                                if ((int) propSlot.GetValue() >= 1 &&
-                                    (int) propSlot.GetValue() <= 3) {
-                                    auto CurrentWeaponReplicated = (ASTExtraShootWeapon *) WeaponManagerComponent->CurrentWeaponReplicated;
-                                    if (CurrentWeaponReplicated) {
-                                        auto ShootWeaponComponent = CurrentWeaponReplicated->ShootWeaponComponent;
-                                        if (ShootWeaponComponent) {
-                                            UShootWeaponEntity *ShootWeaponEntityComponent = ShootWeaponComponent->ShootWeaponEntityComponent;
-                                            if (ShootWeaponEntityComponent) {
-                                                ASTExtraVehicleBase *CurrentVehicle = Target->CurrentVehicle;
-                                                if (CurrentVehicle) {
-                                                    FVector LinearVelocity = CurrentVehicle->ReplicatedMovement.LinearVelocity;
-
-                                                    float dist = g_LocalPlayer->GetDistanceTo(Target);
-                                                    auto timeToTravel = dist /
-                                                                        ShootWeaponEntityComponent->BulletFireSpeed;
-
-                                                    targetAimPos = UKismetMathLibrary::Add_VectorVector(
-                                                            targetAimPos,
-                                                            UKismetMathLibrary::Multiply_VectorFloat(
-                                                                    LinearVelocity, timeToTravel));
-                                                } else {
-                                                    FVector Velocity = Target->GetVelocity();
-
-                                                    float dist = g_LocalPlayer->GetDistanceTo(Target);
-                                                    auto timeToTravel = dist /
-                                                                        ShootWeaponEntityComponent->BulletFireSpeed;
-
-                                                    targetAimPos = UKismetMathLibrary::Add_VectorVector(
-                                                            targetAimPos,
-                                                            UKismetMathLibrary::Multiply_VectorFloat(
-                                                                    Velocity, timeToTravel));
-                                                }
-
-
-                                                  if (Config["RECOI::LCOMPARISON"]) {
-                                                    if (g_LocalPlayer->bIsGunADS) {
-                                                        if (g_LocalPlayer->bIsWeaponFiring) {
-                                                            float dist = g_LocalPlayer->GetDistanceTo(Target) / 100.f;
-                                                            targetAimPos.Z -= dist * (float) Config["RECOIL::SIZE"] * 0.1f; //
-                                                        }
-                                                    }
-                                                }
-
-
-
-                                            if (localPlayerController) {
-                                                     if (Config["NRG::AIMBOT"]) {
-                                            auto ControlRotator =  localPlayerController->ControlRotation;
-                                            auto PlayerCameraManage = localPlayerController->PlayerCameraManager;
-                                            if (PlayerCameraManage) {
-                                                FVector currViewAngle = PlayerCameraManage->CameraCache.POV.Location;
-                                                auto aimRotation = ToRotator(currViewAngle, targetAimPos);
-                                                    //  if (Config["NRG::AIMBOT"]) {
-                                                aimRotation.Yaw -= ControlRotator.Yaw;
-                                                aimRotation.Pitch -= ControlRotator.Pitch;
-                                                AimAngle(aimRotation);
-                           ControlRotator.Pitch += aimRotation.Pitch / (float) 15;
-                           ControlRotator.Yaw += aimRotation.Yaw / (float) 15;
-
-//localController->ControlRotation = ControlRotator;
-localPlayerController->SetControlRotation(ToRotator(localPlayerController->PlayerCameraManager->CameraCache.POV.Location, targetAimPos),"");
-// localController->AController::SetControlRotation(targetAimPos, "");
-
-                                                   }
-
-                                                   }
-                                                   }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
-        }
-
-
-         //   }
-        }
-    }
-
-    g_LocalPlayer = localPlayer;
-    g_PlayerController = localPlayerController;
-    //}
-
-auto td = std::chrono::steady_clock::now() - t1;
-std::chrono::milliseconds sleep_time = std::chrono::milliseconds(std::max(0LL, -std::chrono::duration_cast<std::chrono::milliseconds>(td).count()));
-std::this_thread::sleep_for(sleep_time);
-}
-    return 0;
-}
-
-
-
-*/
-
 void *MemoryThread(void *) {
     while (bValid) {
         auto t1 = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -5891,22 +3527,7 @@ void *MemoryThread(void *) {
                     auto localPlayer = g_LocalPlayer;
                     auto localController = g_PlayerController;
                     if (localPlayer && localController) {
-                        /*
-                        auto objs = UObject::GetGlobalObjects();
-        for (int i = 0; i < objs.Num(); i++) {
-            auto Object = objs.GetByIndex(i);
-   if (isObjectInvalid(Object))
-                continue;
-                         if (Config["MEMORY::WIDEVIEW"]) {
-                if (Object->IsA(ULocalPlayer::StaticClass())) {
-                    auto playerChar = (ULocalPlayer *) Object;
-                    playerChar->AspectRatioAxisConstraint = EAspectRatioAxisConstraint::AspectRatio_MaintainYFOV;
-                }}else
-            if (Object->IsA(ULocalPlayer::StaticClass())) {
-                auto playerChar = (ULocalPlayer *) Object;
-                playerChar->AspectRatioAxisConstraint = EAspectRatioAxisConstraint::AspectRatio_MaintainXFOV;
-            }}*/
-
+  
 
                         float PlayView;
 
@@ -5933,34 +3554,127 @@ void *MemoryThread(void *) {
 int glWidth, glHeight;
 
 
+// ===== ENHANCED ESP ANTI-DETECTION SYSTEM =====
+
+struct ESPAntiDetectionState {
+    static std::random_device rd;
+    static std::mt19937 gen;
+    static std::map<std::string, uint64_t> lastDrawTimes;
+    static std::map<std::string, int> drawCounts;
+    static bool isRecordingDetected;
+    static uint64_t lastAntiDetectionCheck;
+    static const uint64_t ANTI_DETECTION_INTERVAL = 100; // Check every 100ms
+
+    // Enhanced rendering parameters
+    static float colorVariationFactor;
+    static float positionJitterFactor;
+    static int dynamicFrameRate;
+    static bool useRandomizedShapes;
+
+    // Check if ESP rendering should proceed
+    static bool shouldRenderESP() {
+        auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count();
+
+        // Periodic anti-detection check
+        if (now - lastAntiDetectionCheck > ANTI_DETECTION_INTERVAL) {
+            // Update dynamic parameters
+            colorVariationFactor = 0.05f + (gen() % 100) / 1000.0f; // 0.05-0.15
+            positionJitterFactor = 0.3f + (gen() % 70) / 100.0f; // 0.3-1.0
+            dynamicFrameRate = 45 + (gen() % 30); // 45-75 FPS
+
+            lastAntiDetectionCheck = now;
+        }
+
+        // Check recording protection
+        if (isRecordingDetected) {
+            return false;
+        }
+
+        // Dynamic frame rate limiting
+        static uint64_t lastFrameTime = 0;
+        uint64_t targetFrameTime = 1000 / dynamicFrameRate;
+        uint64_t jitter = gen() % 10; // 0-10ms jitter
+
+        if (now - lastFrameTime < targetFrameTime + jitter) {
+            return false;
+        }
+
+        lastFrameTime = now;
+        return true;
+    }
+
+    // Apply color scrambling
+    static int scrambleColor(int originalColor) {
+        if (!memoryProtection.isProtected) {
+            InitializeMemoryProtection();
+        }
+
+        // Extract color components
+        int alpha = (originalColor >> 24) & 0xFF;
+        int red = (originalColor >> 16) & 0xFF;
+        int green = (originalColor >> 8) & 0xFF;
+        int blue = originalColor & 0xFF;
+
+        // Apply controlled variation
+        int variation = (int)(255 * colorVariationFactor);
+        red = std::max(0, std::min(255, red + (int)(gen() % (variation * 2)) - variation));
+        green = std::max(0, std::min(255, green + (int)(gen() % (variation * 2)) - variation));
+        blue = std::max(0, std::min(255, blue + (int)(gen() % (variation * 2)) - variation));
+
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+    // Apply position jitter
+    static FVector2D scramblePosition(FVector2D original) {
+        float jitterRange = positionJitterFactor;
+        float jitterX = ((gen() % 1000) / 1000.0f - 0.5f) * 2 * jitterRange;
+        float jitterY = ((gen() % 1000) / 1000.0f - 0.5f) * 2 * jitterRange;
+
+        return FVector2D(original.X + jitterX, original.Y + jitterY);
+    }
+};
+
+// Static member definitions
+std::random_device ESPAntiDetectionState::rd;
+std::mt19937 ESPAntiDetectionState::gen(ESPAntiDetectionState::rd());
+std::map<std::string, uint64_t> ESPAntiDetectionState::lastDrawTimes;
+std::map<std::string, int> ESPAntiDetectionState::drawCounts;
+bool ESPAntiDetectionState::isRecordingDetected = false;
+uint64_t ESPAntiDetectionState::lastAntiDetectionCheck = 0;
+float ESPAntiDetectionState::colorVariationFactor = 0.1f;
+float ESPAntiDetectionState::positionJitterFactor = 0.5f;
+int ESPAntiDetectionState::dynamicFrameRate = 60;
+bool ESPAntiDetectionState::useRandomizedShapes = true;
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_bearmod_Floating_DrawOn(JNIEnv *env, jclass type, jobject espView, jobject canvas) {
-    espOverlay = ESP(env, espView, canvas);
-    /*
-    timer worldAutoSleep;
-    worldAutoSleep.SetFps(120);
-    worldAutoSleep.AutoFPS_init(0);
+    try {
+        // Enhanced anti-detection check
+        if (!ESPAntiDetectionState::shouldRenderESP()) {
+            return; // Skip rendering for anti-detection
+        }
 
-    if (!m_Canvas) {
-        worldAutoSleep.AutoFPS();
-        LOGI("Canvas Object: %p | Width: %d | Height: %d", canvas, g_screenWidth, g_screenHeight);
-        m_Canvas = new Canvas(env, g_screenWidth, g_screenHeight);
+        // Enhanced memory scrambling before ESP operations
+        if (memoryProtection.isProtected) {
+            ScrambleMemory(memoryProtection.scrambleKey.data(), memoryProtection.scrambleKey.size());
+        }
+
+        espOverlay = ESP(env, espView, canvas);
+
+        if (espOverlay.isValid()) {
+            // Apply enhanced ESP rendering with anti-detection
+            DrawESP(espOverlay, espOverlay.getWidth(), espOverlay.getHeight());
+        }
+
+    } catch (...) {
+        // Graceful error handling to prevent crashes
+        LOGE("[-] Error in enhanced ESP rendering");
     }
-
-    m_Canvas->UpdateCanvas(canvas);
-*/
-
-    if (espOverlay.isValid()) {
-        // worldAutoSleep.AutoFPS();
-        DrawESP(espOverlay, espOverlay.getWidth(), espOverlay.getHeight());
-        //   DrawESP(espOverlay, screenWidth55, screenHeight55);
-    }
-
 }
 
 void *(*oProcessEvent)(UObject *pObj, UFunction *pFunc, void *pArgs);
-
 void *hkProcessEvent(UObject *pObj, UFunction *pFunc, void *pArgs) {
     if (pFunc) {
 
@@ -5993,28 +3707,48 @@ void *hkProcessEvent(UObject *pObj, UFunction *pFunc, void *pArgs) {
                                                 localPlayer->WeaponManagerComponent->CurrentWeaponReplicated) {
                                                 int weapowep = localPlayer->WeaponManagerComponent->CurrentWeaponReplicated->GetWeaponID();
 
+                                                // ===== ENHANCED KILL FEED X-SUIT PROTECTION =====
+                                                int killFeedXSuitId = 0;
+
+                                                // ===== ENHANCED X-SUIT KILL FEED MAPPING =====
                                                 if (Config["SKIN_XSUIT"] == 1) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1405909; //Blood Raven X-Suit
+                                                    killFeedXSuitId = 1405909; //Blood Raven X-Suit
                                                 } else if (Config["SKIN_XSUIT"] == 2) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1405628; //Golden Pharaoh X-Suit
+                                                    killFeedXSuitId = 1405628; //Golden Pharaoh X-Suit
                                                 } else if (Config["SKIN_XSUIT"] == 3) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1406152; //Avalanche X-suit
+                                                    killFeedXSuitId = 1406152; //Avalanche X-suit
                                                 } else if (Config["SKIN_XSUIT"] == 4) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1406475; //Irresidence X-suit
+                                                    killFeedXSuitId = 1406475; //Irresidence X-suit
                                                 } else if (Config["SKIN_XSUIT"] == 5) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1405983; //Poseidon X-suit
+                                                    killFeedXSuitId = 1405983; //Poseidon X-suit
                                                 } else if (Config["SKIN_XSUIT"] == 6) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1406638; //Arcane Jester X-Suit
+                                                    killFeedXSuitId = 1406638; //Arcane Jester X-Suit
                                                 } else if (Config["SKIN_XSUIT"] == 7) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1406311; //Silvanus X-Suit
+                                                    killFeedXSuitId = 1406311; //Silvanus X-Suit
                                                 } else if (Config["SKIN_XSUIT"] == 8) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1406971;//Marmoris X-Suit
+                                                    killFeedXSuitId = 1406971; //Marmoris X-Suit
                                                 } else if (Config["SKIN_XSUIT"] == 9) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1407103; //Fiore X-Suit
+                                                    killFeedXSuitId = 1407103; //Fiore X-Suit
                                                 } else if (Config["SKIN_XSUIT"] == 10) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1407259; //Ignis X-Suit
+                                                    killFeedXSuitId = 1407259; //Ignis X-Suit
                                                 } else if (Config["SKIN_XSUIT"] == 11) {
-                                                    Params->FatalDamageParameter.CauserClothAvatarID = 1406872; //Stygian Liege X-Suit
+                                                    killFeedXSuitId = 1406872; //Stygian Liege X-Suit
+                                                } else if (Config["SKIN_XSUIT"] == 12) {
+                                                    killFeedXSuitId = 1407275; //Temperance's Virtue X-Suit
+                                                } else if (Config["SKIN_XSUIT"] == 13) {
+                                                    killFeedXSuitId = 1407276; //The Lover's Grace X-Suit
+                                                }
+
+                                                // Apply scrambled X-Suit ID to kill feed
+                                                if (killFeedXSuitId > 0) {
+                                                    // Enhanced memory protection for kill feed
+                                                    ScrambleMemory(memoryProtection.scrambleKey.data(), memoryProtection.scrambleKey.size());
+
+                                                    // Apply scrambled ID to prevent detection
+                                                    int scrambledKillFeedId = XSuitAntiDetection::scrambleXSuitId(killFeedXSuitId);
+                                                    Params->FatalDamageParameter.CauserClothAvatarID = scrambledKillFeedId;
+
+                                                    LOGI("🎯 Protected Kill Feed X-Suit: %d -> %d", killFeedXSuitId, scrambledKillFeedId);
                                                 }
 
 
@@ -6506,3 +4240,233 @@ JNIEXPORT void JNICALL
 Java_com_bearmod_Floating_Switch(JNIEnv *env, jobject thiz, jint i) {
     // TODO: implement Switch()
 }
+
+// Enhanced JNI function with validation and fallback support
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_bearmod_SkinManager_updateSkinValue(JNIEnv *env, jclass clazz, jstring key, jint value) {
+    if (!key) return; // Safety check
+    
+    const char *skinKey = env->GetStringUTFChars(key, 0);
+    if (!skinKey) return; // Safety check
+    
+    // Validate skin ID is reasonable (basic range check)
+    bool isValidSkin = (value >= 1100000000 && value <= 1999999999) || value == 0;
+    
+    // Direct mapping with validation and fallback
+    if (strcmp(skinKey, "M416") == 0) {
+        new_Skin.M416_1 = isValidSkin ? value : 1101004003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "AKM") == 0) {
+        new_Skin.AKM = isValidSkin ? value : 1101001003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "SCAR") == 0) {
+        new_Skin.Scar = isValidSkin ? value : 1101003003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "AWM") == 0) {
+        new_Skin.AWM = isValidSkin ? value : 1103003003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "K98") == 0) {
+        new_Skin.K98 = isValidSkin ? value : 1103001003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "UMP") == 0) {
+        new_Skin.UMP = isValidSkin ? value : 1102002003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "UZI") == 0) {
+        new_Skin.UZI = isValidSkin ? value : 1102001003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "Vector") == 0) {
+        new_Skin.Vector = isValidSkin ? value : 1102003003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "GROZA") == 0) {
+        new_Skin.Groza = isValidSkin ? value : 1101005003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "M24") == 0) {
+        new_Skin.M24 = isValidSkin ? value : 1103002003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "MK14") == 0) {
+        new_Skin.MK14 = isValidSkin ? value : 1103007003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "MG3") == 0) {
+        new_Skin.MG3 = isValidSkin ? value : 1105010003; // Fallback to default
+    }
+    else if (strcmp(skinKey, "QBZ") == 0) {
+        new_Skin.QBZ = isValidSkin ? value : 1101007003; // Fallback to default
+    }
+    
+    env->ReleaseStringUTFChars(key, skinKey);
+}
+
+// JNI function to get skin name by weapon and skin ID
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_bearmod_SkinManager_getSkinName(JNIEnv *env, jclass clazz, jstring weaponKey, jint skinId) {
+    if (!weaponKey) return env->NewStringUTF("Unknown");
+    
+    const char *weapon = env->GetStringUTFChars(weaponKey, 0);
+    if (!weapon) return env->NewStringUTF("Unknown");
+    
+    std::string skinName = getSkinName(std::string(weapon), skinId);
+    
+    env->ReleaseStringUTFChars(weaponKey, weapon);
+    return env->NewStringUTF(skinName.c_str());
+}
+
+// JNI function to get all available skin IDs for a weapon
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_bearmod_SkinManager_getAvailableSkinIds(JNIEnv *env, jclass clazz, jstring weaponKey) {
+    if (!weaponKey) return env->NewIntArray(0);
+    
+    const char *weapon = env->GetStringUTFChars(weaponKey, 0);
+    if (!weapon) return env->NewIntArray(0);
+    
+    std::vector<int> skinIds = getAvailableSkinIds(std::string(weapon));
+    
+    jintArray result = env->NewIntArray(skinIds.size());
+    if (result != nullptr) {
+        env->SetIntArrayRegion(result, 0, skinIds.size(), skinIds.data());
+    }
+    
+    env->ReleaseStringUTFChars(weaponKey, weapon);
+    return result;
+}
+
+// JNI function to get current skin ID for a weapon
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_bearmod_SkinManager_getCurrentSkinId(JNIEnv *env, jclass clazz, jstring weaponKey) {
+    if (!weaponKey) return 0;
+    
+    const char *weapon = env->GetStringUTFChars(weaponKey, 0);
+    if (!weapon) return 0;
+    
+    int currentSkinId = 0;
+    
+    // Get current skin ID from new_Skin struct
+    if (strcmp(weapon, "M416") == 0) {
+        currentSkinId = new_Skin.M416_1;
+    }
+    else if (strcmp(weapon, "AKM") == 0) {
+        currentSkinId = new_Skin.AKM;
+    }
+    else if (strcmp(weapon, "SCAR") == 0) {
+        currentSkinId = new_Skin.Scar;
+    }
+    else if (strcmp(weapon, "AWM") == 0) {
+        currentSkinId = new_Skin.AWM;
+    }
+    else if (strcmp(weapon, "K98") == 0) {
+        currentSkinId = new_Skin.K98;
+    }
+    else if (strcmp(weapon, "UMP") == 0) {
+        currentSkinId = new_Skin.UMP;
+    }
+    else if (strcmp(weapon, "UZI") == 0) {
+        currentSkinId = new_Skin.UZI;
+    }
+    else if (strcmp(weapon, "Vector") == 0) {
+        currentSkinId = new_Skin.Vector;
+    }
+    else if (strcmp(weapon, "GROZA") == 0) {
+        currentSkinId = new_Skin.Groza;
+    }
+    else if (strcmp(weapon, "M24") == 0) {
+        currentSkinId = new_Skin.M24;
+    }
+    else if (strcmp(weapon, "MK14") == 0) {
+        currentSkinId = new_Skin.MK14;
+    }
+    else if (strcmp(weapon, "MG3") == 0) {
+        currentSkinId = new_Skin.MG3;
+    }
+    else if (strcmp(weapon, "QBZ") == 0) {
+        currentSkinId = new_Skin.QBZ;
+    }
+    
+    env->ReleaseStringUTFChars(weaponKey, weapon);
+    return currentSkinId;
+}
+
+// ===== STREAMLINED SKIN CONFIGURATION =====
+// Configuration moved to JOIN_SKIN.h for centralized management
+// This reduces code duplication and improves maintainability
+
+// Memory protection functionality moved to JOIN_SKIN.h
+
+// Skin verification functionality moved to JOIN_SKIN.h
+
+// Dynamic skin management functionality moved to JOIN_SKIN.h
+
+// ===== ENHANCED ANTI-DETECTION X-SUIT SYSTEM =====
+// XSuitAntiDetection moved to top of file to avoid redefinition errors
+
+// ===== COMPREHENSIVE SKIN SYSTEM =====
+// All skin data structures and management moved to ESP_SKIN.h and JOIN_SKIN.h
+// This includes:
+// - WeaponSkinInfo, VehicleSkinInfo, DeadboxSkinInfo, KillMessageSkinInfo
+// - Global skin maps (g_WeaponSkinMap, g_VehicleSkinMap, etc.)
+// - Enhanced skin management systems
+// - Memory protection and anti-detection systems
+
+// ===== ENHANCED SKIN MANAGEMENT SYSTEM =====
+// EnhancedSkinManager moved to ESP_SKIN.h and JOIN_SKIN.h to avoid redefinition
+// All EnhancedSkinManager implementation moved to ESP_SKIN.h
+
+// ===== WEAPON DATA STRUCTURES =====
+// All weapon data structures and functions moved to JOIN_SKIN.h and ESP_SKIN.h
+
+// ===== DUPLICATE REMOVAL NOTICE =====
+// All duplicate functions and structures removed to avoid redefinition errors
+// The following are now defined in the modular system:
+// - JOIN_SKIN.h: Basic skin data structures and application logic
+// - ESP_SKIN.h: Advanced features, anti-detection, memory protection
+// - WeaponData, XSuitState, DeadboxState, KillMessageState
+// - Global state maps and initialization functions
+
+// Kill message initialization moved to ESP_SKIN.h
+
+// All duplicate functions moved to ESP_SKIN.h:
+// - ApplyXSuitEffectWithKillMessage
+// - UpdateDeadboxWithKillMessage
+// - GetRealTimeKillMessage
+// - InitializeMemoryProtection
+// - ScrambleMemory
+// - InitializeXSuitEffects
+// - InitializeDeadboxItems
+// - InitializeKillMessages
+// - snew_Skin struct and bearSkins array
+
+// All BearMod skin patch functions moved to ESP_SKIN_IMPL.cpp:
+// - findPattern
+// - mprotectPatchRegion
+
+// All skin patch functions moved to ESP_SKIN_IMPL.cpp:
+// - applySkinPatch
+// - applyEnhancedSkinPatch
+
+// ===== JNI INTEGRATION =====
+// All JNI methods moved to ESP_SKIN_IMPL.cpp for better organization:
+// - Java_com_bearmod_MemoryScrambler_scrambleSkinIDNative
+
+// All remaining JNI methods moved to ESP_SKIN_IMPL.cpp:
+// - Java_com_bearmod_MemoryScrambler_unscrambleSkinIDNative
+
+// ===== MODULAR SKIN SYSTEM COMPLETE =====
+// All skin-related functionality has been moved to the modular system:
+// - ESP_SKIN.h: Advanced skin features, anti-detection, memory protection
+// - ESP_SKIN_IMPL.cpp: Core implementation functions
+// - ESP_SKIN_JNI.cpp: JNI interface methods
+// - JOIN_SKIN.h: Basic skin data structures and application logic
+
+#endif // NRG_H
+
+
+
+
+
+
+
+
+
+

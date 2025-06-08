@@ -1,14 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 应用信息 -->
     <string name="app_name">熊模组</string>
+    <string name="app_version">熊模组 v1.0</string>
+    <string name="app_description">高级游戏增强工具，包含透视、自瞄和自定义功能。</string>
+
+    <!-- 主菜单 -->
+    <string name="welcome_title">欢迎使用熊模组</string>
+    <string name="quick_actions">快速操作</string>
+    <string name="language_settings">语言设置</string>
+    <string name="settings_management">设置管理</string>
+    <string name="master_enable">主开关</string>
+    <string name="language_english">英语</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_current">语言: 中文</string>
+    <string name="status_ready">状态：就绪 • 使用侧边栏在功能间导航</string>
+
+    <!-- 设置管理 -->
+    <string name="save_settings">💾 保存当前设置</string>
+    <string name="settings_saved">✅ 设置已保存!</string>
+    <string name="reset_settings">🔄 重置为默认</string>
+    <string name="settings_reset">✅ 设置已重置!</string>
+    <string name="clear_cache">🗑️ 清除缓存</string>
+    <string name="cache_cleared">✅ 缓存已清除!</string>
+
+    <!-- 防录屏保护 -->
+    <string name="anti_recording_title">🛡️ 防录屏保护</string>
+    <string name="auto_hide_recording">🤖 检测录屏时自动隐藏</string>
+    <string name="manual_hide_mode">🔒 手动隐藏模式</string>
+    <string name="detection_sensitivity">🔍 检测灵敏度</string>
+    <string name="recording_status">🔍 录制状态:</string>
+    <string name="recording_detected">🔴 检测到录制</string>
+    <string name="recording_safe">🟢 安全</string>
+    <string name="what_gets_hidden">ℹ️ 隐藏内容:</string>
+    <string name="hidden_content_list">• ESP框和覆盖层\n• 玩家姓名和距离\n• 自瞄指示器\n• 菜单界面\n• 调试信息</string>
+
+    <!-- ESP设置 -->
+    <string name="player_esp">玩家透视</string>
+    <string name="enable_player_esp">启用玩家透视</string>
+    <string name="player_box">玩家方框</string>
+    <string name="player_name">玩家名称</string>
+    <string name="player_distance">玩家距离</string>
+    <string name="health_bar">血量条</string>
+    <string name="box_settings">方框设置</string>
+    <string name="box_2d">2D方框</string>
+    <string name="box_3d">3D方框</string>
+    <string name="box_corner">角落方框</string>
+    <string name="esp_distance">透视距离</string>
+    <string name="other_esp">其他透视</string>
+    <string name="vehicle_esp">载具透视</string>
+    <string name="warning_zone">警告区域</string>
+
+    <!-- 传统ESP -->
     <string name="esp_line">线</string>
     <string name="esp_bone">骨骼</string>
     <string name="esp_info">信息</string>
     <string name="esp_weapon">武器</string>
     <string name="esp_grenade">手雷预警</string>
+
+    <!-- 自瞄设置 -->
+    <string name="aimbot_settings">自瞄设置</string>
+    <string name="enable_aimbot">启用自瞄</string>
+    <string name="auto_fire">自动开火</string>
+    <string name="silent_aim">静默自瞄</string>
+    <string name="target_settings">目标设置</string>
+    <string name="target_head">头部</string>
+    <string name="target_chest">胸部</string>
+    <string name="target_body">身体</string>
+    <string name="aim_range">自瞄范围</string>
+    <string name="aim_speed">自瞄速度</string>
+    <string name="aim_smoothness">自瞄平滑</string>
+    <string name="advanced_settings">高级设置</string>
+    <string name="prediction">预判</string>
+    <string name="ignore_knocked">忽略倒地</string>
+
+    <!-- 传统自瞄 -->
     <string name="aim_aimbot">自瞄</string>
     <string name="aim_ignore">忽略机器人</string>
     <string name="aim_knocked">瞄准击倒</string>
+
+    <!-- 物品/战利品透视 -->
+    <string name="weapon_esp">武器透视</string>
+    <string name="show_weapons">显示武器</string>
+    <string name="show_attachments">显示配件</string>
+    <string name="supply_esp">补给透视</string>
+    <string name="medical_items">医疗用品</string>
+    <string name="ammo">弹药</string>
+    <string name="armor_helmet">护甲头盔</string>
+    <string name="special_items">特殊物品</string>
+    <string name="airdrop">空投</string>
+    <string name="flare_gun">信号枪</string>
+    <string name="item_distance">物品距离</string>
+
+    <!-- 皮肤设置 -->
+    <string name="skin_settings">皮肤设置</string>
     <string name="skin_enable">皮肤启用</string>
     <string name="deadbox">死亡箱子（游戏中打开）</string>
+    <string name="character_customization">角色自定义</string>
+    <string name="x_suit">X套装</string>
+    <string name="outfit_set">套装</string>
+    <string name="skin_backpack">背包皮肤</string>
+    <string name="skin_helmet">头盔皮肤</string>
+    <string name="assault_rifles">突击步枪</string>
+    <string name="machine_guns">机枪</string>
+    <string name="smg">冲锋枪</string>
+    <string name="sniper_rifles">狙击步枪</string>
+
+    <!-- 导航 -->
+    <string name="tab_main">主页</string>
+    <string name="tab_esp">透视</string>
+    <string name="tab_aim">自瞄</string>
+    <string name="tab_items">物品</string>
+    <string name="tab_skin">皮肤</string>
+
+    <!-- 灵敏度级别 -->
+    <string name="sensitivity_very_low">很低</string>
+    <string name="sensitivity_low">低</string>
+    <string name="sensitivity_medium">中</string>
+    <string name="sensitivity_high">高</string>
+    <string name="sensitivity_very_high">很高</string>
+    <string name="sensitivity_label">灵敏度: </string>
+
+    <!-- 录制保护消息 -->
+    <string name="auto_detection_enabled">🤖 自动检测已启用 - 将监控录制状态</string>
+    <string name="auto_detection_disabled">⏹️ 自动检测已禁用</string>
+    <string name="recording_protection_enabled">📱 所有模组元素已从录制中隐藏</string>
+    <string name="recording_protection_disabled">👁️ 模组元素重新可见</string>
+    <string name="recording_detected_auto">🔴 检测到录制 - 模组已隐藏</string>
+    <string name="recording_stopped_auto">🟢 录制已停止 - 模组可见</string>
+
+    <!-- 直播模式 -->
+    <string name="livestream_mode">直播隐藏模式</string>
+    <string name="recording_protection_enabled_short">录屏保护已开启</string>
+    <string name="recording_protection_disabled_short">录屏保护已关闭</string>
 </resources>

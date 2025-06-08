@@ -12,6 +12,7 @@ import android.view.View;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Random;
 
 public class ESPView extends View implements Runnable {
 
@@ -19,6 +20,11 @@ public class ESPView extends View implements Runnable {
     private final AtomicBoolean isDestroyed = new AtomicBoolean(false);
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
     private final Object drawLock = new Object();
+
+    // Enhanced anti-detection system
+    private ESPAntiDetection antiDetection;
+    private RecorderFakeUtils recorderUtils;
+    private final Random secureRandom = new Random();
 
     private volatile int mFPS = 0;
     private volatile int mFPSCounter = 0;
@@ -45,10 +51,23 @@ public class ESPView extends View implements Runnable {
     
     public ESPView(Context context) {
         super(context, null, 0);
-        
+
         try {
+            // Initialize anti-detection system
+            antiDetection = ESPAntiDetection.getInstance();
+            recorderUtils = new RecorderFakeUtils(context);
+
+            // Set up integration
+            try {
+                MemoryScrambler memScrambler = MemoryScrambler.getInstance();
+                LanguageManager langManager = LanguageManager.getInstance(context);
+                antiDetection.setIntegrationComponents(memScrambler, recorderUtils, langManager);
+            } catch (Exception e) {
+                // Graceful fallback if components not available
+            }
+
             InitializePaints();
-            
+
             // LAG FIX / full smooth - Android 10+ compatible
             setFocusableInTouchMode(false);
             setEnabled(false);
@@ -142,10 +161,21 @@ public class ESPView extends View implements Runnable {
     protected void onDraw(Canvas canvas) {
         try {
             if (canvas != null && this.getVisibility() == View.VISIBLE && !isDestroyed.get() && !isPaused) {
+                // Enhanced anti-detection check
+                if (!antiDetection.shouldRender()) {
+                    return; // Skip rendering for anti-detection
+                }
+
+                // Check recording protection
+                if (recorderUtils != null && recorderUtils.isRecordingDetected()) {
+                    this.ClearCanvas(canvas); // Clear canvas during recording
+                    return;
+                }
+
                 synchronized (drawLock) {
                     this.ClearCanvas(canvas);
                     Floating.DrawOn(this, canvas);
-                    
+
                     // Update FPS with smoothing
                     updateFPS();
                 }
@@ -191,10 +221,13 @@ public class ESPView extends View implements Runnable {
              
     public void NRG_DrawText(Canvas cvs, int a, int r, int g, int b, String txt, float posX, float posY, float size) {
         try {
+            // Enhanced anti-detection text drawing
             mTextPaint.setShadowLayer(3, 0, 0, Color.BLACK);
             mTextPaint.setColor(Color.rgb(r, g, b));
             mTextPaint.setTextSize(size);
-            cvs.drawText(txt, posX, posY, mTextPaint);
+
+            // Use anti-detection system for secure drawing
+            antiDetection.drawTextSecure(cvs, mTextPaint, txt, posX, posY, size);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,7 +238,9 @@ public class ESPView extends View implements Runnable {
             mStrokePaint.setStrokeWidth(stroke);
             mStrokePaint.setColor(Color.rgb(r, g, b));
             mStrokePaint.setAlpha(a);
-            cvs.drawRoundRect(new RectF(x, y, width, height), 5, 5, mStrokePaint);
+
+            // Use anti-detection system for secure rectangle drawing
+            antiDetection.drawRectSecure(cvs, mStrokePaint, x, y, width - x, height - y);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -215,7 +250,9 @@ public class ESPView extends View implements Runnable {
         try {
             mStrokePaint.setARGB(a, r, g, b);
             mStrokePaint.setStrokeWidth(stroke);
-            cvs.drawCircle(posX, posY, radius, mStrokePaint);
+
+            // Use anti-detection system for secure circle drawing
+            antiDetection.drawCircleSecure(cvs, mStrokePaint, posX, posY, radius);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -226,7 +263,9 @@ public class ESPView extends View implements Runnable {
             mStrokePaint.setColor(Color.rgb(r, g, b));
             mStrokePaint.setAlpha(a);
             mStrokePaint.setStrokeWidth(lineWidth);
-            cvs.drawLine(fromX, fromY, toX, toY, mStrokePaint);
+
+            // Use anti-detection system for secure line drawing
+            antiDetection.drawLineSecure(cvs, mStrokePaint, fromX, fromY, toX, toY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,7 +275,9 @@ public class ESPView extends View implements Runnable {
         try {
             mFilledPaint.setColor(Color.rgb(r, g, b));
             mFilledPaint.setAlpha(a);
-            cvs.drawRoundRect(new RectF(x, y, width, height), 5, 5, mFilledPaint);
+
+            // Use anti-detection system for secure filled rectangle drawing
+            antiDetection.drawRectSecure(cvs, mFilledPaint, x, y, width - x, height - y);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -305,41 +346,66 @@ public class ESPView extends View implements Runnable {
     @Override
     public void run() {
         try {
-            // Optimized render loop with better frame pacing
-            final long targetFrameTime = 1000L / 60L; // 60 FPS cap
+            // Enhanced render loop with dynamic frame rate and anti-detection
             long lastFrameTime = SystemClock.uptimeMillis();
-            
+            long frameCount = 0;
+
             while (isRunning.get() && !isDestroyed.get()) {
                 try {
                     long currentTime = SystemClock.uptimeMillis();
+
+                    // Get dynamic frame rate from anti-detection system
+                    Map<String, Object> stats = antiDetection.getAntiDetectionStats();
+                    int dynamicFPS = (Integer) stats.getOrDefault("dynamicFPS", 60);
+                    long targetFrameTime = 1000L / dynamicFPS;
+
                     long deltaTime = currentTime - lastFrameTime;
-                    
-                    // Only render if enough time has passed (frame rate limiting)
+
+                    // Anti-detection frame rate limiting with jitter
                     if (deltaTime >= targetFrameTime) {
-                        post(() -> {
-                            try {
-                                if (!isDestroyed.get() && getVisibility() == View.VISIBLE) {
-                                    invalidate();
+                        // Add random jitter to prevent timing pattern detection
+                        long jitter = secureRandom.nextInt(5); // 0-5ms jitter
+
+                        if (deltaTime >= targetFrameTime + jitter) {
+                            post(() -> {
+                                try {
+                                    if (!isDestroyed.get() && getVisibility() == View.VISIBLE) {
+                                        // Check anti-detection before invalidating
+                                        if (antiDetection.shouldRender()) {
+                                            invalidate();
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    // Ignore rendering exceptions
                                 }
-                            } catch (Exception e) {
-                                // Ignore rendering exceptions
-                            }
-                        });
-                        lastFrameTime = currentTime;
+                            });
+                            lastFrameTime = currentTime;
+                            frameCount++;
+                        }
                     }
-                    
-                    // Adaptive sleep to reduce CPU usage
-                    long sleepTime = Math.max(1, targetFrameTime - (SystemClock.uptimeMillis() - currentTime));
+
+                    // Adaptive sleep with randomization to prevent CPU usage patterns
+                    long baseSleepTime = Math.max(1, targetFrameTime - (SystemClock.uptimeMillis() - currentTime));
+                    long randomSleep = secureRandom.nextInt(3); // 0-2ms additional randomization
+                    long sleepTime = baseSleepTime + randomSleep;
+
                     Thread.sleep(sleepTime);
-                    
+
+                    // Periodically clear operation history for security
+                    if (frameCount % 1800 == 0) { // Every ~30 seconds at 60 FPS
+                        antiDetection.clearOperationHistory();
+                    }
+
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
                 } catch (Exception e) {
-                    // Log and continue
+                    // Log and continue with fallback
                     e.printStackTrace();
                     try {
-                        Thread.sleep(16); // Fallback sleep
+                        // Fallback sleep with randomization
+                        int fallbackSleep = 16 + secureRandom.nextInt(8); // 16-24ms
+                        Thread.sleep(fallbackSleep);
                     } catch (InterruptedException ie) {
                         Thread.currentThread().interrupt();
                         break;
@@ -369,11 +435,16 @@ public class ESPView extends View implements Runnable {
         }
     }
     
-    // Resource cleanup
+    // Enhanced resource cleanup with anti-detection
     public void cleanup() {
         try {
             stopRenderThread();
-            
+
+            // Clean up anti-detection system
+            if (antiDetection != null) {
+                antiDetection.clearOperationHistory();
+            }
+
             // Clean up bitmaps
             if (bitmap != null && !bitmap.isRecycled()) {
                 bitmap.recycle();
@@ -387,13 +458,45 @@ public class ESPView extends View implements Runnable {
                 out2.recycle();
                 out2 = null;
             }
-            
+
             // Clean up OTHER bitmaps array
             for (int i = 0; i < OTHER.length; i++) {
                 if (OTHER[i] != null && !OTHER[i].isRecycled()) {
                     OTHER[i].recycle();
                     OTHER[i] = null;
                 }
+            }
+
+            // Clear references for security
+            antiDetection = null;
+            recorderUtils = null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Get ESP anti-detection statistics
+     */
+    public Map<String, Object> getESPStats() {
+        try {
+            if (antiDetection != null) {
+                return antiDetection.getAntiDetectionStats();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new java.util.HashMap<>();
+    }
+
+    /**
+     * Enable/disable randomized shapes for anti-detection
+     */
+    public void setRandomizedShapes(boolean enabled) {
+        try {
+            if (antiDetection != null) {
+                antiDetection.setRandomizedShapes(enabled);
             }
         } catch (Exception e) {
             e.printStackTrace();

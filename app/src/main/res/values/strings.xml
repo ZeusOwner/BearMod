@@ -1,13 +1,135 @@
 <resources>
+    <!-- App Information -->
     <string name="app_name">BearMod</string>
-        <string name="esp_line">Line</string>
-        <string name="esp_bone">Bone</string>
-        <string name="esp_info">Info</string>
-        <string name="esp_weapon">Weapon</string>
-        <string name="esp_grenade">Grenade Warning</string>
-        <string name="aim_aimbot">AimBot</string>
-        <string name="aim_ignore">IgnoreBot</string>
-        <string name="aim_knocked">Aim-Knocked</string>
-        <string name="skin_enable">Skin-Enable</string>
-        <string name="deadbox">DeadBox (Ingame for open)</string>
+    <string name="app_version">BearMod v1.0</string>
+    <string name="app_description">Advanced game enhancement tool with ESP, Aimbot, and customization features.</string>
+
+    <!-- Main Menu -->
+    <string name="welcome_title">Welcome to BearMod</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="language_settings">Language Settings</string>
+    <string name="settings_management">Settings Management</string>
+    <string name="master_enable">Master Enable</string>
+    <string name="language_english">English</string>
+    <string name="language_chinese">Chinese</string>
+    <string name="language_current">Language: English</string>
+    <string name="status_ready">Status: Ready • Use sidebar to navigate between features</string>
+
+    <!-- Settings Management -->
+    <string name="save_settings">💾 Save Current Settings</string>
+    <string name="settings_saved">✅ Settings Saved!</string>
+    <string name="reset_settings">🔄 Reset to Default</string>
+    <string name="settings_reset">✅ Settings Reset!</string>
+    <string name="clear_cache">🗑️ Clear Cache</string>
+    <string name="cache_cleared">✅ Cache Cleared!</string>
+
+    <!-- Anti-Recording Protection -->
+    <string name="anti_recording_title">🛡️ Anti-Recording Protection</string>
+    <string name="auto_hide_recording">🤖 Auto-Hide on Recording Detection</string>
+    <string name="manual_hide_mode">🔒 Manual Hide Mode</string>
+    <string name="detection_sensitivity">🔍 Detection Sensitivity</string>
+    <string name="recording_status">🔍 Recording Status:</string>
+    <string name="recording_detected">🔴 RECORDING DETECTED</string>
+    <string name="recording_safe">🟢 SAFE</string>
+    <string name="what_gets_hidden">ℹ️ What gets hidden:</string>
+    <string name="hidden_content_list">• ESP boxes and overlays\n• Player names and distances\n• Aimbot indicators\n• Menu interface\n• Debug information</string>
+
+    <!-- ESP Settings -->
+    <string name="player_esp">Player ESP</string>
+    <string name="enable_player_esp">Enable Player ESP</string>
+    <string name="player_box">Player Box</string>
+    <string name="player_name">Player Name</string>
+    <string name="player_distance">Player Distance</string>
+    <string name="health_bar">Health Bar</string>
+    <string name="box_settings">Box Settings</string>
+    <string name="box_2d">2D Box</string>
+    <string name="box_3d">3D Box</string>
+    <string name="box_corner">Corner Box</string>
+    <string name="esp_distance">ESP Distance</string>
+    <string name="other_esp">Other ESP</string>
+    <string name="vehicle_esp">Vehicle ESP</string>
+    <string name="warning_zone">Warning Zone</string>
+
+    <!-- Legacy ESP -->
+    <string name="esp_line">Line</string>
+    <string name="esp_bone">Bone</string>
+    <string name="esp_info">Info</string>
+    <string name="esp_weapon">Weapon</string>
+    <string name="esp_grenade">Grenade Warning</string>
+
+    <!-- Aimbot Settings -->
+    <string name="aimbot_settings">Aimbot Settings</string>
+    <string name="enable_aimbot">Enable Aimbot</string>
+    <string name="auto_fire">Auto Fire</string>
+    <string name="silent_aim">Silent Aim</string>
+    <string name="target_settings">Target Settings</string>
+    <string name="target_head">Head</string>
+    <string name="target_chest">Chest</string>
+    <string name="target_body">Body</string>
+    <string name="aim_range">Aim Range</string>
+    <string name="aim_speed">Aim Speed</string>
+    <string name="aim_smoothness">Aim Smoothness</string>
+    <string name="advanced_settings">Advanced</string>
+    <string name="prediction">Prediction</string>
+    <string name="ignore_knocked">Ignore Knocked</string>
+
+    <!-- Legacy Aim -->
+    <string name="aim_aimbot">AimBot</string>
+    <string name="aim_ignore">IgnoreBot</string>
+    <string name="aim_knocked">Aim-Knocked</string>
+
+    <!-- Items/Loot ESP -->
+    <string name="weapon_esp">Weapon ESP</string>
+    <string name="show_weapons">Show Weapons</string>
+    <string name="show_attachments">Show Attachments</string>
+    <string name="supply_esp">Supply ESP</string>
+    <string name="medical_items">Medical Items</string>
+    <string name="ammo">Ammo</string>
+    <string name="armor_helmet">Armor &amp; Helmet</string>
+    <string name="special_items">Special Items</string>
+    <string name="airdrop">Airdrop</string>
+    <string name="flare_gun">Flare Gun</string>
+    <string name="item_distance">Item Distance</string>
+
+    <!-- Skin Settings -->
+    <string name="skin_settings">Skin Settings</string>
+    <string name="skin_enable">Skin-Enable</string>
+    <string name="deadbox">DeadBox (Ingame for open)</string>
+    <string name="character_customization">Character Customization</string>
+    <string name="x_suit">X-suit</string>
+    <string name="outfit_set">Set</string>
+    <string name="skin_backpack">Skin-BackPack</string>
+    <string name="skin_helmet">Skin-Helmet</string>
+    <string name="assault_rifles">Assault Rifles</string>
+    <string name="machine_guns">Machine Guns</string>
+    <string name="smg">SMG</string>
+    <string name="sniper_rifles">Sniper Rifles</string>
+
+    <!-- Navigation -->
+    <string name="tab_main">MAIN</string>
+    <string name="tab_esp">ESP</string>
+    <string name="tab_aim">AIM</string>
+    <string name="tab_items">ITEMS</string>
+    <string name="tab_skin">SKIN</string>
+
+    <!-- Sensitivity Levels -->
+    <string name="sensitivity_very_low">Very Low</string>
+    <string name="sensitivity_low">Low</string>
+    <string name="sensitivity_medium">Medium</string>
+    <string name="sensitivity_high">High</string>
+    <string name="sensitivity_very_high">Very High</string>
+    <string name="sensitivity_label">Sensitivity: </string>
+
+    <!-- Recording Protection Messages -->
+    <string name="auto_detection_enabled">🤖 Auto-detection enabled - Will monitor for recording</string>
+    <string name="auto_detection_disabled">⏹️ Auto-detection disabled</string>
+    <string name="recording_protection_enabled">📱 All mod elements hidden from recording</string>
+    <string name="recording_protection_disabled">👁️ Mod elements visible again</string>
+    <string name="recording_detected_auto">🔴 Recording detected - Mod hidden</string>
+    <string name="recording_stopped_auto">🟢 Recording stopped - Mod visible</string>
+
+    <!-- LiveStream Mode -->
+    <string name="livestream_mode">LiveStreamMode(Recording Hide)</string>
+    <string name="recording_protection_enabled_short">Recording protection enabled</string>
+    <string name="recording_protection_disabled_short">Recording protection disabled</string>
 </resources>

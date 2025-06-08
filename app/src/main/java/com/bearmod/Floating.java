@@ -83,6 +83,10 @@ import android.provider.Settings;
 import android.net.Uri;
 
 import com.bearmod.MenuManager;
+import com.bearmod.ModernMenuManager;
+import com.bearmod.LanguageManager;
+import com.bearmod.ThemeManager;
+import com.bearmod.RecorderFakeUtils;
 
 public class Floating extends Service {
 
@@ -217,6 +221,9 @@ public class Floating extends Service {
     private TextView fpsTextView;
 
     private MenuManager menuManager;
+    private ModernMenuManager modernMenuManager;
+    private LanguageManager languageManager;
+    private ThemeManager themeManager;
 
     // Auto-detection monitoring
     private Handler autoDetectionHandler;
@@ -832,6 +839,11 @@ public class Floating extends Service {
             scrollView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
             scrollView.setFillViewport(true);
             scrollView.addView(contentLayout);
+
+            // Initialize modern managers
+            languageManager = LanguageManager.getInstance(this);
+            themeManager = ThemeManager.getInstance(this);
+            modernMenuManager = new ModernMenuManager(this);
 
             // Create MenuManager
             menuManager = new MenuManager(
