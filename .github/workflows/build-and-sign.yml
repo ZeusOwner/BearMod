@@ -38,6 +38,12 @@ jobs:
         echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.1.12297006"
         echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.1.12297006" >> $GITHUB_ENV
 
+    - name: ✅ Make Gradle executable
+      run: chmod +x ./gradlew
+
+    - name: 🔢 Auto-Bump versionCode
+      run: ./gradlew -PversionCode=${{ github.run_number }} :app:processReleaseResources
+
     - name: 🧹 Clean Project
       run: ./gradlew clean
 
@@ -56,26 +62,12 @@ jobs:
         echo "RELEASE_KEY_ALIAS=${{ secrets.KEYSTORE_ALIAS }}" >> $GITHUB_ENV
         echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
 
-    - name: 🧹 Cleanup Keystore
-      if: always()
-      run: |
-        rm -f release.keystore
-
-    - name: 📋 List APK Files
-      run: |
-        echo "Debug APKs:"
-        find app/build/outputs/apk/debug -name "*.apk" -type f
-        echo "Release APKs:"
-        find app/build/outputs/apk/release -name "*.apk" -type f
-
     - name: 📦 Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
         name: debug-apk
         path: app/build/outputs/apk/debug/app-debug.apk
         retention-days: 30
-
-
 
     - name: 📦 Upload Release APK (Signed)
       if: github.event_name != 'pull_request'
@@ -93,20 +85,23 @@ jobs:
         name: BearMod v${{ github.run_number }}
         body: |
           ## 🐻 BearMod Release v${{ github.run_number }}
-          
-          **Build Information:**
+
+          **Build Info**
           - Commit: ${{ github.sha }}
           - Branch: ${{ github.ref_name }}
-          - Build Date: ${{ github.event.head_commit.timestamp }}
-          
+          - Build Time: ${{ github.event.head_commit.timestamp }}
+
           **Files:**
-          - `app-debug.apk` - Debug build for testing
-          - `app-release.apk` - Signed release build (recommended)
+          - ✅ Debug Build: `app-debug.apk`
+          - ✅ Signed Release: `app-release.apk`
           
-          **Installation:**
-          Download the signed APK and install on your Android device.
+          > Download the signed APK and install it on your Android device.
         files: |
           app/build/outputs/apk/debug/app-debug.apk
           app/build/outputs/apk/release/app-release.apk
         draft: false
         prerelease: false
+
+    - name: 🧹 Cleanup Keystore
+      if: always()
+      run: rm -f release.keystore
