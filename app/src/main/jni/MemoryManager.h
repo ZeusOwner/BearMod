@@ -19,7 +19,7 @@
 // Fallback implementations for process_vm_* functions
 extern "C" {
     // Fallback implementation for process_vm_readv
-    static ssize_t process_vm_readv(pid_t pid, const struct iovec *local_iov, unsigned long liovcnt,
+    inline ssize_t process_vm_readv(pid_t pid, const struct iovec *local_iov, unsigned long liovcnt,
                                    const struct iovec *remote_iov, unsigned long riovcnt, unsigned long flags) {
         // Simple fallback - just copy if it's the same process
         if (pid == getpid() && liovcnt == 1 && riovcnt == 1) {
@@ -31,7 +31,7 @@ extern "C" {
     }
 
     // Fallback implementation for process_vm_writev
-    static ssize_t process_vm_writev(pid_t pid, const struct iovec *local_iov, unsigned long liovcnt,
+    inline ssize_t process_vm_writev(pid_t pid, const struct iovec *local_iov, unsigned long liovcnt,
                                     const struct iovec *remote_iov, unsigned long riovcnt, unsigned long flags) {
         // Simple fallback - just copy if it's the same process
         if (pid == getpid() && liovcnt == 1 && riovcnt == 1) {

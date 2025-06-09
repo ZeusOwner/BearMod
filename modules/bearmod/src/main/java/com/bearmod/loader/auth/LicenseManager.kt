@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import java.util.*
+import java.util.Base64
 
 /**
  * License Manager for BearMod

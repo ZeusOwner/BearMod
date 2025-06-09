@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 #define LOG_TAG "BearModJNI"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
@@ -12,13 +13,9 @@
 
 // Forward declarations
 class BearModCore;
-class LicenseValidator;
-class FeatureManager;
 
 // Global instances
 static std::unique_ptr<BearModCore> g_bearModCore;
-static std::unique_ptr<LicenseValidator> g_licenseValidator;
-static std::unique_ptr<FeatureManager> g_featureManager;
 static bool g_initialized = false;
 
 // Simple BearMod core implementation
@@ -293,13 +290,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {
     LOGI("BearMod JNI library unloading");
-    
+
     // Cleanup
     g_bearModCore.reset();
-    g_licenseValidator.reset();
-    g_featureManager.reset();
     g_initialized = false;
-    
+
     LOGI("BearMod JNI cleanup completed");
 }
 

@@ -131,8 +131,8 @@ int Register1(JNIEnv *env) {
 
 
 int Register2(JNIEnv *env) {
-    JNINativeMethod methods[] = {{"Init",  "(Landroid/content/Context;)V", (void *) native_Init},
-                                 {"Check", "(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;", (void *) native_Check}};
+    JNINativeMethod methods[] = {{"Init",  "(Landroid/content/Context;)V", (void *) Java_com_bearmod_Launcher_Init},
+                                 {"Check", "(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;", (void *) Java_com_bearmod_Launcher_Check}};
 
     jclass clazz = env->FindClass("com/bearmod/Launcher");
     if (!clazz)

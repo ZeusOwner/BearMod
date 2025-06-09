@@ -91,4 +91,13 @@ cmake-build-*/
 
 # JNI
 *.so
-!app/src/main/jniLibs/**/*.so 
+!app/src/main/jniLibs/**/*.so
+
+# Signing
+*.keystore
+*.jks
+release.keystore
+debug.keystore
+
+# Sensitive configuration
+local.properties

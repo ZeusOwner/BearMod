@@ -12,6 +12,7 @@ ndk = "27.1.12297006"
 
 # Java/Kotlin
 java = "17"
+kotlin = "1.9.22"
 
 # AndroidX Core
 androidx-core = "1.16.0"
@@ -71,4 +72,6 @@ testing-android = ["androidx-test-ext-junit", "espresso-core", "mockito-android"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-foojay-resolver-convention = { id = "org.gradle.toolchains.foojay-resolver-convention", version = "0.8.0" } 
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+foojay-resolver-convention = { id = "org.gradle.toolchains.foojay-resolver-convention", version = "0.8.0" }

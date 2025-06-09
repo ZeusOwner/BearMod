@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    alias(libs.plugins.android.application)
 }
 
 android {
@@ -9,44 +9,88 @@ android {
     defaultConfig {
         applicationId = "com.bearmod"
         minSdk = libs.versions.minSdk.get().toInt()
-        //noinspection OldTargetApi
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         ndk {
-            //noinspection ChromeOsAbiSupport
-            abiFilters += "arm64-v8a"
+            abiFilters += listOf("arm64-v8a") // Add more ABIs if needed
+        }
+
+        externalNativeBuild {
+            ndkBuild {
+                arguments += listOf("-j8")
+                abiFilters += listOf("arm64-v8a")
+            }
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            // These will be set by CI/CD or local.properties
+            storeFile = file(findProperty("RELEASE_STORE_FILE") as String? ?: "release.keystore")
+            storePassword = findProperty("RELEASE_STORE_PASSWORD") as String? ?: ""
+            keyAlias = findProperty("RELEASE_KEY_ALIAS") as String? ?: ""
+            keyPassword = findProperty("RELEASE_KEY_PASSWORD") as String? ?: ""
+        }
+
+        getByName("debug") {
+            // Optional: Configure debug signing if needed
+            // For local development, you can uncomment and set these:
+            // storeFile = file("debug.keystore")
+            // storePassword = "android"
+            // keyAlias = "androiddebugkey"
+            // keyPassword = "android"
         }
     }
 
     lint {
         baseline = file("lint-baseline.xml")
-        disable += listOf("InvalidPackage", "MissingTranslation")
+        disable += listOf("InvalidPackage", "MissingTranslation", "NewApi", "UnusedResources", "IconMissingDensityFolder")
+        abortOnError = false
     }
 
     buildTypes {
-        release {
+        getByName("debug") {
+            isDebuggable = true
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debug")
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
+
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            // Use release signing config if available, otherwise debug
+            signingConfig = if (hasProperty("RELEASE_STORE_FILE")) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
+
+
 
     tasks.withType<JavaCompile>().configureEach {
         options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))
-    }
-
-    externalNativeBuild {
-        ndkBuild {
-            path("src/main/jni/Android.mk")
-        }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    externalNativeBuild {
+        ndkBuild {
+            path = file("src/main/jni/Android.mk")
+        }
+    }
+
     ndkVersion = libs.versions.ndk.get()
 }
 

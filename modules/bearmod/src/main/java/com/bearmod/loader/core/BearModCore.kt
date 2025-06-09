@@ -107,7 +107,7 @@ class BearModCore private constructor() {
             // Validate license
             val licenseResult = licenseManager.validateLicense(licenseKey)
             if (!licenseResult.isValid) {
-                return@withContext LicenseValidationResult.InvalidLicense(licenseResult.error)
+                return@withContext LicenseValidationResult.InvalidLicense(licenseResult.error ?: "Unknown error")
             }
             
             // Set license in native layer
@@ -123,7 +123,7 @@ class BearModCore private constructor() {
             }
             
             return@withContext LicenseValidationResult.Success(
-                userInfo = licenseResult.userInfo,
+                userInfo = licenseResult.userInfo ?: UserInfo("unknown", "unknown", "unknown", 0),
                 permissions = licenseResult.permissions,
                 loadedModules = getLoadedModules()
             )

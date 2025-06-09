@@ -338,11 +338,318 @@ public class FileUtils {
     
     /**
      * Get the app's private cache directory (your original method)
-     * 
+     *
      * @param context The application context
      * @return The app's private cache directory
      */
     public static File getAppCacheDir(Context context) {
         return context.getCacheDir();
+    }
+
+    // Missing methods that are being called in the project
+
+    /**
+     * Get BearMod directory
+     */
+    public static File getBearModDir(Context context) {
+        File dir = new File(context.getFilesDir(), BEARMOD_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    /**
+     * Get config directory
+     */
+    public static File getConfigDir(Context context) {
+        File dir = new File(getBearModDir(context), CONFIG_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    /**
+     * Get logs directory
+     */
+    public static File getLogsDir(Context context) {
+        File dir = new File(getBearModDir(context), LOGS_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    /**
+     * Get backup directory
+     */
+    public static File getBackupDir(Context context) {
+        File dir = new File(getBearModDir(context), BACKUP_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    /**
+     * Get temp directory
+     */
+    public static File getTempDir(Context context) {
+        File dir = new File(getBearModDir(context), TEMP_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    /**
+     * List files with specific extension
+     */
+    public static List<File> listFilesWithExtension(File directory, String extension) {
+        List<File> result = new ArrayList<>();
+        if (directory == null || !directory.exists() || !directory.isDirectory()) {
+            return result;
+        }
+
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && file.getName().endsWith(extension)) {
+                    result.add(file);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get directory size
+     */
+    public static long getDirectorySize(File directory) {
+        if (directory == null || !directory.exists() || !directory.isDirectory()) {
+            return 0;
+        }
+
+        long size = 0;
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    size += file.length();
+                } else if (file.isDirectory()) {
+                    size += getDirectorySize(file);
+                }
+            }
+        }
+        return size;
+    }
+
+    /**
+     * Format file size
+     */
+    public static String formatFileSize(long bytes) {
+        if (bytes < 1024) {
+            return bytes + " B";
+        } else if (bytes < 1024 * 1024) {
+            return String.format("%.1f KB", bytes / 1024.0);
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return String.format("%.1f MB", bytes / (1024.0 * 1024.0));
+        } else {
+            return String.format("%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0));
+        }
+    }
+
+    /**
+     * Cleanup temp files
+     */
+    public static int cleanupTempFiles(File directory, int maxAgeHours) {
+        if (directory == null || !directory.exists() || !directory.isDirectory()) {
+            return 0;
+        }
+
+        int cleaned = 0;
+        long cutoffTime = System.currentTimeMillis() - (maxAgeHours * 60 * 60 * 1000L);
+
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.lastModified() < cutoffTime) {
+                    if (delete(file)) {
+                        cleaned++;
+                    }
+                }
+            }
+        }
+        return cleaned;
+    }
+
+    /**
+     * Create backup
+     */
+    public static boolean createBackup(File sourceFile, File backupDir) {
+        if (sourceFile == null || !sourceFile.exists() || backupDir == null) {
+            return false;
+        }
+
+        if (!backupDir.exists()) {
+            backupDir.mkdirs();
+        }
+
+        String backupName = sourceFile.getName() + BACKUP_EXT;
+        File backupFile = new File(backupDir, backupName);
+
+        return copyFile(sourceFile, backupFile);
+    }
+
+    /**
+     * Restore from backup
+     */
+    public static boolean restoreFromBackup(File backupFile, File targetFile) {
+        if (backupFile == null || !backupFile.exists() || targetFile == null) {
+            return false;
+        }
+
+        return copyFile(backupFile, targetFile);
+    }
+
+    /**
+     * Create ZIP archive
+     */
+    public static boolean createZipArchive(List<File> files, File zipFile) {
+        if (files == null || files.isEmpty() || zipFile == null) {
+            return false;
+        }
+
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile))) {
+            for (File file : files) {
+                if (file.exists() && file.isFile()) {
+                    addFileToZip(zos, file, file.getName());
+                }
+            }
+            return true;
+        } catch (IOException e) {
+            Log.e(TAG, "Error creating ZIP archive", e);
+            return false;
+        }
+    }
+
+    private static void addFileToZip(ZipOutputStream zos, File file, String entryName) throws IOException {
+        ZipEntry entry = new ZipEntry(entryName);
+        zos.putNextEntry(entry);
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                zos.write(buffer, 0, bytesRead);
+            }
+        }
+
+        zos.closeEntry();
+    }
+
+    /**
+     * Extract ZIP archive
+     */
+    public static boolean extractZipArchive(File zipFile, File extractDir) {
+        if (zipFile == null || !zipFile.exists() || extractDir == null) {
+            return false;
+        }
+
+        if (!extractDir.exists()) {
+            extractDir.mkdirs();
+        }
+
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                File entryFile = new File(extractDir, entry.getName());
+
+                // Create parent directories
+                File parentDir = entryFile.getParentFile();
+                if (parentDir != null && !parentDir.exists()) {
+                    parentDir.mkdirs();
+                }
+
+                // Extract file
+                try (FileOutputStream fos = new FileOutputStream(entryFile)) {
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+                    while ((bytesRead = zis.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+                }
+
+                zis.closeEntry();
+            }
+            return true;
+        } catch (IOException e) {
+            Log.e(TAG, "Error extracting ZIP archive", e);
+            return false;
+        }
+    }
+
+    /**
+     * Encrypt file (simple XOR encryption for demo)
+     */
+    public static boolean encryptFile(File sourceFile, File encryptedFile, byte[] key) {
+        if (sourceFile == null || !sourceFile.exists() || encryptedFile == null || key == null) {
+            return false;
+        }
+
+        try {
+            byte[] data = readBinaryFile(sourceFile);
+            byte[] encrypted = new byte[data.length];
+
+            for (int i = 0; i < data.length; i++) {
+                encrypted[i] = (byte) (data[i] ^ key[i % key.length]);
+            }
+
+            return writeBinaryFile(encryptedFile, encrypted);
+        } catch (Exception e) {
+            Log.e(TAG, "Error encrypting file", e);
+            return false;
+        }
+    }
+
+    /**
+     * Decrypt file (simple XOR decryption for demo)
+     */
+    public static boolean decryptFile(File encryptedFile, File decryptedFile, byte[] key) {
+        // XOR encryption is symmetric, so decryption is the same as encryption
+        return encryptFile(encryptedFile, decryptedFile, key);
+    }
+
+    /**
+     * Get file extension
+     */
+    public static String getFileExtension(File file) {
+        if (file == null) {
+            return "";
+        }
+
+        String name = file.getName();
+        int lastDot = name.lastIndexOf('.');
+        if (lastDot > 0 && lastDot < name.length() - 1) {
+            return name.substring(lastDot);
+        }
+        return "";
+    }
+
+    /**
+     * Get file name without extension
+     */
+    public static String getFileNameWithoutExtension(File file) {
+        if (file == null) {
+            return "";
+        }
+
+        String name = file.getName();
+        int lastDot = name.lastIndexOf('.');
+        if (lastDot > 0) {
+            return name.substring(0, lastDot);
+        }
+        return name;
     }
 }

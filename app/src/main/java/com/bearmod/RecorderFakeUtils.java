@@ -74,6 +74,151 @@ public class RecorderFakeUtils {
     private static volatile long lastCheckTime = 0;
     private static final long CHECK_INTERVAL = 1000; // 1 second minimum between checks
 
+    // Instance variables
+    private Context context;
+
+    // Constructor
+    public RecorderFakeUtils() {
+        // Default constructor for static usage
+    }
+
+    public RecorderFakeUtils(Context context) {
+        this.context = context;
+        if (!isInitialized.get()) {
+            synchronized (lockObject) {
+                if (!isInitialized.get()) {
+                    initializeDetection(context);
+                    isInitialized.set(true);
+                }
+            }
+        }
+    }
+
+    // Initialize detection systems
+    private static void initializeDetection(Context context) {
+        try {
+            Log.d("RecorderFakeUtils", "Initializing recording detection");
+            // Initialize detection systems here
+        } catch (Exception e) {
+            Log.e("RecorderFakeUtils", "Failed to initialize detection", e);
+        }
+    }
+
+    // Check if recording is detected
+    public boolean isRecordingDetected() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastCheckTime < CHECK_INTERVAL) {
+            return isRecordingDetected;
+        }
+
+        lastCheckTime = currentTime;
+        isRecordingDetected = performRecordingCheck();
+        return isRecordingDetected;
+    }
+
+    // Perform actual recording detection
+    private boolean performRecordingCheck() {
+        try {
+            // Check for screen recording apps
+            if (context != null && isScreenRecordingActive()) {
+                return true;
+            }
+
+            // Check for audio recording
+            if (isAudioRecordingActive()) {
+                return true;
+            }
+
+            // Check for suspicious processes
+            if (isSuspiciousProcessRunning()) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception e) {
+            Log.e("RecorderFakeUtils", "Error during recording check", e);
+            return false;
+        }
+    }
+
+    // Check for screen recording
+    private boolean isScreenRecordingActive() {
+        try {
+            if (context == null) return false;
+
+            // Check for common screen recording apps
+            String[] recordingApps = {
+                "com.mobizen.mirroring.uibc",
+                "com.kimcy929.screenrecorder",
+                "com.hecorat.screenrecorder.free",
+                "com.nll.screenrecorder",
+                "com.duapps.recorder",
+                "com.androidfung.droidcam"
+            };
+
+            PackageManager pm = context.getPackageManager();
+            for (String app : recordingApps) {
+                if (packageCache.computeIfAbsent(app, pkg -> {
+                    try {
+                        pm.getPackageInfo(pkg, 0);
+                        return true;
+                    } catch (PackageManager.NameNotFoundException e) {
+                        return false;
+                    }
+                })) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Check for audio recording
+    private boolean isAudioRecordingActive() {
+        try {
+            if (context == null) return false;
+
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            if (audioManager != null) {
+                // Check if microphone is in use
+                return audioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION;
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Check for suspicious processes
+    private boolean isSuspiciousProcessRunning() {
+        try {
+            if (context == null) return false;
+
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            if (activityManager != null) {
+                List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+                if (processes != null) {
+                    for (ActivityManager.RunningAppProcessInfo process : processes) {
+                        String processName = process.processName.toLowerCase();
+                        if (processName.contains("record") ||
+                            processName.contains("capture") ||
+                            processName.contains("screen")) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     //华为
     public static boolean isEmui() {
         return check(ROM_EMUI);
@@ -1046,9 +1191,7 @@ public class RecorderFakeUtils {
         }
     }
     
-    public static boolean isRecordingDetected() {
-        return isRecordingDetected;
-    }
+
     
     // Method to be called when app goes to background to clean up resources
     public static void onAppBackground() {

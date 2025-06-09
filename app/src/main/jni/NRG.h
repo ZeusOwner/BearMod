@@ -42,6 +42,10 @@ using namespace SDK;
 
 extern void StartRuntimeHook(const char *);
 
+// JNI function declarations
+extern "C" JNIEXPORT void JNICALL Java_com_bearmod_Launcher_Init(JNIEnv *env, jclass clazz, jobject mContext);
+extern "C" JNIEXPORT jstring JNICALL Java_com_bearmod_Launcher_Check(JNIEnv *env, jclass clazz, jobject mContext, jstring mUserKey);
+
 #include "UE4.h"
 
 #define PI 3.14159265358979323846f
@@ -4152,14 +4156,18 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
 }
 
 
-void native_Init(JNIEnv *env, jclass clazz, jobject mContext) {
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_bearmod_Launcher_Init(JNIEnv *env, jclass clazz, jobject mContext) {
     auto pkgName = GetPackageName(env, mContext);
     // StartRuntimeHook(pkgName);
     //    pthread_t t;
     //pthread_create(&t, 0, Init_Thread, 0);
 }
 
-jstring native_Check(JNIEnv *env, jclass clazz, jobject mContext, jstring mUserKey) {
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_bearmod_Launcher_Check(JNIEnv *env, jclass clazz, jobject mContext, jstring mUserKey) {
     auto userKey = env->GetStringUTFChars(mUserKey, 0);
     std::string hwid = userKey;
     hwid += GetAndroidID(env, mContext);

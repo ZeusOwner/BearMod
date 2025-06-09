@@ -1,0 +1,20 @@
+# Android SDK location
+sdk.dir=/path/to/Android/Sdk
+
+# NDK location (optional, if not using the one from SDK)
+ndk.dir=/path/to/Android/Sdk/ndk/27.1.12297006
+
+# Release signing configuration (for local builds)
+# Copy this file to local.properties and fill in your actual values
+# DO NOT commit local.properties to version control!
+
+RELEASE_STORE_FILE=path/to/your/keystore.jks
+RELEASE_STORE_PASSWORD=your_keystore_password
+RELEASE_KEY_ALIAS=your_key_alias
+RELEASE_KEY_PASSWORD=your_key_password
+
+# Example for local development:
+# RELEASE_STORE_FILE=/storage/emulated/0/MT2/keys/BearOwner.jks
+# RELEASE_STORE_PASSWORD=147258369VV
+# RELEASE_KEY_ALIAS=key0
+# RELEASE_KEY_PASSWORD=147258369VV

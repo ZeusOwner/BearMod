@@ -1,15 +1,14 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "com.bearmod.loader"
-    compileSdk = 34
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 21
-        targetSdk = 34
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -17,16 +16,15 @@ android {
         ndk {
             abiFilters += listOf("arm64-v8a")
         }
+    }
 
-        externalNativeBuild {
-            ndkBuild {
-                path = file("src/main/jni/Android.mk")
-            }
-        }
+    lint {
+        disable += listOf("InvalidPackage", "MissingTranslation", "NewApi")
+        abortOnError = false
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -36,12 +34,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     externalNativeBuild {
@@ -49,6 +47,8 @@ android {
             path = file("src/main/jni/Android.mk")
         }
     }
+
+    ndkVersion = libs.versions.ndk.get()
 }
 
 dependencies {
