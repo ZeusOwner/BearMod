@@ -38,7 +38,7 @@ jobs:
         echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.1.12297006"
         echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.1.12297006" >> $GITHUB_ENV
 
-    - name: ✅ Make Gradle executable
+    - name: ✅ Make Gradle Executable
       run: chmod +x ./gradlew
 
     - name: 🔢 Auto-Bump versionCode
@@ -85,12 +85,11 @@ jobs:
         name: BearMod v${{ github.run_number }}
         body: |
           ## 🐻 BearMod Release v${{ github.run_number }}
-
           **Build Info**
           - Commit: ${{ github.sha }}
           - Branch: ${{ github.ref_name }}
           - Build Time: ${{ github.event.head_commit.timestamp }}
-
+          
           **Files:**
           - ✅ Debug Build: `app-debug.apk`
           - ✅ Signed Release: `app-release.apk`
