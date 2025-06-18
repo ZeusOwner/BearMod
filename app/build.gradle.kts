@@ -69,6 +69,7 @@ android {
             signingConfig = if (hasProperty("RELEASE_STORE_FILE")) {
                 signingConfigs.getByName("release")
             } else {
+                logger.warn("[BearMod] WARNING: Release signing properties not found. Using debug signing config for release build. Please configure RELEASE_STORE_FILE and related properties in local.properties for secure release signing.")
                 signingConfigs.getByName("debug")
             }
         }
