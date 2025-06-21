@@ -1,11 +1,11 @@
 # Android SDK location
 # sdk.dir=C\:\\Users\\BearOwner\\AppData\\Local\\Android\\Sdk
-sdk.dir=/path/to/Android/Sdk
+sdk.dir=C:/User/BearOwner/AppData/Local/Android/Sdk
 
 # NDK location (optional, if not using the one from SDK)
 # Example for Windows NDK path:
 # ndk.dir=C:\\Users\\BearOwner\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006
-ndk.dir=/path/to/Android/Sdk/ndk/27.1.12297006
+ndk.dir=C:/Users/BearOwner/AppData/Local/Android/Sdk/ndk/27.1.12297006
 
 # Release signing configuration (for local builds)
 # Copy this file to local.properties and fill in your actual values
