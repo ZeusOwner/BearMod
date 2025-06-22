@@ -14,19 +14,6 @@ Advanced game enhancement tool for PUBG Mobile with ESP, aimbot, and performance
 - **Storage**: 50MB free space
 - **Device Support**: Chinese ROMs prioritized (Realme, iQOO, Honor, RedMagic, Lenovo, Redmi/POCO)
 
-## 🚀 Installation
-
-### Option 1: LD Player (Recommended for Testing)
-1. Install LD Player emulator
-2. Enable Developer Options and USB Debugging
-3. Install APK: `adb install app-release.apk`
-
-### Option 2: Physical Device
-1. Enable **Developer Options** in Settings
-2. Turn on **USB Debugging** 
-3. Allow **Unknown Sources** for APK installation
-4. Install the APK file
-
 ## 📦 APK Versions
 
 - **Release**: `app-release.apk` (12MB) - Optimized for production
@@ -69,10 +56,10 @@ Advanced game enhancement tool for PUBG Mobile with ESP, aimbot, and performance
 
 ### Prerequisites
 - Android Studio 2024.1+
-- Android SDK 34+
+- Android SDK 35+
 - NDK 27.1.12297006
 - JDK 17+
-- Gradle 8.10.1+
+- Gradle 8.14.1+
 
 ### Build Commands
 ```bash
@@ -150,7 +137,6 @@ For issues or questions:
 1. Check troubleshooting section
 2. Verify device compatibility  
 3. Ensure proper permissions granted
-4. Test on LD Player emulator first
 
 ---
 **Disclaimer**: This tool is for educational purposes. Users are responsible for compliance with game terms of service and local laws.
