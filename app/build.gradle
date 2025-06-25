@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 36
+    namespace = 'com.bearmod'
+
+    defaultConfig {
+        applicationId = "com.bearmod"
+        minSdk = 30 // Android 11+ (API 30+ only, fully modernized)
+        //noinspection OldTargetApi
+        targetSdk = 33 // or higher for modern API compliance
+        versionCode = 100 // Increased to avoid downgrade issues
+        versionName = "3.8.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            //noinspection ChromeOsAbiSupport
+            abiFilters += "arm64-v8a"
+        }
+    }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+        disable 'InvalidPackage', 'MissingTranslation'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.debug
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs.addAll(["-Xlint:unchecked", "-Xlint:deprecation"])
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path "src/main/cpp/Android.mk"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    ndkVersion = '27.1.12297006'
+}
+
+
+dependencies {
+    // Core dependencies
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.core:core:1.16.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.viewpager:viewpager:1.1.0'
+    implementation 'androidx.fragment:fragment:1.8.8'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
+    implementation 'androidx.exifinterface:exifinterface:1.4.1'
+    
+    // Networking dependencies for KeyAuth
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
+    // Security dependencies
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+
+    // Add Firebase Crashlytics dependency
+ //   implementation platform('com.google.firebase:firebase-bom:33.11.0')
+   // implementation 'com.google.firebase:firebase-crashlytics'
+   // implementation 'com.google.firebase:firebase-analytics'
+}

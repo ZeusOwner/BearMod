@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/premium_card_background"
+    android:elevation="12dp">
+
+    <!-- Left Sidebar Navigation -->
+    <LinearLayout
+        android:id="@+id/sidebar_container"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#1A1A1A"
+        android:padding="8dp"
+        android:minHeight="300dp">
+
+        <!-- Header Logo -->
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/icon"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Navigation Icons -->
+        <ImageView
+            android:id="@+id/nav_players"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/sidebar_item_selector"
+            android:padding="6dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:tag="players" />
+
+        <ImageView
+            android:id="@+id/nav_aimbot"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/sidebar_item_selector"
+            android:padding="6dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:tag="aimbot" />
+
+        <ImageView
+            android:id="@+id/nav_items"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/sidebar_item_selector"
+            android:padding="6dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:tag="items" />
+
+        <ImageView
+            android:id="@+id/nav_vehicles"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/sidebar_item_selector"
+            android:padding="6dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:tag="vehicles" />
+
+        <ImageView
+            android:id="@+id/nav_settings"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/sidebar_item_selector"
+            android:padding="6dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:tag="settings" />
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Close Button -->
+        <ImageView
+            android:id="@+id/close_menu"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/sidebar_item_selector"
+            android:padding="6dp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Main Content Area -->
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#262626"
+        android:padding="16dp"
+        android:minWidth="240dp"
+        android:maxWidth="300dp">
+
+        <!-- Header with Category Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/category_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Players"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Status Indicator -->
+            <View
+                android:id="@+id/status_indicator"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="#00FF00"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Scrollable Content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="280dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Content will be dynamically populated -->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- Quick Actions Footer (Optional) -->
+        <LinearLayout
+            android:id="@+id/quick_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/action_enable_all"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:text="Enable All"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:background="@drawable/button_outline_background"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/action_disable_all"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:text="Disable All"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:background="@drawable/button_outline_background"
+                android:layout_marginStart="4dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout> 

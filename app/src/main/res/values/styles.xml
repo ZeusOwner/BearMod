@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:windowBackground">@color/background_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+    </style>
+
+    <!-- New UI Styles for the Dark Theme -->
+    <style name="TabButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/tab_button_background</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="TabIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:tint">@color/text_primary_dark</item>
+    </style>
+
+    <style name="TabText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/divider</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="ContentPage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="CustomSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:thumb">@drawable/seekbar_thumb</item>
+        <item name="android:progressDrawable">@drawable/seekbar_track</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+    </style>
+
+    <style name="TitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="ValueDisplay" parent="Widget.AppCompat.TextView">
+        <item name="android:background">@drawable/value_display_background</item>
+        <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- New Modern UI Styles -->
+    <style name="ModernMenu.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="cardBackgroundColor">@color/card_background</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <style name="ModernMenu.TitleText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
+
+    <style name="ModernMenu.LabelText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+
+    <style name="ModernMenu.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="thumbTint">@color/switch_thumb_checked</item>
+        <item name="trackTint">@color/switch_track_checked</item>
+    </style>
+
+    <style name="ModernMenu.SeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:progressTint">@color/slider_track_active</item>
+        <item name="android:progressBackgroundTint">@color/slider_track_inactive</item>
+        <item name="android:thumbTint">@color/slider_thumb</item>
+    </style>
+
+    <style name="ModernMenu.ValueText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
+
+    <style name="ModernMenu.AimbotSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressDrawable">@drawable/seekbar_track_aimbot</item>
+        <item name="android:thumb">@drawable/seekbar_thumb_aimbot</item>
+    </style>
+
+    <!-- Add missing ModernMenu styles -->
+    <style name="ModernMenu_Theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/primary_accent</item>
+        <item name="android:colorPrimaryDark">@color/primary_accent_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+
+    <style name="ModernMenu_CardTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_accent</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:background">@drawable/premium_card_background</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <!-- ========================================= -->
+    <!-- PREMIUM MODERN STYLES 2024               -->
+    <!-- ========================================= -->
+    
+    <!-- Headers -->
+    <style name="HeaderText">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+    
+    <style name="SubHeaderText">
+        <item name="android:textColor">@color/text_accent</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+    
+    <!-- Body Text -->
+    <style name="BodyTextPrimary">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+    
+    <style name="BodyTextSecondary">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">1dp</item>
+    </style>
+    
+    <style name="CaptionText">
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    
+    <!-- Labels -->
+    <style name="LabelText">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+    
+    <!-- Value Text -->
+    <style name="ValueText">
+        <item name="android:textColor">@color/text_accent</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+    
+    <!-- ========================================= -->
+    <!-- BUTTON STYLES                            -->
+    <!-- ========================================= -->
+    
+    <!-- Primary Buttons -->
+    <style name="PrimaryButton">
+        <item name="android:background">@drawable/premium_button_primary</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+    
+    <!-- Secondary Buttons -->
+    <style name="SecondaryButton">
+        <item name="android:background">@drawable/button_outline_background</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+    
+    <!-- Stepper Buttons -->
+    <style name="StepperButton">
+        <item name="android:background">@drawable/modern_stepper_button</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:elevation">3dp</item>
+    </style>
+    
+    <!-- ========================================= -->
+    <!-- CARD & CONTAINER STYLES                  -->
+    <!-- ========================================= -->
+    
+    <!-- Premium Cards -->
+    <style name="PremiumCard">
+        <item name="android:background">@drawable/premium_card_background</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:elevation">6dp</item>
+    </style>
+    
+    <!-- Section Cards -->
+    <style name="SectionCard">
+        <item name="android:background">@drawable/premium_card_background</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+    
+    <!-- ========================================= -->
+    <!-- TOGGLE & SWITCH STYLES                   -->
+    <!-- ========================================= -->
+    
+    <!-- Modern Toggle -->
+    <style name="ModernToggle">
+        <item name="android:thumb">@drawable/modern_toggle_switch</item>
+        <item name="android:track">@drawable/modern_toggle_switch</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+    
+    <!-- ========================================= -->
+    <!-- LEGACY COMPATIBILITY                     -->
+    <!-- ========================================= -->
+    
+    <!-- Keep old style names for compatibility -->
+    <!-- Note: ModernMenu.LabelText already exists above, using different names -->
+    <style name="LegacyLabelText" parent="LabelText" />
+    <style name="LegacyValueText" parent="ValueText" />
+    <style name="LegacyButtonText" parent="BodyTextPrimary" />
+    
+</resources>

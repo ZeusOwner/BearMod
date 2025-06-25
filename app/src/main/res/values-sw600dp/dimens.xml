@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensions for tablets and large screens (600dp+) -->
+    
+    <!-- Text sizes - larger for tablets -->
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">15sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_xlarge">24sp</dimen>
+    
+    <!-- Menu dimensions - larger for tablets -->
+    <dimen name="sidebar_width">64dp</dimen>
+    <dimen name="sidebar_padding">12dp</dimen>
+    <dimen name="content_padding">20dp</dimen>
+    <dimen name="content_min_width">320dp</dimen>
+    <dimen name="content_max_width">400dp</dimen>
+    <dimen name="menu_min_height">400dp</dimen>
+    
+    <!-- Icon sizes - larger for tablets -->
+    <dimen name="nav_icon_size">@dimen/icon_size_xl</dimen>
+    <dimen name="nav_icon_padding">8dp</dimen>
+    <dimen name="status_dot_size">10dp</dimen>
+    
+    <!-- Component heights - taller for tablets -->
+    <dimen name="quick_action_height">36dp</dimen>
+    <dimen name="toggle_item_height">56dp</dimen>
+    <dimen name="slider_item_height">72dp</dimen>
+    
+    <!-- Larger spacing for tablets -->
+    <dimen name="spacing_tiny">12dp</dimen>
+    <dimen name="spacing_small">16dp</dimen>
+    <dimen name="spacing_medium">20dp</dimen>
+    <dimen name="spacing_large">32dp</dimen>
+    
+</resources> 

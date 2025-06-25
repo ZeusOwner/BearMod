@@ -1,0 +1,55 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+# Ignore build artifacts and temporary files
+build/
+dist/
+*.o
+*.so
+*.a
+*.dylib
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore configuration files with sensitive data
+config.json
+secrets.json
+*.key
+*.pem
+
+# Ignore large binary files
+*.bin
+*.dat
+*.pak
+
+# Ignore backup files
+*.bak
+*.backup
+*_backup
+
+# Ignore test files
+test/
+tests/
+*_test.cpp
+*_test.h
+
+# Ignore documentation
+docs/
+ *.md
+README*
+
+# Ignore version control
+.git/
+.svn/
+.hg/

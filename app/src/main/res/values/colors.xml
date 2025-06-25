@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ========================================= -->
+    <!-- PREMIUM MODERN UI COLOR SCHEME 2024      -->
+    <!-- ========================================= -->
+    
+    <!-- Primary Colors - Modern Dark Theme -->
+    <color name="primary">#6366F1</color> <!-- Indigo -->
+    <color name="primary_dark">#4F46E5</color> <!-- Darker Indigo -->
+    <color name="primary_light">#818CF8</color> <!-- Lighter Indigo -->
+    <color name="accent">#F59E0B</color> <!-- Amber accent -->
+    <color name="accent_secondary">#EF4444</color> <!-- Red accent -->
+    
+    <!-- Background Colors - Deep & Rich -->
+    <color name="background_primary">#0F0F23</color> <!-- Very dark navy -->
+    <color name="background_secondary">#1A1A2E</color> <!-- Dark navy -->
+    <color name="background_surface">#16213E</color> <!-- Card surface -->
+    <color name="background_surface_light">#2D3748</color> <!-- Lighter card surface -->
+    <color name="background_surface_elevated">#1E293B</color> <!-- Elevated surface -->
+    <color name="background_glass">#1A1A2E80</color> <!-- Glassmorphism -->
+    
+    <!-- Text Colors - High Contrast -->
+    <color name="text_primary">#FFFFFF</color> <!-- Pure white -->
+    <color name="text_primary_dark">#E2E8F0</color> <!-- Slightly darker white -->
+    <color name="text_secondary">#CBD5E1</color> <!-- Light gray -->
+    <color name="text_tertiary">#9CA3AF</color> <!-- Medium gray - improved contrast -->
+    <color name="text_accent">#F59E0B</color> <!-- Accent text -->
+    <color name="text_danger">#EF4444</color> <!-- Danger text -->
+    <color name="text_success">#10B981</color> <!-- Success text -->
+    
+    <!-- Button Colors - Modern & Vibrant -->
+    <color name="button_primary">#F59E0B</color> <!-- Primary button - changed to amber for better contrast -->
+    <color name="button_primary_pressed">#D97706</color> <!-- Pressed state -->
+    <color name="button_secondary">#374151</color> <!-- Secondary button -->
+    <color name="button_accent">#6366F1</color> <!-- Accent button -->
+    <color name="button_danger">#EF4444</color> <!-- Danger button -->
+    <color name="button_success">#10B981</color> <!-- Success button -->
+    
+    <!-- Navigation & UI Elements -->
+    <color name="nav_background">#0F0F23</color> <!-- Navigation background -->
+    <color name="nav_active">#F59E0B</color> <!-- Active nav item - changed to amber for better contrast -->
+    <color name="nav_inactive">#6B7280</color> <!-- Inactive nav item - lighter gray for better visibility -->
+    <color name="divider">#374151</color> <!-- Dividers -->
+    <color name="border">#4B5563</color> <!-- Borders -->
+    <color name="shadow">#00000040</color> <!-- Shadows -->
+    
+    <!-- Toggle & Switch Colors -->
+    <color name="switch_thumb_on">#F59E0B</color> <!-- Active switch thumb -->
+    <color name="switch_thumb_off">#9CA3AF</color> <!-- Inactive switch thumb -->
+    <color name="switch_track_on">#F59E0B60</color> <!-- Active switch track -->
+    <color name="switch_track_off">#4B556360</color> <!-- Inactive switch track -->
+    
+    <!-- Stepper & Input Colors -->
+    <color name="stepper_background">#374151</color> <!-- Stepper background -->
+    <color name="stepper_active">#6366F1</color> <!-- Active stepper -->
+    <color name="input_background">#1F2937</color> <!-- Input background -->
+    <color name="input_border">#4B5563</color> <!-- Input border -->
+    <color name="input_focus">#6366F1</color> <!-- Focused input -->
+    
+    <!-- Status Colors -->
+    <color name="status_online">#10B981</color> <!-- Online/Active -->
+    <color name="status_offline">#6B7280</color> <!-- Offline/Inactive -->
+    <color name="status_warning">#F59E0B</color> <!-- Warning -->
+    <color name="status_error">#EF4444</color> <!-- Error -->
+    
+    <!-- Overlay & Modal Colors -->
+    <color name="overlay_background">#00000080</color> <!-- Dark overlay -->
+    <color name="modal_background">#1A1A2E</color> <!-- Modal background -->
+    <color name="card_border">#374151</color> <!-- Card borders -->
+    
+    <!-- Legacy/Compatibility Colors -->
+    <color name="transparent">#00000000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Old color names for backward compatibility -->
+    <color name="menu_background">@color/background_secondary</color>
+    <color name="card_background">@color/background_surface</color>
+    <color name="primary_accent">@color/primary</color>
+    <color name="primary_accent_dark">@color/primary_dark</color>
+    <color name="primary_accent_light">@color/primary_light</color>
+    <color name="menu_card_title">@color/text_accent</color>
+    <color name="seekbar_accent_orange">@color/accent</color>
+    <color name="switch_thumb_checked">@color/switch_thumb_on</color>
+    <color name="switch_track_checked">@color/switch_track_on</color>
+    <color name="slider_track_active">@color/accent</color>
+    <color name="slider_track_inactive">@color/nav_inactive</color>
+    <color name="slider_thumb">@color/accent</color>
+    <color name="button_text">@color/text_primary</color>
+    <color name="icon_tint_normal">@color/nav_inactive</color>
+    <color name="icon_tint_active">@color/nav_active</color>
+    <!-- Premium UI Colors -->
+    <color name="premium_background">#1A1A1D</color>
+    <color name="premium_surface">#25252A</color>
+    <color name="premium_accent_red">#FF4757</color>
+    <color name="premium_accent_green">#2ECC71</color>
+    <color name="premium_text_primary">#FFFFFF</color>
+    <color name="premium_text_secondary">#B8B8B8</color>
+    <color name="premium_divider">#363636</color>
+    
+    <!-- Glass Morphism -->
+    <color name="glass_dark">#CC0F0F12</color>
+    <color name="glass_light">#1AFFFFFF</color>
+    <color name="glass_border">#33FFFFFF</color>
+    
+    <!-- Sidebar Colors -->
+    <color name="sidebar_background">#E6141416</color>
+    <color name="sidebar_item_pressed">#33FF4757</color>
+    <color name="sidebar_item_selected">#1AFF4757</color>
+    
+    <!-- Tab Colors -->
+    <color name="tab_selected">#FF4757</color>
+    <color name="tab_unselected">#808080</color>
+    <color name="divider_color">#1AFFFFFF</color>
+    
+</resources>
