@@ -38,6 +38,9 @@ jobs:
         echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.1.12297006"
         echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.1.12297006" >> $GITHUB_ENV
 
+    - name: 🧹 Make Gradle Wrapper Executable
+      run: chmod +x ./gradlew
+
     - name: 🧹 Clean Project
       run: ./gradlew clean
 
@@ -74,8 +77,6 @@ jobs:
         name: debug-apk
         path: app/build/outputs/apk/debug/app-debug.apk
         retention-days: 30
-
-
 
     - name: 📦 Upload Release APK (Signed)
       if: github.event_name != 'pull_request'

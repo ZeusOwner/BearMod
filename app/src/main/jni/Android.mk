@@ -62,6 +62,7 @@ LOCAL_SRC_FILES := \
     Main.cpp \
     Tools.cpp \
     md5.cpp \
+    md5.h \
     Logger.cpp \
     CLog.cpp \
     MemoryManager.cpp \
