@@ -1869,4 +1869,548 @@ public class SkinManager {
             Log.e(TAG, "❌ Enhanced scrambling test failed: " + e.getMessage());
         }
     }
+
+    /**
+     * Enhanced skin protection system with multiple security layers
+     */
+    public static void enableAdvancedSkinProtection(boolean enabled) {
+        try {
+            skinConfig.enableSkinProtection = enabled;
+            if (enabled) {
+                // Initialize advanced protection mechanisms
+                initializeAdvancedProtection();
+            }
+            Log.d(TAG, "Advanced skin protection " + (enabled ? "enabled" : "disabled"));
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting advanced skin protection", e);
+        }
+    }
+    
+    /**
+     * Initialize advanced protection mechanisms
+     */
+    private static void initializeAdvancedProtection() {
+        try {
+            // Initialize memory scrambling for all weapon types
+            for (String weapon : getSupportedWeapons()) {
+                // Pre-generate scrambled values
+                for (int i = 0; i < 10; i++) {
+                    scrambleMemory();
+                    Thread.sleep(1); // Prevent timing patterns
+                }
+            }
+            
+            // Initialize detection counters
+            skinVerificationCounts.clear();
+            lastVerificationTimes.clear();
+            
+            Log.d(TAG, "Advanced protection mechanisms initialized");
+        } catch (Exception e) {
+            Log.e(TAG, "Error initializing advanced protection", e);
+        }
+    }
+    
+    /**
+     * Enhanced weapon skin application with real-time verification
+     */
+    public static boolean applyWeaponSkinWithVerification(String weapon, int skinIndex) {
+        if (!weaponSkinMap.containsKey(weapon)) {
+            Log.w(TAG, "Unknown weapon: " + weapon);
+            return false;
+        }
+        
+        try {
+            WeaponSkinData weaponData = weaponSkinMap.get(weapon);
+            if (skinIndex < 0 || skinIndex >= weaponData.skinIds.length) {
+                Log.w(TAG, "Invalid skin index for " + weapon + ": " + skinIndex);
+                return false;
+            }
+            
+            // Rate limiting check
+            if (!rateLimitCheck(weapon)) {
+                Log.w(TAG, "Rate limit exceeded for " + weapon);
+                return false;
+            }
+            
+            int skinId = weaponData.skinIds[skinIndex];
+            String skinName = weaponData.skinNames[skinIndex];
+            
+            // Enhanced protection
+            if (skinConfig.enableSkinProtection) {
+                applyEnhancedProtection(weapon, skinId);
+            }
+            
+            // Apply skin with protection
+            applySkinWithProtection(weapon, skinId, weaponData.isSpecialSkin);
+            
+            // Real-time verification
+            if (skinConfig.enableSkinVerification) {
+                boolean verified = verifySkinApplication(weapon, skinId);
+                if (!verified) {
+                    Log.w(TAG, "Skin verification failed for " + weapon);
+                    // Retry once
+                    applySkinWithProtection(weapon, skinId, weaponData.isSpecialSkin);
+                    verified = verifySkinApplication(weapon, skinId);
+                    if (!verified) {
+                        Log.e(TAG, "Skin application failed after retry for " + weapon);
+                        return false;
+                    }
+                }
+            }
+            
+            // Update tracking
+            lastSkinChangeTimes.put(weapon, System.currentTimeMillis());
+            updateRealTimeSkinName(weapon);
+            
+            Log.d(TAG, "Successfully applied " + skinName + " to " + weapon + " (ID: " + skinId + ")");
+            return true;
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error applying weapon skin with verification", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Enhanced vehicle skin application with protection
+     */
+    public static boolean applyVehicleSkinWithProtection(String vehicleType, int skinIndex) {
+        if (!vehicleSkinMap.containsKey(vehicleType)) {
+            Log.w(TAG, "Unknown vehicle type: " + vehicleType);
+            return false;
+        }
+        
+        try {
+            VehicleSkinData vehicleData = vehicleSkinMap.get(vehicleType);
+            if (skinIndex < 0 || skinIndex >= vehicleData.skinIds.length) {
+                Log.w(TAG, "Invalid skin index for " + vehicleType + ": " + skinIndex);
+                return false;
+            }
+            
+            int skinId = vehicleData.skinIds[skinIndex];
+            String skinName = vehicleData.skinNames[skinIndex];
+            
+            // Apply vehicle skin with native protection
+            if (applyVehicleSkinNative(vehicleType, skinId)) {
+                Log.d(TAG, "Successfully applied " + skinName + " to " + vehicleType);
+                return true;
+            } else {
+                Log.e(TAG, "Failed to apply vehicle skin for " + vehicleType);
+                return false;
+            }
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error applying vehicle skin with protection", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Batch apply multiple weapon skins with enhanced protection
+     */
+    public static Map<String, Boolean> batchApplyWeaponSkins(Map<String, Integer> weaponSkinMap) {
+        Map<String, Boolean> results = new HashMap<>();
+        
+        try {
+            // Pre-scramble memory for batch operation
+            if (skinConfig.enableMemoryScrambling) {
+                scrambleMemory();
+            }
+            
+            for (Map.Entry<String, Integer> entry : weaponSkinMap.entrySet()) {
+                String weapon = entry.getKey();
+                Integer skinIndex = entry.getValue();
+                
+                boolean success = applyWeaponSkinWithVerification(weapon, skinIndex);
+                results.put(weapon, success);
+                
+                // Small delay to prevent detection patterns
+                if (skinConfig.enableAntiDetection) {
+                    try {
+                        Thread.sleep(random.nextInt(50) + 10); // 10-60ms delay
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }
+            
+            Log.d(TAG, "Batch skin application completed. Success rate: " + 
+                  results.values().stream().mapToInt(b -> b ? 1 : 0).sum() + "/" + results.size());
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error in batch skin application", e);
+        }
+        
+        return results;
+    }
+    
+    /**
+     * Apply dynamic skin rotation for anti-detection
+     */
+    public static void enableDynamicSkinRotation(String weapon, boolean enabled) {
+        try {
+            if (enabled) {
+                skinConfig.enableDynamicRotation = true;
+                lastRotationTimes.put(weapon, System.currentTimeMillis());
+                currentRotationIndices.put(weapon, 0);
+                usedSkinIds.put(weapon, new HashSet<>());
+                
+                // Start rotation for this weapon
+                startSkinRotation(weapon);
+            } else {
+                lastRotationTimes.remove(weapon);
+                currentRotationIndices.remove(weapon);
+                usedSkinIds.remove(weapon);
+            }
+            
+            Log.d(TAG, "Dynamic skin rotation " + (enabled ? "enabled" : "disabled") + " for " + weapon);
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting dynamic skin rotation", e);
+        }
+    }
+    
+    /**
+     * Start skin rotation for a weapon
+     */
+    private static void startSkinRotation(String weapon) {
+        new Thread(() -> {
+            try {
+                while (skinConfig.enableDynamicRotation && lastRotationTimes.containsKey(weapon)) {
+                    long lastRotation = lastRotationTimes.getOrDefault(weapon, 0L);
+                    long currentTime = System.currentTimeMillis();
+                    
+                    if (currentTime - lastRotation >= skinConfig.rotationInterval) {
+                        rotateSkin(weapon);
+                        lastRotationTimes.put(weapon, currentTime);
+                    }
+                    
+                    // Sleep with random jitter
+                    Thread.sleep(5000 + random.nextInt(10000)); // 5-15 seconds
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (Exception e) {
+                Log.e(TAG, "Error in skin rotation thread", e);
+            }
+        }).start();
+    }
+    
+    /**
+     * Rotate to next skin for a weapon
+     */
+    private static void rotateSkin(String weapon) {
+        try {
+            WeaponSkinData weaponData = weaponSkinMap.get(weapon);
+            if (weaponData == null) return;
+            
+            Set<Integer> usedIds = usedSkinIds.getOrDefault(weapon, new HashSet<>());
+            List<Integer> availableIndices = new ArrayList<>();
+            
+            // Find unused skin indices
+            for (int i = 0; i < weaponData.skinIds.length; i++) {
+                if (!usedIds.contains(weaponData.skinIds[i])) {
+                    availableIndices.add(i);
+                }
+            }
+            
+            // If all skins used, reset
+            if (availableIndices.isEmpty()) {
+                usedIds.clear();
+                for (int i = 0; i < weaponData.skinIds.length; i++) {
+                    availableIndices.add(i);
+                }
+            }
+            
+            // Select random skin
+            int randomIndex = availableIndices.get(random.nextInt(availableIndices.size()));
+            int skinId = weaponData.skinIds[randomIndex];
+            
+            // Apply skin
+            if (applyWeaponSkinWithVerification(weapon, randomIndex)) {
+                usedIds.add(skinId);
+                currentRotationIndices.put(weapon, randomIndex);
+                Log.d(TAG, "Rotated skin for " + weapon + " to index " + randomIndex);
+            }
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error rotating skin for " + weapon, e);
+        }
+    }
+    
+    /**
+     * Enhanced rate limiting check
+     */
+    private static boolean rateLimitCheck(String weapon) {
+        try {
+            long currentTime = System.currentTimeMillis();
+            Long lastChange = lastSkinChangeTimes.get(weapon);
+            
+            if (lastChange != null && currentTime - lastChange < MIN_SKIN_CHANGE_INTERVAL) {
+                return false;
+            }
+            
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, "Error in rate limit check", e);
+            return true; // Allow on error
+        }
+    }
+    
+    /**
+     * Advanced attachment management with protection
+     */
+    public static boolean applyRandomAttachmentsWithProtection(String weapon) {
+        if (!weaponSkinMap.containsKey(weapon) || !skinConfig.enableRandomAttachments) {
+            return false;
+        }
+        
+        try {
+            WeaponSkinData weaponData = weaponSkinMap.get(weapon);
+            Map<String, int[]> attachments = weaponData.attachments;
+            
+            // Apply random attachments
+            for (Map.Entry<String, int[]> entry : attachments.entrySet()) {
+                String attachmentType = entry.getKey();
+                int[] availableIds = entry.getValue();
+                
+                if (availableIds.length > 0) {
+                    int randomId = availableIds[random.nextInt(availableIds.length)];
+                    applyAttachmentWithProtection(weapon, attachmentType, randomId);
+                }
+            }
+            
+            Log.d(TAG, "Applied random attachments to " + weapon);
+            return true;
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error applying random attachments", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Enhanced memory management with periodic cleanup
+     */
+    public static void performEnhancedMemoryCleanup() {
+        try {
+            // Clear verification history
+            long currentTime = System.currentTimeMillis();
+            lastVerificationTimes.entrySet().removeIf(entry -> 
+                currentTime - entry.getValue() > VERIFICATION_INTERVAL * 2);
+            
+            // Clear skin name history for old weapons
+            skinNameHistory.entrySet().removeIf(entry -> {
+                List<String> history = entry.getValue();
+                return history.size() > MAX_SKIN_HISTORY * 2;
+            });
+            
+            // Limit skin name update tracking
+            lastSkinNameUpdate.entrySet().removeIf(entry -> 
+                currentTime - entry.getValue() > SKIN_NAME_UPDATE_INTERVAL * 10);
+            
+            // Clear old rotation data
+            if (currentRotationIndices.size() > 20) {
+                currentRotationIndices.clear();
+                usedSkinIds.clear();
+                lastRotationTimes.clear();
+            }
+            
+            // Force garbage collection if needed
+            Runtime runtime = Runtime.getRuntime();
+            long maxMemory = runtime.maxMemory();
+            long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+            
+            if (usedMemory > maxMemory * 0.8) { // If using more than 80% of max memory
+                System.gc();
+                Log.d(TAG, "Performed garbage collection due to high memory usage");
+            }
+            
+            Log.d(TAG, "Enhanced memory cleanup completed");
+        } catch (Exception e) {
+            Log.e(TAG, "Error in enhanced memory cleanup", e);
+        }
+    }
+    
+    /**
+     * Native method implementations with JNI bridge
+     */
+    private static native boolean updateSkinValueNative(String weaponKey, int skinId);
+    private static native boolean applyAttachmentNative(String weaponKey, String attachmentType, int attachmentId);
+    private static native String getSkinNameNative(String weaponKey, int skinId);
+    private static native int[] getAvailableSkinIdsNative(String weaponKey);
+    private static native int getCurrentSkinIdNative(String weaponKey);
+    private static native void scrambleMemoryNative(byte[] buffer, byte[] key);
+    private static native boolean applyVehicleSkinNative(String vehicleType, int skinId);
+    private static native boolean verifyIntegrityNative(String dataType, int expectedId);
+    
+    // Legacy native method stubs (for compatibility)
+    private static native void updateSkinValue(String weaponKey, int skinId);
+    private static native void applyAttachment(String weaponKey, String attachmentType, int attachmentId);
+    private static native String getSkinName(String weaponKey, int skinId);
+    private static native int[] getAvailableSkinIds(String weaponKey);
+    private static native int getCurrentSkinId(String weaponKey);
+    private static native void scrambleMemoryNative(byte[] buffer, byte[] key);
+    
+    // Implementation bridges for backwards compatibility
+    static {
+        try {
+            // Load native library
+            System.loadLibrary("bearmod");
+            Log.d(TAG, "Native library loaded successfully");
+        } catch (UnsatisfiedLinkError e) {
+            Log.e(TAG, "Failed to load native library", e);
+        }
+    }
+    
+    /**
+     * Enhanced skin statistics and monitoring
+     */
+    public static Map<String, Object> getEnhancedSkinStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+        
+        try {
+            // Basic statistics
+            stats.put("totalWeapons", weaponSkinMap.size());
+            stats.put("totalVehicles", vehicleSkinMap.size());
+            stats.put("activeSkinNames", activeSkinNames.size());
+            stats.put("skinNameHistory", skinNameHistory.size());
+            
+            // Performance statistics
+            stats.put("lastSkinChanges", lastSkinChangeTimes.size());
+            stats.put("verificationCounts", skinVerificationCounts.size());
+            stats.put("rotationActive", currentRotationIndices.size());
+            
+            // Configuration statistics
+            stats.put("enableDynamicSkins", skinConfig.enableDynamicSkins);
+            stats.put("enableSkinProtection", skinConfig.enableSkinProtection);
+            stats.put("enableAntiDetection", skinConfig.enableAntiDetection);
+            stats.put("protectionLevel", skinConfig.protectionLevel);
+            stats.put("stealthLevel", skinConfig.protectionLevel);
+            
+            // Memory statistics
+            Runtime runtime = Runtime.getRuntime();
+            stats.put("maxMemory", runtime.maxMemory());
+            stats.put("totalMemory", runtime.totalMemory());
+            stats.put("freeMemory", runtime.freeMemory());
+            stats.put("usedMemory", runtime.totalMemory() - runtime.freeMemory());
+            
+            // Timing statistics
+            stats.put("skinChangeCooldown", skinConfig.skinChangeCooldown);
+            stats.put("rotationInterval", skinConfig.rotationInterval);
+            stats.put("currentTime", System.currentTimeMillis());
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error generating enhanced skin statistics", e);
+            stats.put("error", e.getMessage());
+        }
+        
+        return stats;
+    }
+    
+    /**
+     * Comprehensive skin system health check
+     */
+    public static Map<String, Object> performSkinSystemHealthCheck() {
+        Map<String, Object> healthReport = new HashMap<>();
+        
+        try {
+            // Check native library status
+            boolean nativeLibraryLoaded = false;
+            try {
+                updateSkinValueNative("TEST", 0);
+                nativeLibraryLoaded = true;
+            } catch (Exception e) {
+                healthReport.put("nativeLibraryError", e.getMessage());
+            }
+            healthReport.put("nativeLibraryLoaded", nativeLibraryLoaded);
+            
+            // Check weapon skin data integrity
+            int weaponDataIntegrity = 0;
+            for (WeaponSkinData weaponData : weaponSkinMap.values()) {
+                if (weaponData.skinIds.length == weaponData.skinNames.length) {
+                    weaponDataIntegrity++;
+                }
+            }
+            healthReport.put("weaponDataIntegrity", weaponDataIntegrity + "/" + weaponSkinMap.size());
+            
+            // Check vehicle skin data integrity
+            int vehicleDataIntegrity = 0;
+            for (VehicleSkinData vehicleData : vehicleSkinMap.values()) {
+                if (vehicleData.skinIds.length == vehicleData.skinNames.length) {
+                    vehicleDataIntegrity++;
+                }
+            }
+            healthReport.put("vehicleDataIntegrity", vehicleDataIntegrity + "/" + vehicleSkinMap.size());
+            
+            // Check memory usage
+            Runtime runtime = Runtime.getRuntime();
+            long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+            long maxMemory = runtime.maxMemory();
+            double memoryUsagePercent = (double) usedMemory / maxMemory * 100;
+            healthReport.put("memoryUsagePercent", memoryUsagePercent);
+            healthReport.put("memoryHealthy", memoryUsagePercent < 80);
+            
+            // Check configuration status
+            healthReport.put("configurationValid", skinConfig != null);
+            healthReport.put("protectionEnabled", skinConfig.enableSkinProtection);
+            healthReport.put("antiDetectionEnabled", skinConfig.enableAntiDetection);
+            
+            // Overall health score
+            int healthScore = 0;
+            if (nativeLibraryLoaded) healthScore += 25;
+            if (weaponDataIntegrity == weaponSkinMap.size()) healthScore += 25;
+            if (vehicleDataIntegrity == vehicleSkinMap.size()) healthScore += 25;
+            if (memoryUsagePercent < 80) healthScore += 25;
+            
+            healthReport.put("overallHealthScore", healthScore + "/100");
+            healthReport.put("systemHealthy", healthScore >= 75);
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error performing skin system health check", e);
+            healthReport.put("healthCheckError", e.getMessage());
+            healthReport.put("systemHealthy", false);
+        }
+        
+        return healthReport;
+    }
+    
+    /**
+     * Emergency skin system reset
+     */
+    public static void emergencySystemReset() {
+        try {
+            Log.w(TAG, "Performing emergency skin system reset");
+            
+            // Clear all tracking data
+            activeSkinNames.clear();
+            lastSkinNameUpdate.clear();
+            skinNameHistory.clear();
+            lastSkinChangeTimes.clear();
+            skinVerificationCounts.clear();
+            lastVerificationTimes.clear();
+            lastRotationTimes.clear();
+            currentRotationIndices.clear();
+            usedSkinIds.clear();
+            skinProtectionLevels.clear();
+            
+            // Reset configuration to safe defaults
+            skinConfig.enableDynamicSkins = true;
+            skinConfig.enableSkinProtection = true;
+            skinConfig.enableAntiDetection = true;
+            skinConfig.protectionLevel = 2;
+            skinConfig.skinChangeCooldown = 5000;
+            skinConfig.rotationInterval = 30000;
+            
+            // Force garbage collection
+            System.gc();
+            
+            // Re-initialize protection
+            initializeAdvancedProtection();
+            
+            Log.i(TAG, "Emergency skin system reset completed");
+        } catch (Exception e) {
+            Log.e(TAG, "Error during emergency system reset", e);
+        }
+    }
 }
